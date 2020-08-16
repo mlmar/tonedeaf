@@ -1,6 +1,7 @@
+  
 {
   "type": "static",
-  "alias": "mlmar.now.sh",
+  "alias": "spotify-react-app-template.now.sh",
   "static": {
     "rewrites": [
       {
