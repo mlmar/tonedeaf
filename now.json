@@ -1,7 +1,7 @@
   
 {
   "type": "static",
-  "alias": "mlmar.tonedeaf.now.sh",
+  "alias": "tonedeaf.vercel.app.now.sh",
   "static": {
     "rewrites": [
       {
