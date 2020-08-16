@@ -1,7 +1,7 @@
   
 {
   "type": "static",
-  "alias": "spotify-react-app-template.now.sh",
+  "alias": "mlmar.tonedeaf.now.sh",
   "static": {
     "rewrites": [
       {
