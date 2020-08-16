@@ -1,13 +1,16 @@
-  
 {
-  "type": "static",
-  "alias": "tonedeaf.vercel.app",
-  "static": {
-    "rewrites": [
-      {
-        "source": "**/!(auth)",
-        "destination": "/index.html"
-      }
-    ]
-  }
+  "version": 2,
+  "builds": [{ "src": "/api/authorization_code/app.js", "use": "@now/node-server" }],
+  "routes": [
+    {
+      "src": "/api/authorization_code/",
+      "dest": "/app.js",
+      "methods": ["GET"]
+    },
+    {
+      "src": "/api/authorization_code/",
+      "dest": "/app.js",
+      "methods": ["POST"]
+    }
+  ]
 }
