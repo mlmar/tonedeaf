@@ -21,7 +21,7 @@
   height: 100%;
   background: #f8f8f8;
   color: white;
-    scrollbar-width: thin !important;
+  min-height: 100vh;
 }
 
 

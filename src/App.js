@@ -20,7 +20,7 @@ class App extends React.Component {
     const params = this.getHashParams();
     const token = params.access_token;
 
-    const show_site = "http://localhost:8888";
+    const show_site = "http://localhost:8888/login";
     const show_logout = "https://accounts.spotify.com/en/status"
     
     if(token) {
@@ -72,22 +72,31 @@ class App extends React.Component {
   
   // display based on selectedIndex
   render() {
-    var display;
-    var showNowPlaying = <NowPlaying full="false"/>;
-    switch(this.state.selectedIndex) {
-      case 0:
-        display = <NowPlaying full="true"/>
-        showNowPlaying = "";
-        break;
-      case 1:
-        display = <TopArtists/>
-        break;
-      case 2:
-        display = <TopTracks/>
-        break;
-      case 3:
-        display = <Recent/>
-        break;
+    if(this.state.loggedIn) {
+      var display;
+      var showNowPlaying = <NowPlaying full="false"/>;
+      switch(this.state.selectedIndex) {
+        case 0:
+          display = <NowPlaying full="true"/>;
+          showNowPlaying = "";
+          break;
+        case 1:
+          display = <TopArtists/>
+          break;
+        case 2:
+          display = <TopTracks/>
+          break;
+        case 3:
+          display = <Recent/>
+          break;
+      }
+
+      var sidebar = (
+        <React.Fragment>
+          <Profile/>
+          {showNowPlaying}
+        </React.Fragment>
+      )
     }
 
     return (
@@ -97,7 +106,6 @@ class App extends React.Component {
           <div className="top">
             <label className="label-title text-white"> tonedeaf </label>
             <div className="nav">
-
               <div className="nav-buttons" onClick={(event) => this.navClick(event)}>
                 {
                   this.state.nav.map(function(item, i) {
@@ -109,29 +117,22 @@ class App extends React.Component {
                   })
                 }
               </div>
-              
               <div className="div-log-btn">
                 <a href={this.state.returnPage}>
                   <button className="nav-btn log-btn"> {this.state.loginButton} </button>
                 </a>
               </div>
-
             </div>
           </div>
-
           <div className="div-content">
-
             <div className="div-sidebar div--outline">
               <div>
-                <Profile/>
-                {showNowPlaying}
+                {sidebar}
               </div>
             </div>
-
             <div className="div-panels div--outline">
               {display}
             </div>
-
           </div>
         </div>
       </div>
