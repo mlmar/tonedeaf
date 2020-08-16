@@ -15,7 +15,7 @@ var cookieParser = require('cookie-parser');
 
 var client_id = '61523c77f3dc4d848fbbefc093cae898'; // Your client id
 var client_secret = 'fdb7faa5d53840e58617346892aae350'; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var redirect_uri = 'https://tonedeaf.vercel.app/'; // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
