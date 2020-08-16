@@ -11,6 +11,6 @@
     "request": "~2.83.0"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "node app.js",
   },
 }
