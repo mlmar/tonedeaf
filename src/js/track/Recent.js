@@ -16,7 +16,11 @@ class Recent extends React.Component {
   }
 
   getRecent(event) {
-    this.spotifyWebApi.getMyRecentlyPlayedTracks()
+    var selected_range = {
+      limit : 50
+    }
+
+    this.spotifyWebApi.getMyRecentlyPlayedTracks(selected_range)
       .then((response) => {
         this.setState({
           tracks : response.items
@@ -54,6 +58,7 @@ class Recent extends React.Component {
                   title={track.track.name}
                   artist={this.artistsToString(track.track.artists)}
                   url={track.track.external_urls.spotify}
+                  year={track.track.album.release_date.split("-")[0]}
                 />
               </div>
             )

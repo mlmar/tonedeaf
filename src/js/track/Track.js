@@ -1,5 +1,4 @@
 import React from 'react';
-
 import SpotifyWebApi from 'spotify-web-api-js';
 
 class Track extends React.Component {
@@ -11,7 +10,9 @@ class Track extends React.Component {
         image : this.props.image,
         title : this.props.title,
         artist : this.props.artist,
-        url : this.props.url
+        url : this.props.url,
+        year : this.props.year,
+        rank : this.props.rank
       }
     };
     
@@ -19,6 +20,11 @@ class Track extends React.Component {
   }
   
   render() {
+    // if rank is provided, prepend it the title
+    var check_undefined = void(0)
+    var rank = (this.state.track.rank !== check_undefined) ?
+      ( <React.Fragment> {this.state.track.rank}. </React.Fragment> ) : ""
+
     return (
       <div className="panel">
         
@@ -26,8 +32,9 @@ class Track extends React.Component {
             <div className="div-track">
               <img className="div-track--img" src={this.state.track.image} width="100" height="100" alt="track art"/>
               <div className="div-track--info">
-                <label className="label-medium"> {this.state.track.title} </label>
+                <label className="label-medium"> {rank} {this.state.track.title} </label>
                 <label className="label-small"> {this.state.track.artist} </label>
+                <label className="label-small"> {this.state.track.year} </label>
               </div>
             </div>
           </a>

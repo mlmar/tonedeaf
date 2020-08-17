@@ -1,7 +1,8 @@
 import React from 'react';
+import SpotifyWebApi from 'spotify-web-api-js';
 import Track from './Track.js';
 
-import SpotifyWebApi from 'spotify-web-api-js';
+const check_undefined = void(0);
 
 class TopTracks extends React.Component {
   constructor(props) {
@@ -10,18 +11,27 @@ class TopTracks extends React.Component {
       tracks : []
     };
 
+    this.range = ["long_term", "medium_term", "short_term"];
+
     this.spotifyWebApi = new SpotifyWebApi();
     this.getTopTracks = this.getTopTracks.bind(this);
     this.artistsToString = this.artistsToString.bind(this);
   }
 
-  getTopTracks(event) {
-    this.spotifyWebApi.getMyTopTracks()
+  getTopTracks(index) {
+    this.setState({tracks : []});
+    
+    var selected_range = {
+      time_range : this.range[index],
+      limit : 50
+    }
+    
+    this.spotifyWebApi.getMyTopTracks(selected_range)
       .then((response) => {
         this.setState({
           tracks : response.items
-        })
-        console.log("Succesfully retrieved top tracks @");
+        });
+        console.log("Succesfully retrieved top tracks @ " + index);
         console.log(this.state.tracks);
       })
       .catch((error) => {
@@ -39,7 +49,7 @@ class TopTracks extends React.Component {
   }
 
   componentDidMount() {
-    this.getTopTracks();
+    this.getTopTracks(0);
   }
   
   render() {
@@ -54,6 +64,8 @@ class TopTracks extends React.Component {
                   title={track.name}
                   artist={this.artistsToString(track.artists)}
                   url={track.external_urls.spotify}
+                  year={track.album.release_date.split("-")[0]}
+                  rank={i+1}
                 />
               </div>
             )

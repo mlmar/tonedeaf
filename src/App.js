@@ -6,7 +6,8 @@ import NowPlaying from './js/NowPlaying.js';
 import TopArtists from './js/artist/TopArtists.js';
 import TopTracks from './js/track/TopTracks.js';
 import Recent from './js/track/Recent.js';
-
+import Options from './js/Options.js'
+// import Rec from './js/recommendations/Rec.js';
 
 // Spotify Web API JS by Jose Perez on github
 // https://github.com/JMPerez/spotify-web-api-js
@@ -20,7 +21,7 @@ class App extends React.Component {
     const params = this.getHashParams();
     const token = params.access_token;
 
-    // const show_site = "http://localhost:8888/login";
+//     const show_site = "http://localhost:8888/login";
     const show_site = "https://tonedeaf-auth.vercel.app/login"
     const show_logout = "https://accounts.spotify.com/en/status"
     
@@ -32,10 +33,14 @@ class App extends React.Component {
       loggedIn      : token ? true : false,
       returnPage    : token ? show_logout : show_site,
       loginButton   : token ? "log out" : "log in",
-      nav             : [ "now playing", "top artists", "top songs", "recent"],
+      nav             : [ "now playing", "top artists", "top tracks", "recent", "recommend"],
       selectedIndex : 0
     }
 
+    this.optionsArray = ["long term","6 months","4 weeks"];
+    this.topArtists = React.createRef();
+    this.topTracks = React.createRef();
+    
     this.navClick = this.navClick.bind(this);
   }
 
@@ -75,30 +80,58 @@ class App extends React.Component {
   
   // display based on selectedIndex
   render() {
-    var frontpage;
+    var frontpage; // TODO: landing screen
     if(this.state.loggedIn) {
-      var display;
-      var showNowPlaying = <NowPlaying full="false"/>;
+      var focus = <Profile/>; // focus on profile by default
+      var display; // right side content panels
+      var showNowPlaying = <NowPlaying full="false"/>; // in sidebar
 
       switch(this.state.selectedIndex) {
         case 0:
-          display = <NowPlaying full="true"/>;
-          showNowPlaying = "";
+          display = <NowPlaying full="true"/>; // in right panel
+          showNowPlaying = <span className="empty"/>; // replace with an empty span
           break;
+
         case 1:
-          display = <TopArtists/>
+          var text = "top artists"
+          focus = (
+            <Options 
+              text={text} 
+              options={this.optionsArray}
+              callback={(index) => {
+                this.topArtists.current.getTopArtists(index);
+              }}
+              /> 
+            )
+          display = <TopArtists ref={this.topArtists}/>
           break;
+
         case 2:
-          display = <TopTracks/>
+          var text = "top tracks"
+          focus = (
+            <Options 
+              text={text} 
+              options={this.optionsArray}
+              callback={(index) => {
+                this.topTracks.current.getTopTracks(index);
+              }}
+              />
+            )          
+          display = <TopTracks ref={this.topTracks}/>
           break;
+
         case 3:
+          focus = <Profile/>
           display = <Recent/>
+          break;
+
+        default:
           break;
       }
 
       var sidebar = (
         <React.Fragment>
-          <Profile/>
+          {focus}
           {showNowPlaying}
         </React.Fragment>
       )

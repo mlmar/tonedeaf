@@ -1,5 +1,4 @@
 import React from 'react';
-
 import SpotifyWebApi from 'spotify-web-api-js';
 
 class Profile extends React.Component {
@@ -46,21 +45,38 @@ class Profile extends React.Component {
 
   // get profile on component load
   componentDidMount() {
-    this.getProfile()
+    if(this.props.type === "artist" ) {
+      
+    } else {
+      this.getProfile()
+    }
   }
   
   
   render() {
+    var profileInfo;
+    if(this.props.type === "artist") {
+      profileInfo = (
+        <React.Fragment>
+          {/* TODO */}
+        </React.Fragment>
+      )
+    } else {
+      profileInfo = (
+        <React.Fragment>
+          <label className="label-small"> {this.state.info.followers} followers </label>
+          <label className="label-small"> {this.state.info.product} {this.state.info.type} </label>
+        </React.Fragment>
+      )
+    }
+    
     return (
       <div className="panel animate-drop">
         <a href={this.state.info.uri}>
           <label className="label-subtitle"> {this.state.info.display_name} </label>
           <img className="img" src={this.state.info.image} width="70" alt="Profile not found"/>
         </a>
-        <label className="label-small"> {this.state.info.followers} followers </label>
-        <label className="label-small"> {this.state.info.country} </label>
-        <label className="label-small"> {this.state.info.type} </label>
-        <label className="label-small"> {this.state.info.product} </label>
+        {profileInfo}
       </div>
     )
   }

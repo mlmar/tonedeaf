@@ -1,5 +1,4 @@
 import React from 'react';
-
 import SpotifyWebApi from 'spotify-web-api-js';
 
 import Artist from './Artist.js'
@@ -11,18 +10,27 @@ class TopArtists extends React.Component {
       artists : []
     };
 
+    this.range = ["long_term", "medium_term", "short_term"];
+
     this.spotifyWebApi = new SpotifyWebApi();
     this.getTopArtists = this.getTopArtists.bind(this);
     this.genresToString = this.genresToString.bind(this);
   }
 
-  getTopArtists(event) {
-    this.spotifyWebApi.getMyTopArtists()
+  getTopArtists(index) {
+    this.setState({artists : []});
+
+    var selected_range = {
+      time_range : this.range[index],
+      limit : 50
+    }
+
+    this.spotifyWebApi.getMyTopArtists(selected_range)
       .then((response) => {
         this.setState({
           artists : response.items
         })
-        console.log("Succesfully retrieved top artists @");
+        console.log("Succesfully retrieved top artists @ " + index);
         console.log(response.items);
       })
       .catch((error) => {
@@ -30,6 +38,7 @@ class TopArtists extends React.Component {
         console.error(error)
       });
   }
+  
 
   genresToString(genres) {
     var result = "";
@@ -40,7 +49,7 @@ class TopArtists extends React.Component {
   }
 
   componentDidMount() {
-    this.getTopArtists();
+    this.getTopArtists(0);
   }
   
   render() {
@@ -57,6 +66,7 @@ class TopArtists extends React.Component {
                   genre={this.genresToString(artist.genres)}
                   popularity={artist.popularity}
                   followers={artist.followers.total}
+                  rank={i+1}
                 />
               </div>
             )

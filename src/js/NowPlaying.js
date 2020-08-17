@@ -1,5 +1,4 @@
 import React from 'react';
-
 import SpotifyWebApi from 'spotify-web-api-js';
 
 class NowPlaying extends React.Component {

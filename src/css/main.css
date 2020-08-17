@@ -62,7 +62,7 @@ button:hover {
 
 .animate-drop { 
   animation-name: drop;
-  animation-duration: .2s;
+  animation-duration: .3s;
 }
 
 .progressbar {
@@ -168,6 +168,11 @@ button:hover {
 .label-small {
   font-size: 1rem;
   color: #212121;
+  padding-bottom: .2rem;
+}
+
+.label-rank {
+  text-align: right;
 }
 
 
@@ -369,4 +374,29 @@ div-frontpage {
 
 .input-item:focus, .input-item:hover {
   outline: none;
+}
+
+.option-btn {
+  border: solid #ffffff3b;
+  border-width: 1px;
+  border-radius: .3rem;
+  font-size: 1rem;
+  font-weight: 100;
+  min-height: 5vh;
+  min-width: 15vh;
+  color: #ffffff;
+  background: #333333;
+  transition: all .5s;
+  margin: .1rem 0 .1rem 0;
+  width: 100%;
+}
+
+.option-btn:hover {
+  background: #2184b5;
+  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+  color: #ffffff;
+}
+
+.option-btn:focus, .option-btn--selected {
+  background: #299fd9;
 }
