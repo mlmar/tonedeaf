@@ -6,7 +6,8 @@ class Options extends React.Component {
     super(props);
     this.state = {
       text :  this.props.text,
-      options : this.props.options
+      options : this.props.options,
+      index : 0
     };
 
     this.spotifyWebApi = new SpotifyWebApi();
@@ -16,20 +17,19 @@ class Options extends React.Component {
   // detect which button was clicked and pass index to callback prop function
   optionClick(event) {
     if(event.target.tagName === "BUTTON") {
-      var index = 0;
       for (var i = 0; i < event.currentTarget.childNodes.length; i++) {
         var li = event.currentTarget.childNodes[i];
         li.classList.remove("option-btn--selected");
 
         // select the child that matches the button that was pressed
         if (event.target === li) {
-          index = i;
+          this.state.index = i;
           event.target.classList.add("option-btn--selected");
         }
       }
       
-      console.log("callback with " + index)
-      this.props.callback(index);
+      console.log("callback with " + this.state.index)
+      this.props.callback(this.state.index);
     }
   }
   

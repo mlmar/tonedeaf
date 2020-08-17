@@ -37,9 +37,10 @@ class App extends React.Component {
       selectedIndex : 0
     }
 
-    this.optionsArray = ["long term","6 months","4 weeks"];
     this.topArtists = React.createRef();
     this.topTracks = React.createRef();
+    this.optionsArray = ["long term", "6 months", "4 weeks"];
+    this.optionsArrayIndex = 0;
     
     this.navClick = this.navClick.bind(this);
   }
@@ -100,10 +101,12 @@ class App extends React.Component {
               options={this.optionsArray}
               callback={(index) => {
                 this.topArtists.current.getTopArtists(index);
+                this.optionsArrayIndex = index;
               }}
+              ref={this.options}
               /> 
             )
-          display = <TopArtists ref={this.topArtists}/>
+          display = <TopArtists ref={this.topArtists} selected={this.optionsArrayIndex}/>
           break;
 
         case 2:
@@ -114,10 +117,12 @@ class App extends React.Component {
               options={this.optionsArray}
               callback={(index) => {
                 this.topTracks.current.getTopTracks(index);
+                this.optionsArrayIndex = index;
               }}
+              ref={this.options}
               />
             )          
-          display = <TopTracks ref={this.topTracks}/>
+          display = <TopTracks ref={this.topTracks} selected={this.optionsArrayIndex}/>
           break;
 
         case 3:

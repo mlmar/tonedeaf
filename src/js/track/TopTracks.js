@@ -2,8 +2,6 @@ import React from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 import Track from './Track.js';
 
-const check_undefined = void(0);
-
 class TopTracks extends React.Component {
   constructor(props) {
     super(props);
@@ -49,7 +47,7 @@ class TopTracks extends React.Component {
   }
 
   componentDidMount() {
-    this.getTopTracks(0);
+    this.getTopTracks(this.props.selected);
   }
   
   render() {

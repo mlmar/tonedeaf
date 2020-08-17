@@ -49,7 +49,7 @@ class TopArtists extends React.Component {
   }
 
   componentDidMount() {
-    this.getTopArtists(0);
+    this.getTopArtists(this.props.selected);
   }
   
   render() {
