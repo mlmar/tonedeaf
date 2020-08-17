@@ -33,7 +33,7 @@ class App extends React.Component {
       loggedIn      : token ? true : false,
       returnPage    : token ? show_logout : show_site,
       loginButton   : token ? "log out" : "log in",
-      nav             : [ "now playing", "top artists", "top tracks", "recent", "recommend"],
+      nav             : [ "now playing", "top artists", "top tracks", "recent"],
       selectedIndex : 0
     }
 
