@@ -20,7 +20,8 @@ class App extends React.Component {
     const params = this.getHashParams();
     const token = params.access_token;
 
-    const show_site = "http://localhost:8888/login";
+    const show_site_local = "http://localhost:8888/login";
+    const show_site = "https://tonedeaf-auth.vercel.app/login"
     const show_logout = "https://accounts.spotify.com/en/status"
     
     if(token) {
@@ -41,21 +42,23 @@ class App extends React.Component {
 
   // change selectedIndex to index of selected nav element
   navClick(event) {
-    var index = 0;
-    for (var i = 0; i < event.currentTarget.childNodes.length; i++) {
-      var li = event.currentTarget.childNodes[i];
-      li.classList.remove("selected");
+    if(event.target.tagName === "BUTTON") {
+      var index = 0;
+      for (var i = 0; i < event.currentTarget.childNodes.length; i++) {
+        var li = event.currentTarget.childNodes[i];
+        li.classList.remove("selected");
 
-      // select the child that matches the button that was pressed
-      if (event.target.tagName === "BUTTON" && event.target === li) {
-          index = i;
-          event.target.classList.add("selected");
-          console.log(event.target + " " + index);
+        // select the child that matches the button that was pressed
+        if (event.target === li) {
+            index = i;
+            event.target.classList.add("selected");
+            console.log(event.target + " " + index);
+        }
       }
-    }
 
-    this.setState({selectedIndex : index});
-    console.log("Selected Index: " + this.state.selectedIndex);
+      this.setState({selectedIndex : index});
+      console.log("Selected Index: " + this.state.selectedIndex);
+    }
   }
   
   // From Spotify's index.html in their authentication examples
