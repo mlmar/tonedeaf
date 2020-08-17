@@ -177,7 +177,7 @@ class NowPlaying extends React.Component {
     } else {
       return (
         <div className="panel animate-drop">
-          <label className="label-subtitle"> now playing </label>
+          <label className="label-subtitle"> {this.state.labelText} </label>
           <a href={this.state.playing.url}>
             <img className="img" src={this.state.playing.image} width="70" alt="Album art not found"/>
             <div className="div-nowplaying--info">
