@@ -17,7 +17,6 @@
 .page {
   display: flex;
   flex-direction: column;
-  padding: 5vh;
   height: 100%;
   background: #f8f8f8;
   color: white;
@@ -43,6 +42,9 @@ button:hover {
   cursor: pointer;
 }
 
+::-webkit-scrollbar {
+  width: 0;
+}
 
 
 /********* ANIMATION *********/
@@ -92,6 +94,7 @@ button:hover {
 
 .img {
   width: 100%;
+  overflow: hidden;
 }
 
 .btn {
@@ -118,8 +121,18 @@ button:hover {
   color: white !important;
 }
 
+.label-bold {
+  font-weight: bold !important;
+}
+
+.label-super {
+  font-size: 10vw;
+  font-weight: 500;
+  color: #212121;
+}
+
 .label-title {
-  font-size: 7vh;
+  font-size: 2.5em;
   font-weight: 500;
   color: #212121;
 }
@@ -146,9 +159,10 @@ button:hover {
 }
 
 .label-medium {
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1.6rem;
+  font-weight: bolder;
   color: #212121;
+  padding-bottom: .5rem;
 }
 
 .label-small {
@@ -164,7 +178,7 @@ button:hover {
 .top {
   display: flex;
   text-align: left;
-  height: 13vh;
+  height: 4.5rem;
   width: 100%;
 
   position: fixed;
@@ -172,7 +186,7 @@ button:hover {
   left: 0;
   z-index: 99;
 
-  padding: 1rem;
+  padding: 1rem 2em 1rem 2em;
   background: #2d2d2d;
 
   border-bottom: solid;
@@ -197,20 +211,21 @@ button:hover {
 .nav-btn {
   border: none;
   border-width: 1px;
-  font-size: 1rem;
+  font-size: 1em;
   font-weight: 100;
-  min-height: 5vh;
+  min-height: 1.5em;
   min-width: 15vh;
   color: #ffffff;
   background: none;
   transition: all .1s;
-  margin: .5rem .2rem .3rem .2rem;
+  margin: .5em .2rem .3rem .2em;
   text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+  border-width: .2em !important;
 }
 
 .nav-btn:hover {
-  border-bottom: solid #ffffffb5 !important;
-  margin-bottom: 1px !important;
+/*   border-bottom: solid #ffffffb5 !important; */
+  border-width: .2em !important;
 }
 
 .div-log-btn {
@@ -226,12 +241,14 @@ button:hover {
 
 .log-btn:hover {
   border-bottom: solid #0a8435 !important;
+  border-width: .2em !important;
 }
 
 .selected {
   border-bottom: solid #ffffff !important;
   margin-bottom: -1px !important;
   transition: border-bottom .1s linear;
+  border-width: .2em !important;
 }
 
 /********* DIVS *********/
@@ -239,10 +256,15 @@ button:hover {
 .div-content {
   display: flex;
   padding-top: 2rem;
-  margin-top: 6vh;
+  margin-top: 4.5rem;
+
+  padding: 2rem;
 
   width: 100%;
+}
 
+div-frontpage {
+  width: 100%;
 }
 
 .div-sidebar {
@@ -251,6 +273,7 @@ button:hover {
   width: fit-content;
   width: 40vw;
   min-height: fit-content;
+  padding-right: .7rem;
 }
 
 .div-panels {
@@ -271,7 +294,14 @@ button:hover {
 .div-track--info {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 1rem 0 1rem 1rem;
+  width: 100%;
+}
+
+.div-track--info-item {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  width: 100%;
 }
 
 .div-nowplaying--info {

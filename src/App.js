@@ -20,7 +20,7 @@ class App extends React.Component {
     const params = this.getHashParams();
     const token = params.access_token;
 
-    const show_site_local = "http://localhost:8888/login";
+    // const show_site = "http://localhost:8888/login";
     const show_site = "https://tonedeaf-auth.vercel.app/login"
     const show_logout = "https://accounts.spotify.com/en/status"
     
@@ -37,6 +37,18 @@ class App extends React.Component {
     }
 
     this.navClick = this.navClick.bind(this);
+  }
+
+  // From Spotify's index.html in their authentication examples
+  //  used to get access token to send api requests
+  getHashParams() {
+    var hashParams = {};
+    var e, r = /([^&;=]+)=?([^&;]*)/g,
+        q = window.location.hash.substring(1);
+    while ( e = r.exec(q)) {
+       hashParams[e[1]] = decodeURIComponent(e[2]);
+    }
+    return hashParams;
   }
 
 
@@ -61,23 +73,13 @@ class App extends React.Component {
     }
   }
   
-  // From Spotify's index.html in their authentication examples
-  //  used to get access token to send api requests
-  getHashParams() {
-    var hashParams = {};
-    var e, r = /([^&;=]+)=?([^&;]*)/g,
-        q = window.location.hash.substring(1);
-    while ( e = r.exec(q)) {
-       hashParams[e[1]] = decodeURIComponent(e[2]);
-    }
-    return hashParams;
-  }
-  
   // display based on selectedIndex
   render() {
+    var frontpage;
     if(this.state.loggedIn) {
       var display;
       var showNowPlaying = <NowPlaying full="false"/>;
+
       switch(this.state.selectedIndex) {
         case 0:
           display = <NowPlaying full="true"/>;
@@ -98,6 +100,19 @@ class App extends React.Component {
         <React.Fragment>
           <Profile/>
           {showNowPlaying}
+        </React.Fragment>
+      )
+
+      frontpage = (
+        <React.Fragment>
+          <div className="div-sidebar div--outline">
+            <div>
+              {sidebar}
+            </div>
+          </div>
+          <div className="div-panels div--outline">
+            {display}
+          </div>
         </React.Fragment>
       )
     }
@@ -128,14 +143,7 @@ class App extends React.Component {
             </div>
           </div>
           <div className="div-content">
-            <div className="div-sidebar div--outline">
-              <div>
-                {sidebar}
-              </div>
-            </div>
-            <div className="div-panels div--outline">
-              {display}
-            </div>
+            {frontpage}
           </div>
         </div>
       </div>

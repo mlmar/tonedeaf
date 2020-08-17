@@ -55,6 +55,8 @@ class TopArtists extends React.Component {
                   name={artist.name}
                   url={artist.external_urls.spotify}
                   genre={this.genresToString(artist.genres)}
+                  popularity={artist.popularity}
+                  followers={artist.followers.total}
                 />
               </div>
             )
