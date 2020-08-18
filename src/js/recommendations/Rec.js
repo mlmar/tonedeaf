@@ -207,7 +207,7 @@ class Rec extends React.Component {
       <div className="panel animate-drop">
          <label className="label-medium"> 1 — Select up to 5 genres </label>
          <label className="label-subtext"> * Will add function to select artists later </label>
-         <label className="label-medium"> 2 — Modify the minimum/maximum of any song attribute </label>
+         <label className="label-medium"> 2 — Modify song attribute preferences </label>
          <label className="label-medium"> 3 — Press 'Get Recommendations' </label>
         <button className="option-btn" onClick={this.getRecs}> Get Recommendations </button>
       </div>
