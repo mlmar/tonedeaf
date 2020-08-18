@@ -15,7 +15,8 @@ class Artist extends React.Component {
         genre : this.props.genre,
         popularity : this.props.popularity,
         followers: this.props.followers,
-        rank : this.props.rank
+        rank : this.props.rank,
+        id : this.props.id
       }
     };
     
@@ -27,33 +28,42 @@ class Artist extends React.Component {
     var check_undefined = void(0)
     var rank = (this.state.artist.rank !== check_undefined) ? 
       ( <React.Fragment> {this.state.artist.rank}. </React.Fragment> ) : ""
-
-    return (
-      <div className="panel">
-        <div className="div-track">
-          <a href={this.state.artist.url}>
-            <img className="div-track--img" src={this.state.artist.image} width="100" height="100" alt="track art"/>
-          </a>
-          <div className="div-track--info">
-            <div>
-              <label className="label-medium"> {rank} {this.state.artist.name} </label>
-            </div>
-            <div className="div-track--info-item">
-              <label className="label-small label-bold"> genres </label>
-              <label className="label-small"> {this.state.artist.genre} </label>
-            </div>
-            <div className="div-track--info-item">
-              <label className="label-small label-bold"> popularity index </label>
-              <label className="label-small"> {this.state.artist.popularity} </label>
-            </div>
-            <div className="div-track--info-item">
-              <label className="label-small label-bold"> followers </label>
-              <label className="label-small"> {this.state.artist.followers} </label>
+    
+    if(this.props.compact) {
+      return (
+        <div className="panel min-width">
+          <img className="div-track--img" src={this.state.artist.image} width="100" height="100" alt="track art"/>
+          <label className="label-small label-bold label-center"> {rank} {this.state.artist.name} </label>
+        </div>
+      )
+    } else {
+      return (
+        <div className="panel">
+          <div className="div-track">
+            <a href={this.state.artist.url}>
+              <img className="div-track--img" src={this.state.artist.image} width="100" height="100" alt="track art"/>
+            </a>
+            <div className="div-track--info noclick">
+              <div>
+                <label className="label-medium"> {rank} {this.state.artist.name} </label>
+              </div>
+              <div className="div-track--info-item">
+                <label className="label-small label-bold"> genres </label>
+                <label className="label-small"> {this.state.artist.genre} </label>
+              </div>
+              <div className="div-track--info-item">
+                <label className="label-small label-bold"> popularity index </label>
+                <label className="label-small"> {this.state.artist.popularity} </label>
+              </div>
+              <div className="div-track--info-item">
+                <label className="label-small label-bold"> followers </label>
+                <label className="label-small"> {this.state.artist.followers} </label>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    } 
   }
 }
 

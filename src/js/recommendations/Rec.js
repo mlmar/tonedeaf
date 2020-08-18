@@ -3,6 +3,7 @@ import SpotifyWebApi from 'spotify-web-api-js';
 import Genre from './Genre.js'
 import Attributes from './Attributes.js'
 import Track from '../track/Track.js';
+import PlaylistCreator from '../PlaylistCreator.js';
 
 // Recommendations based on genre
 class Rec extends React.Component {
@@ -32,6 +33,7 @@ class Rec extends React.Component {
     };
 
     this.spotifyWebApi = new SpotifyWebApi();
+    this.playlistCreator = new PlaylistCreator(this.props.userid);
 
     this.selectedAmount = 0;
     this.selectedGenres = "";
@@ -42,13 +44,20 @@ class Rec extends React.Component {
     this.getRecs = this.getRecs.bind(this);
     this.getGenreSeeds = this.getGenreSeeds.bind(this);
     this.artistsToString = this.artistsToString.bind(this);
+    this.createPlaylist = this.createPlaylist.bind(this);
+  }
+
+
+  createPlaylist() {
+    if(this.state.tracks.length > 0) {
+      this.playlistCreator.setTracks(this.state.tracks);
+      this.playlistCreator.createPlaylist("tonedeaf top tracks");
+    }
   }
 
   // recommendation button
   //  gets parameters for recommendations
   getRecs() {
-    this.parameters();
-    
     if(this.selectedGenres.length > 0) {
       this.spotifyWebApi.getRecommendations(this.parameters())
         .then((response) => {
@@ -196,11 +205,11 @@ class Rec extends React.Component {
     var display;
     var recButton = (
       <div className="panel animate-drop">
-         <label className="label-medium"> 1) select up to 5 genres </label>
-         <label className="label-small label-bold"> * will add function to select artists later </label>
-         <label className="label-medium"> 2) modify the minimum/maximum of any song attribute </label>
-         <label className="label-medium"> 3) press 'get recommendations' </label>
-        <button className="option-btn" onClick={this.getRecs}> get recommendations </button>
+         <label className="label-medium"> 1 — Select up to 5 genres </label>
+         <label className="label-subtext"> * Will add function to select artists later </label>
+         <label className="label-medium"> 2 — Modify the minimum/maximum of any song attribute </label>
+         <label className="label-medium"> 3 — Press 'get recommendations' </label>
+        <button className="option-btn" onClick={this.getRecs}> Get Recommendations </button>
       </div>
     )
 
@@ -270,6 +279,8 @@ class Rec extends React.Component {
                     artist={this.artistsToString(track.artists)}
                     url={track.external_urls.spotify}
                     year={track.album.release_date.split("-")[0]}
+                    type={track.album.type}
+                    album={track.album.name}
                   />
                 </div>
               )

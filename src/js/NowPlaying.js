@@ -5,7 +5,7 @@ class NowPlaying extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      labelText : "last played",
+      labelText : "Last Played",
       playing : {
         artist : [],
         title : "",
@@ -34,7 +34,7 @@ class NowPlaying extends React.Component {
       .then((response) => {
         var track = response.items[0].track;
         this.setState({
-          labelText : "last played",
+          labelText : "Last Played",
           playing: {
             artist : track.album.artists,
             title: track.name,
@@ -71,7 +71,7 @@ class NowPlaying extends React.Component {
         } else {
 
         this.setState({
-          labelText : "now playing",
+          labelText : "Now Playing",
           playing: {
             artist : response.item.artists,
             title: response.item.name,

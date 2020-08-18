@@ -30,6 +30,10 @@ div {
 
 a[href] {
   text-decoration: none;
+  cursor: pointer !important;
+}
+
+.cursor-pointer {
   cursor: pointer;
 }
 
@@ -48,6 +52,10 @@ button:hover {
 
 .cursor-help {
   cursor: help !important;
+}
+
+.min-width {
+  width: min-content !important;
 }
 
 /********* SCROLLBAR *********/
@@ -83,9 +91,23 @@ button:hover {
   }
 }
 
+
 .animate-drop { 
   animation-name: drop;
   animation-duration: .3s;
+}
+
+
+/* set hide by default then toggle show */
+.hide {
+  opacity: 0  !important;
+  transition: opacity 2s ease !important;
+}
+
+.show {
+  opacity: 1  !important;
+  tranisition: opacity 2s ease !important;
+
 }
 
 .progressbar {
@@ -118,6 +140,7 @@ button:hover {
 .img {
   width: 100%;
   overflow: hidden;
+  padding: .5em 0 .5em 0;
 }
 
 .btn {
@@ -153,10 +176,15 @@ button:hover {
   font-style: italic;
 }
 
+.label-underline {
+  text-decoration: underline;
+}
+
 .label-super {
-  font-size: 10vw;
+  font-size: 10em;
   font-weight: 500;
   color: #212121;
+  transition: all 1s;
 }
 
 .label-title {
@@ -172,15 +200,16 @@ button:hover {
   padding-bottom: .5rem;
 }
 
+
 .label-large {
-  font-size: 4vw;
+  font-size: 3em;
   font-weight: bold;
   color: #212121;
   padding-bottom: .5rem;
 }
 
 .label-sublarge {
-  font-size: 3vw;
+  font-size: 2em;
   font-weight: bold;
   color: #212121;
   padding-bottom: .5rem;
@@ -199,6 +228,13 @@ button:hover {
   padding-bottom: .2rem;
 }
 
+.label-subtext {
+  font-size: 1em;
+  font-weight: bold;
+  color: #212121;
+  padding-bottom: .2rem;
+}
+
 .label-rank {
   text-align: right;
 }
@@ -207,9 +243,51 @@ button:hover {
   padding: 0 !important;
 }
 
+.label-center {
+  padding-top: .5rem;
+  text-align: center;
+}
+
+.label-left {
+  text-align: left;
+}
+
 .label-right {
   text-align: right;
 }
+
+
+
+
+/********* FRONT PAGE *********/
+
+.div-frontpage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 2vh 10rem 2vh 10rem;
+  text-align: left;
+  align-items: center;
+}
+
+.sign {
+  color: #212121;
+  border-bottom: solid #4493da;
+  transition: color 1s ease;
+}
+
+.sign:hover {
+  border-bottom: solid #4493da !important;
+  color: #60a3e0;
+  transition: color 1s ease;
+}
+
+.bottom {
+  position: fixed;
+  bottom: 1.5rem;
+}
+
 
 
 
@@ -300,11 +378,6 @@ button:hover {
   margin-top: 4.5rem;
 
   padding: 2rem;
-
-  width: 100%;
-}
-
-div-frontpage {
   width: 100%;
 }
 
@@ -381,6 +454,15 @@ div-frontpage {
   grid-gap: 0rem 1rem;
 }
 
+.div-artist--compact {
+  position: relative;
+}
+
+.div-selected-artists {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
 /********* PANEL *********/
 
 
@@ -446,7 +528,7 @@ div-frontpage {
   border-width: .5px;
   margin: .3rem 0 .3rem 0;
   padding: .3rem;
-  height: 4vh;
+  height: 2vh;
   width: 100%;
   transition: all .5s;
   text-align: center;
@@ -457,7 +539,7 @@ div-frontpage {
 }
 
 .input-search {
-  height: 6vh;
+  height: 2.5rem;
   font-size: 1rem;
 }
 
@@ -476,12 +558,33 @@ div-frontpage {
   width: 100%;
 }
 
-.option-btn:hover {
+.option-btn:hover, .add-btn:hover {
   background: #2184b5;
   text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
   color: #ffffff;
 }
 
-.option-btn:focus, .option-btn--selected {
+.option-btn:focus, .option-btn--selected, .add-btn:hover, .sub-btn:hover {
   background: #299fd9;
+}
+
+.add-btn, .sub-btn {
+  position: absolute;
+  right: 2rem;
+  border: solid #ffffff3b;
+  border-width: 1px;
+  border-radius: .3rem;
+  font-size: 1rem;
+  font-weight: 100;
+  color: #ffffff;
+  background: #333333;
+  transition: all .5s;
+  margin: .1rem 0 .1rem 0;
+  width: 1.2em;
+  height: 1.2rem;
+}
+
+.sub-btn {
+  position: absolute;
+  right: 0rem;
 }

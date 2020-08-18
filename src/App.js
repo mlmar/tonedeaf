@@ -9,7 +9,8 @@ import Recent from './js/track/Recent.js';
 import Options from './js/Options.js'
 import Rec from './js/recommendations/Rec.js';
 import GenreOptions from './js/recommendations/GenreOptions.js';
-import Circle from './js/recommendations/Circle.js';
+import Scope from './js/recommendations/Scope.js';
+import FrontPage from './js/FrontPage';
 
 // Spotify Web API JS by Jose Perez on github
 // https://github.com/JMPerez/spotify-web-api-js
@@ -23,8 +24,8 @@ class App extends React.Component {
     const params = this.getHashParams();
     const token = params.access_token;
 
-    const show_site = "http://localhost:8888/login";
-//     const show_site = "https://tonedeaf-auth.vercel.app/login"
+//     const show_site = "http://localhost:8888/login";
+    const show_site = "https://tonedeaf-auth.vercel.app/login"
     const show_logout = "https://accounts.spotify.com/en/status"
     
     if(token) {
@@ -34,14 +35,14 @@ class App extends React.Component {
     this.state = {
       loggedIn      : token ? true : false,
       returnPage    : token ? show_logout : show_site,
-      loginButton   : token ? "log out" : "log in",
+      loginButton   : token ? "Log Out" : "Log In",
       nav           : [ 
-        "now playing", 
-        "top artists", 
-        "top tracks", 
-        "recent",
-        "recommendations",
-        "circle"
+        "Now Playing", 
+        "Top Artists", 
+        "Top Tracks", 
+        "Recent",
+        "Tuner",
+        "Scope"
       ],
       selectedIndex : 0
     }
@@ -52,9 +53,10 @@ class App extends React.Component {
     this.topTracks = React.createRef();
     this.recent = React.createRef();
     this.rec = React.createRef();
+    this.scope = React.createRef();
     this.options = React.createRef();
 
-    this.optionsArray = ["long term", "6 months", "4 weeks"];
+    this.optionsArray = ["Long Term", "6 Months", "4 Weeks"];
     this.optionsArrayIndex = 0; // generic tracker to reset index upon component change
     
     this.navClick = this.navClick.bind(this);
@@ -89,7 +91,7 @@ class App extends React.Component {
       }
       
       // reset options component if window changes from one top to the other top list
-      if(this.state.selectedIndex === 1 || this.state.selectedIndex === 2) {
+      if(this.options.current !== null) {
         if(this.optionsArrayIndex >= 0 && this.state.selectedIndex !== index) {
           this.options.current.setState({index: 0});
         }
@@ -102,7 +104,8 @@ class App extends React.Component {
 
   // display based on selectedIndex
   render() {
-    var frontpage; // TODO: landing screen
+    var top;
+    var frontpage;
     if(this.state.loggedIn) {
 
       // focus on profile by default
@@ -125,7 +128,7 @@ class App extends React.Component {
           break;
 
         case 1:
-          var text1 = "top artists"
+          var text1 = "Your Top Artists"
 
           focus = ( // for time range selection
             <Options 
@@ -142,7 +145,7 @@ class App extends React.Component {
           break;
 
         case 2:
-          var text2 = "top tracks"
+          var text2 = "Your Top Tracks"
           focus = ( // for time range selection
             <Options 
               text={text2} 
@@ -157,8 +160,8 @@ class App extends React.Component {
           
           secondaryFocus = ( // save tracks to playlist option
             <Options 
-              text="playlist" 
-              options={["save tracks"]}
+              text="Like these tracks?" 
+              options={["Save as spotify playlist"]}
               callback={(index) => {
                 this.topTracks.current.createPlaylist();
               }}
@@ -171,8 +174,8 @@ class App extends React.Component {
         case 3:
           secondaryFocus = ( // save tracks to playlist option
             <Options 
-              text="playlist" 
-              options={["save tracks"]}
+              text="Like these tracks?" 
+              options={["Save as spotify playlist"]}
               callback={(index) => {
                 this.recent.current.createPlaylist();
               }}
@@ -191,11 +194,30 @@ class App extends React.Component {
             />
           )
 
-          display = <Rec ref={this.rec}/>
+          secondaryFocus = ( // save tracks to playlist option
+            <Options 
+              text="Like these tracks?" 
+              options={["Save as spotify playlist"]}
+              callback={(index) => {
+                this.rec.current.createPlaylist();
+              }}
+            />
+          )
+
+          display = <Rec userid={this.userid} ref={this.rec}/>
           break;
 
         case 5:
-          display = <Circle/>
+          secondaryFocus = ( // save tracks to playlist option
+            <Options 
+              text="Like these tracks?" 
+              options={["Save as spotify playlist"]}
+              callback={(index) => {
+                this.scope.current.createPlaylist();
+              }}
+            />
+          )
+          display = <Scope userid={this.userid} ref={this.scope}/>
           break;
 
         default:
@@ -210,6 +232,30 @@ class App extends React.Component {
         </React.Fragment>
       )
 
+      top = (
+        <div className="top">
+          <label className="label-title text-white"> tonedeaf </label>
+          <div className="nav">
+            <div className="nav-buttons" onClick={(event) => this.navClick(event)}>
+              {
+                this.state.nav.map(function(item, i) {
+                    if (i === 0) {
+                        return <button className="nav-btn selected" key={i}>{item}</button>
+                    } else {
+                        return <button className="nav-btn" key={i}>{item}</button>
+                    }
+                })
+              }
+            </div>
+            <div className="div-log-btn">
+              <a href={this.state.returnPage}>
+                <button className="nav-btn log-btn"> {this.state.loginButton} </button>
+              </a>
+            </div>
+          </div>
+        </div>
+      )
+
       frontpage = (
         <React.Fragment>
           <div className="div-sidebar div--outline">
@@ -222,33 +268,14 @@ class App extends React.Component {
           </div>
         </React.Fragment>
       )
+    } else {
+      frontpage = <FrontPage return={this.state.returnPage}/>
     }
 
     return (
       <div className="App">
         <div className="page">
-
-          <div className="top">
-            <label className="label-title text-white"> tonedeaf </label>
-            <div className="nav">
-              <div className="nav-buttons" onClick={(event) => this.navClick(event)}>
-                {
-                  this.state.nav.map(function(item, i) {
-                      if (i === 0) {
-                          return <button className="nav-btn selected" key={i}>{item}</button>
-                      } else {
-                          return <button className="nav-btn" key={i}>{item}</button>
-                      }
-                  })
-                }
-              </div>
-              <div className="div-log-btn">
-                <a href={this.state.returnPage}>
-                  <button className="nav-btn log-btn"> {this.state.loginButton} </button>
-                </a>
-              </div>
-            </div>
-          </div>
+          {top}
           <div className="div-content">
             {frontpage}
           </div>

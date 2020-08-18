@@ -1,7 +1,7 @@
 import React from 'react';
 import Track from './Track.js';
-
 import SpotifyWebApi from 'spotify-web-api-js';
+import PlaylistCreator from '../PlaylistCreator.js';
 
 class Recent extends React.Component {
   constructor(props) {
@@ -11,69 +11,20 @@ class Recent extends React.Component {
     };
 
     this.spotifyWebApi = new SpotifyWebApi();
+    this.playlistCreator = new PlaylistCreator(this.props.userid);
+
     this.getRecent = this.getRecent.bind(this);
     this.artistsToString = this.artistsToString.bind(this);
     this.createPlaylist = this.createPlaylist.bind(this);
-    this.addTopTracksToPlaylist = this.addTopTracksToPlaylist.bind(this);
-    this.getUris = this.getUris.bind(this);
-    this.getDate = this.getDate.bind(this);
   }
 
-    getDate() {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = mm + '/' + dd + '/' + yyyy;
-    return today;
-  }
-  
-  /**************************** playlists ****************************/
-
-  // create a playlist
   createPlaylist() {
-    var id = this.props.userid;
-    var params = {
-      name : "tonedeaf recent",
-      public : true,
-      collaborative : false,
-      description : "tonedeaf.vercel.app @ " + this.getDate()
+    if(this.state.tracks.length > 0) {
+      this.playlistCreator.setTracks(this.state.tracks, true);
+      this.playlistCreator.createPlaylist("tonedeaf recent");
     }
-
-    this.spotifyWebApi.createPlaylist(id, params)
-      .then((response) => {
-
-        this.addTopTracksToPlaylist(response);
-        window.open(response.uri);
-
-        console.log("Succesfully created playlist @ ")
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error("Could not create playlist @")
-        console.error(error)
-      });
   }
 
-  // add top tracks to a playlist
-  addTopTracksToPlaylist(playlist) {
-    var pid = playlist.id;
-    var params = this.getUris();
-
-    this.spotifyWebApi.addTracksToPlaylist(pid, params)
-      .then((response) => {
-        console.log("Succesfully added top tracks to playlist @ ")
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error("Could not add top tracks to playlist @")
-        console.error(error)
-      });
-  }
-
-  /**************************** end playlist ****************************/
-  
   // get the uris of top tracks
   getUris() {
     var uris = [];
@@ -130,6 +81,8 @@ class Recent extends React.Component {
                   artist={this.artistsToString(track.track.artists)}
                   url={track.track.external_urls.spotify}
                   year={track.track.album.release_date.split("-")[0]}
+                  type={track.track.album.type}
+                  album={track.track.album.name}
                 />
               </div>
             )

@@ -14,8 +14,8 @@ class GenreOptions extends React.Component {
   render() {
     return (
       <Options 
-        text="recommendations"
-        options={["genres","attributes"]}
+        text={"Tuner"}
+        options={["Genres","Attributes"]}
         callback={(index) => {
           this.props.callback(index);
         }}

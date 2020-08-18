@@ -12,6 +12,8 @@ class Track extends React.Component {
         artist : this.props.artist,
         url : this.props.url,
         year : this.props.year,
+        album : this.props.album,
+        type : this.props.type,
         rank : this.props.rank
       }
     };
@@ -34,7 +36,8 @@ class Track extends React.Component {
           <div className="div-track--info">
             <label className="label-medium"> {rank} {this.state.track.title} </label>
             <label className="label-small"> {this.state.track.artist} </label>
-            <label className="label-small label-italic"> {this.state.track.year} </label>
+            <br/>
+            <label className="label-small"> {this.state.track.album} | {this.state.track.year} </label>
           </div>
         </div>
       </div>
