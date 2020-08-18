@@ -44,10 +44,6 @@ class PlaylistCreator {
 
         this.addTopTracksToPlaylist(response);
         
-        if(window.confirm("do you want to open this playlist in spotify?")) {
-          window.oepn(response.url);
-        }
-
         console.log("Succesfully created playlist @ ")
         console.log(response);
       })
