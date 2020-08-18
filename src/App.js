@@ -160,7 +160,7 @@ class App extends React.Component {
           
           secondaryFocus = ( // save tracks to playlist option
             <Options 
-              text="Like these tracks?" 
+              text="Like these tracks? (let me know if this works)"
               options={["Save as spotify playlist"]}
               callback={(index) => {
                 this.topTracks.current.createPlaylist();
@@ -174,7 +174,7 @@ class App extends React.Component {
         case 3:
           secondaryFocus = ( // save tracks to playlist option
             <Options 
-              text="Like these tracks?" 
+              text="Like these tracks? (let me know if this works)"
               options={["Save as spotify playlist"]}
               callback={(index) => {
                 this.recent.current.createPlaylist();
@@ -196,7 +196,7 @@ class App extends React.Component {
 
           secondaryFocus = ( // save tracks to playlist option
             <Options 
-              text="Like these tracks?" 
+              text="Like these tracks? (let me know if this works)" 
               options={["Save as spotify playlist"]}
               callback={(index) => {
                 this.rec.current.createPlaylist();
@@ -210,7 +210,7 @@ class App extends React.Component {
         case 5:
           secondaryFocus = ( // save tracks to playlist option
             <Options 
-              text="Like these tracks?" 
+              text="Like these tracks? (let me know if this works)" 
               options={["Save as spotify playlist"]}
               callback={(index) => {
                 this.scope.current.createPlaylist();

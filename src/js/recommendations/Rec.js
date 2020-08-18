@@ -51,7 +51,7 @@ class Rec extends React.Component {
   createPlaylist() {
     if(this.state.tracks.length > 0) {
       this.playlistCreator.setTracks(this.state.tracks);
-      this.playlistCreator.createPlaylist("tonedeaf top tracks");
+      this.playlistCreator.createPlaylist("tonedeaf tuner");
     }
   }
 
