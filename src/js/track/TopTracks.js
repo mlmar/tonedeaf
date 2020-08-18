@@ -47,7 +47,7 @@ class TopTracks extends React.Component {
   }
 
   componentDidMount() {
-    this.getTopTracks(this.props.selected);
+    this.getTopTracks(0);
   }
   
   render() {

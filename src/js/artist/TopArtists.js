@@ -1,6 +1,5 @@
 import React from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
-
 import Artist from './Artist.js'
 
 class TopArtists extends React.Component {
@@ -49,7 +48,7 @@ class TopArtists extends React.Component {
   }
 
   componentDidMount() {
-    this.getTopArtists(this.props.selected);
+    this.getTopArtists(0);
   }
   
   render() {

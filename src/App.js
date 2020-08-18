@@ -7,7 +7,8 @@ import TopArtists from './js/artist/TopArtists.js';
 import TopTracks from './js/track/TopTracks.js';
 import Recent from './js/track/Recent.js';
 import Options from './js/Options.js'
-// import Rec from './js/recommendations/Rec.js';
+import Rec from './js/recommendations/Rec.js';
+import GenreOptions from './js/recommendations/GenreOptions.js'
 
 // Spotify Web API JS by Jose Perez on github
 // https://github.com/JMPerez/spotify-web-api-js
@@ -33,14 +34,22 @@ class App extends React.Component {
       loggedIn      : token ? true : false,
       returnPage    : token ? show_logout : show_site,
       loginButton   : token ? "log out" : "log in",
-      nav             : [ "now playing", "top artists", "top tracks", "recent"],
+      nav           : [ 
+        "now playing", 
+        "top artists", 
+        "top tracks", 
+        "recent",
+        "recommendations"
+      ],
       selectedIndex : 0
     }
 
     this.topArtists = React.createRef();
     this.topTracks = React.createRef();
+    this.rec = React.createRef();
+    this.options = React.createRef();
     this.optionsArray = ["long term", "6 months", "4 weeks"];
-    this.optionsArrayIndex = 0;
+    this.optionsArrayIndex = 0; // generic tracker to reset index upon component change
     
     this.navClick = this.navClick.bind(this);
   }
@@ -73,6 +82,13 @@ class App extends React.Component {
             console.log(event.target + " " + index);
         }
       }
+      
+      // reset options component if window changes from one top to the other top list
+      if(this.state.selectedIndex === 1 || this.state.selectedIndex === 2) {
+        if(this.optionsArrayIndex >= 0 && this.state.selectedIndex !== index) {
+          this.options.current.setState({index: 0});
+        }
+      }
 
       this.setState({selectedIndex : index});
       console.log("Selected Index: " + this.state.selectedIndex);
@@ -94,40 +110,51 @@ class App extends React.Component {
           break;
 
         case 1:
-          var text = "top artists"
+          var text1 = "top artists"
+
           focus = (
             <Options 
-              text={text} 
+              text={text1} 
               options={this.optionsArray}
               callback={(index) => {
                 this.topArtists.current.getTopArtists(index);
                 this.optionsArrayIndex = index;
               }}
               ref={this.options}
-              /> 
-            )
-          display = <TopArtists ref={this.topArtists} selected={this.optionsArrayIndex}/>
+            /> 
+          )
+          display = <TopArtists ref={this.topArtists}/>
           break;
 
         case 2:
-          var text = "top tracks"
+          var text2 = "top tracks"
           focus = (
             <Options 
-              text={text} 
+              text={text2} 
               options={this.optionsArray}
               callback={(index) => {
                 this.topTracks.current.getTopTracks(index);
                 this.optionsArrayIndex = index;
               }}
               ref={this.options}
-              />
-            )          
-          display = <TopTracks ref={this.topTracks} selected={this.optionsArrayIndex}/>
+            />
+          )
+          display = <TopTracks ref={this.topTracks}/>
           break;
 
         case 3:
-          focus = <Profile/>
           display = <Recent/>
+          break;
+        
+        case 4:
+          focus = (
+            <GenreOptions
+              callback={(index) => {
+                this.rec.current.setState({index: index})
+              }}
+            />
+          )
+          display = <Rec ref={this.rec}/>
           break;
 
         default:

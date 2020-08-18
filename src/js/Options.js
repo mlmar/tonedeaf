@@ -16,20 +16,20 @@ class Options extends React.Component {
 
   // detect which button was clicked and pass index to callback prop function
   optionClick(event) {
+    var tempIndex;
     if(event.target.tagName === "BUTTON") {
       for (var i = 0; i < event.currentTarget.childNodes.length; i++) {
         var li = event.currentTarget.childNodes[i];
-        li.classList.remove("option-btn--selected");
 
         // select the child that matches the button that was pressed
         if (event.target === li) {
-          this.state.index = i;
-          event.target.classList.add("option-btn--selected");
+          tempIndex = i;
         }
       }
       
-      console.log("callback with " + this.state.index)
-      this.props.callback(this.state.index);
+      this.setState({index : tempIndex})
+      console.log("callback with " + tempIndex + " from " + this.state.text)
+      this.props.callback(tempIndex);
     }
   }
   
@@ -40,7 +40,7 @@ class Options extends React.Component {
         <div className="div-options" onClick={this.optionClick}>
           {
             this.state.options.map((option, i) => {
-              var classes = i > 0 ? "option-btn" : "option-btn option-btn--selected"
+              var classes = (i !== this.state.index) ? "option-btn" : "option-btn option-btn--selected";
               return (
                 <button className={classes} key={i}> {option} </button>
               )
@@ -53,9 +53,3 @@ class Options extends React.Component {
 }
 
 export default Options;
-
-
-// <div className="div-options--item" key={i+1000}>
-//   <input className="radio" type="radio" name="options" value={option} key={i}/>
-//   <label className="label-small label-bold" key={i+100}> {option} </label>
-// </div>

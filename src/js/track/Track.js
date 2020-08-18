@@ -27,18 +27,16 @@ class Track extends React.Component {
 
     return (
       <div className="panel">
-        
+        <div className="div-track">
           <a href={this.state.track.url}>
-            <div className="div-track">
-              <img className="div-track--img" src={this.state.track.image} width="100" height="100" alt="track art"/>
-              <div className="div-track--info">
-                <label className="label-medium"> {rank} {this.state.track.title} </label>
-                <label className="label-small"> {this.state.track.artist} </label>
-                <label className="label-small"> {this.state.track.year} </label>
-              </div>
-            </div>
+            <img className="div-track--img" src={this.state.track.image} width="100" height="100" alt="track art"/>
           </a>
-        
+          <div className="div-track--info">
+            <label className="label-medium"> {rank} {this.state.track.title} </label>
+            <label className="label-small"> {this.state.track.artist} </label>
+            <label className="label-small label-italic"> {this.state.track.year} </label>
+          </div>
+        </div>
       </div>
     )
   }

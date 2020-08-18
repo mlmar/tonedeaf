@@ -42,8 +42,31 @@ button:hover {
   cursor: pointer;
 }
 
+.noclick {
+  pointer-events: none;
+}
+
+.cursor-help {
+  cursor: help !important;
+}
+
+/********* SCROLLBAR *********/
+
 ::-webkit-scrollbar {
-  width: 0;
+  width: .5rem;
+  height: .5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f182;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #a6a6a67a;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a6a6a6a8;
 }
 
 
@@ -80,16 +103,16 @@ button:hover {
   outline-width: thin;
 }
 
-.hover-shadow, .btn:hover, .input-item:hover {
+.hover-shadow, .btn:hover {
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%), 0 2px 15px 0 rgb(0 0 0 / 12%);
 }
 
-.bg-green {
-  background: #1DB954 !important;
+.bg-blue {
+  background: #60a3e0 !important;
 }
 
-.bg-green:hover {
-  background: #0a8435 !important
+.bg-blue:hover {
+  background: #4493da !important
 }
 
 .img {
@@ -123,6 +146,11 @@ button:hover {
 
 .label-bold {
   font-weight: bold !important;
+}
+
+.label-italic {
+  padding-top: .5rem;
+  font-style: italic;
 }
 
 .label-super {
@@ -175,6 +203,13 @@ button:hover {
   text-align: right;
 }
 
+.label-nopadding {
+  padding: 0 !important;
+}
+
+.label-right {
+  text-align: right;
+}
 
 
 
@@ -184,7 +219,7 @@ button:hover {
   display: flex;
   text-align: left;
   height: 4.5rem;
-  width: 100%;
+  width: 100vw;
 
   position: fixed;
   top: 0;
@@ -205,6 +240,7 @@ button:hover {
   width: 100%;
   padding: 0 0 0 6vw;
   height: min-content;
+  width: 100vw;
 }
 
 .nav-buttons {
@@ -240,12 +276,12 @@ button:hover {
 }
 
 .log-btn {
-  border-bottom: double #1DB954 !important;
+  border-bottom: double #60a3e0 !important;
   margin-bottom: -1px;
 }
 
 .log-btn:hover {
-  border-bottom: solid #0a8435 !important;
+  border-bottom: solid #4493da !important;
   border-width: .2em !important;
 }
 
@@ -279,6 +315,11 @@ div-frontpage {
   width: 40vw;
   min-height: fit-content;
   padding-right: .7rem;
+}
+
+.div-profile--info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .div-panels {
@@ -334,6 +375,11 @@ div-frontpage {
   padding-bottom: 2vw;
 }
 
+.div-genres {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 0rem 1rem;
+}
 
 /********* PANEL *********/
 
@@ -351,12 +397,44 @@ div-frontpage {
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%);
 }
 
+.panel-genre {
+  padding: .5rem;
+  text-align: center;
+  height: 80%;
+  transition: background 1 ease;
+}
 
 .panel-side {
   flex-direction: row;
 }
 
+.panel-selected {
+  background: #60a3e0;
+  transition: background 1 ease;
+}
 
+.panel-genre:hover {
+  background: #4493da;
+  transition: background 1 ease;
+  cursor: pointer;
+}
+
+.panel-attribute {
+ display: flex;
+}
+
+.panel-attribute--sliders {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.side-label {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  width: 100%;
+  align-items: center;
+}
 
 
 
@@ -368,8 +446,10 @@ div-frontpage {
   border-width: .5px;
   margin: .3rem 0 .3rem 0;
   padding: .3rem;
-  height: 3.5vh;
+  height: 4vh;
+  width: 100%;
   transition: all .5s;
+  text-align: center;
 }
 
 .input-item:focus, .input-item:hover {

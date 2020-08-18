@@ -63,10 +63,10 @@ class Profile extends React.Component {
       )
     } else {
       profileInfo = (
-        <React.Fragment>
-          <label className="label-small"> {this.state.info.followers} followers </label>
-          <label className="label-small"> {this.state.info.product} {this.state.info.type} </label>
-        </React.Fragment>
+        <div className="div-profile--info">
+          <label className="label-small label-bold"> {this.state.info.product} {this.state.info.type} </label>
+          <label className="label-small label-bold label-right"> {this.state.info.followers} followers </label>
+        </div>
       )
     }
     
