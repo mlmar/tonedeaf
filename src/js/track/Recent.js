@@ -13,8 +13,78 @@ class Recent extends React.Component {
     this.spotifyWebApi = new SpotifyWebApi();
     this.getRecent = this.getRecent.bind(this);
     this.artistsToString = this.artistsToString.bind(this);
+    this.createPlaylist = this.createPlaylist.bind(this);
+    this.addTopTracksToPlaylist = this.addTopTracksToPlaylist.bind(this);
+    this.getUris = this.getUris.bind(this);
+    this.getDate = this.getDate.bind(this);
   }
 
+    getDate() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = mm + '/' + dd + '/' + yyyy;
+    return today;
+  }
+  
+  /**************************** playlists ****************************/
+
+  // create a playlist
+  createPlaylist() {
+    var id = this.props.userid;
+    var params = {
+      name : "tonedeaf recent",
+      public : true,
+      collaborative : false,
+      description : "tonedeaf.vercel.app @ " + this.getDate()
+    }
+
+    this.spotifyWebApi.createPlaylist(id, params)
+      .then((response) => {
+
+        this.addTopTracksToPlaylist(response);
+        window.open(response.uri);
+
+        console.log("Succesfully created playlist @ ")
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("Could not create playlist @")
+        console.error(error)
+      });
+  }
+
+  // add top tracks to a playlist
+  addTopTracksToPlaylist(playlist) {
+    var pid = playlist.id;
+    var params = this.getUris();
+
+    this.spotifyWebApi.addTracksToPlaylist(pid, params)
+      .then((response) => {
+        console.log("Succesfully added top tracks to playlist @ ")
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("Could not add top tracks to playlist @")
+        console.error(error)
+      });
+  }
+
+  /**************************** end playlist ****************************/
+  
+  // get the uris of top tracks
+  getUris() {
+    var uris = [];
+    for(var i = 0; i < this.state.tracks.length; i++) {
+      uris.push(this.state.tracks[i].track.uri);
+    }
+    console.log(uris);
+    return uris;
+  }
+
+  // gets more recent songs
   getRecent(event) {
     var selected_range = {
       limit : 50
@@ -33,6 +103,7 @@ class Recent extends React.Component {
         console.error(error)
       });
   }
+  
 
   artistsToString(artists) {
     var result = "";

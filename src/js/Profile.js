@@ -12,7 +12,8 @@ class Profile extends React.Component {
         uri: "",
         country : "",
         type : "",
-        product : ""
+        product : "",
+        id : ""
       }
     };
 
@@ -31,9 +32,12 @@ class Profile extends React.Component {
             uri: response.uri,
             country: response.country,
             type: response.type,
-            product: response.product
+            product: response.product,
+            id: response.id
           }
         });
+
+        this.props.callback(response.id);
         console.log("Retrieved profile information @");
         console.log(response);
       })

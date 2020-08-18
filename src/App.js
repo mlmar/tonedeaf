@@ -8,7 +8,8 @@ import TopTracks from './js/track/TopTracks.js';
 import Recent from './js/track/Recent.js';
 import Options from './js/Options.js'
 import Rec from './js/recommendations/Rec.js';
-import GenreOptions from './js/recommendations/GenreOptions.js'
+import GenreOptions from './js/recommendations/GenreOptions.js';
+import Circle from './js/recommendations/Circle.js';
 
 // Spotify Web API JS by Jose Perez on github
 // https://github.com/JMPerez/spotify-web-api-js
@@ -22,8 +23,8 @@ class App extends React.Component {
     const params = this.getHashParams();
     const token = params.access_token;
 
-//     const show_site = "http://localhost:8888/login";
-    const show_site = "https://tonedeaf-auth.vercel.app/login"
+    const show_site = "http://localhost:8888/login";
+//     const show_site = "https://tonedeaf-auth.vercel.app/login"
     const show_logout = "https://accounts.spotify.com/en/status"
     
     if(token) {
@@ -39,15 +40,20 @@ class App extends React.Component {
         "top artists", 
         "top tracks", 
         "recent",
-        "recommendations"
+        "recommendations",
+        "circle"
       ],
       selectedIndex : 0
     }
 
+    this.userid = 0;
+
     this.topArtists = React.createRef();
     this.topTracks = React.createRef();
+    this.recent = React.createRef();
     this.rec = React.createRef();
     this.options = React.createRef();
+
     this.optionsArray = ["long term", "6 months", "4 weeks"];
     this.optionsArrayIndex = 0; // generic tracker to reset index upon component change
     
@@ -65,7 +71,6 @@ class App extends React.Component {
     }
     return hashParams;
   }
-
 
   // change selectedIndex to index of selected nav element
   navClick(event) {
@@ -94,12 +99,22 @@ class App extends React.Component {
       console.log("Selected Index: " + this.state.selectedIndex);
     }
   }
-  
+
   // display based on selectedIndex
   render() {
     var frontpage; // TODO: landing screen
     if(this.state.loggedIn) {
-      var focus = <Profile/>; // focus on profile by default
+
+      // focus on profile by default
+      var focus = (
+        <Profile callback={(id) => {
+            this.userid = id;
+            console.log("succesfllly found user id on mount @ " + id);
+          }}
+        /> 
+      );
+
+      var secondaryFocus;
       var display; // right side content panels
       var showNowPlaying = <NowPlaying full="false"/>; // in sidebar
 
@@ -112,7 +127,7 @@ class App extends React.Component {
         case 1:
           var text1 = "top artists"
 
-          focus = (
+          focus = ( // for time range selection
             <Options 
               text={text1} 
               options={this.optionsArray}
@@ -128,7 +143,7 @@ class App extends React.Component {
 
         case 2:
           var text2 = "top tracks"
-          focus = (
+          focus = ( // for time range selection
             <Options 
               text={text2} 
               options={this.optionsArray}
@@ -139,11 +154,32 @@ class App extends React.Component {
               ref={this.options}
             />
           )
-          display = <TopTracks ref={this.topTracks}/>
+          
+          secondaryFocus = ( // save tracks to playlist option
+            <Options 
+              text="playlist" 
+              options={["save tracks"]}
+              callback={(index) => {
+                this.topTracks.current.createPlaylist();
+              }}
+            />
+          )
+          
+          display = <TopTracks userid={this.userid} ref={this.topTracks}/>
           break;
 
         case 3:
-          display = <Recent/>
+          secondaryFocus = ( // save tracks to playlist option
+            <Options 
+              text="playlist" 
+              options={["save tracks"]}
+              callback={(index) => {
+                this.recent.current.createPlaylist();
+              }}
+            />
+          )
+
+          display = <Recent userid={this.userid} ref={this.recent}/>
           break;
         
         case 4:
@@ -154,7 +190,12 @@ class App extends React.Component {
               }}
             />
           )
+
           display = <Rec ref={this.rec}/>
+          break;
+
+        case 5:
+          display = <Circle/>
           break;
 
         default:
@@ -164,6 +205,7 @@ class App extends React.Component {
       var sidebar = (
         <React.Fragment>
           {focus}
+          {secondaryFocus}
           {showNowPlaying}
         </React.Fragment>
       )

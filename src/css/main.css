@@ -456,6 +456,11 @@ div-frontpage {
   outline: none;
 }
 
+.input-search {
+  height: 6vh;
+  font-size: 1rem;
+}
+
 .option-btn {
   border: solid #ffffff3b;
   border-width: 1px;
