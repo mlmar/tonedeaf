@@ -47,13 +47,15 @@
   .top-open {
     background: #212121f7;
     height: 35rem;
-    transition: height .5s ease, background .5s ease;
+    transition: background .5s ease;
+    transition: height .5s ease;
   }
 
   .top-closed {
     background: #2d2d2d;
     height: 4rem;
-    transition: height .5s ease, background .5s ease;
+    transition: background .5s ease;
+    transition: .5s ease;
   }
 
   .top-border {
