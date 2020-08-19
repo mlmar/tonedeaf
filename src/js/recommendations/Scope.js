@@ -226,7 +226,7 @@ class Scope extends React.Component {
           </div>
           <br/>
           <label className="label-subtext label-bold"> * Search and add up to 5 artists then press 'Get Recommendations' </label>
-          <label className="label-subtext label-bold label-italic"> * Sometimes searches will glitch, just press backspace </label>
+          <label className="label-subtext label-bold label-italic"> * if it glitches, press backspace </label>
           <input type="text" className="input-item input-search" onChange={(e) => this.search(e)} />
           <button className="option-btn" onClick={this.getRecs}> Get Recommendations </button>
         </div>
