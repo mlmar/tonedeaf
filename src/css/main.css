@@ -26,7 +26,6 @@ a[href] {
 }
 
 button:focus {
-  border: none;
   outline: none;
 }
 
@@ -588,6 +587,10 @@ img {
   height: 5vh;
   transition: all .5s;
   width: 100%;
+}
+
+.genre-btn:hover {
+  background: #cccccc;
 }
 
 .dark-btn {

@@ -62,7 +62,7 @@ class App extends React.Component {
     this.topArtists = React.createRef();
     this.topTracks = React.createRef();
     this.recent = React.createRef();
-    this.rec = React.createRef();
+    this.tuner = React.createRef();
     this.scope = React.createRef();
     this.options = React.createRef();
 
@@ -201,7 +201,7 @@ class App extends React.Component {
           focus = (
             <GenreOptions
               callback={(index) => {
-                this.rec.current.setState({index: index})
+                this.tuner.current.setState({index: index})
               }}
             />
           )
@@ -211,12 +211,12 @@ class App extends React.Component {
               text="Like these tracks?" 
               options={["Save as spotify playlist"]}
               callback={(index) => {
-                this.rec.current.createPlaylist();
+                this.tuner.current.createPlaylist();
               }}
             />
           )
 
-          display = <Tuner userid={this.userid} ref={this.rec}/>
+          display = <Tuner userid={this.userid} ref={this.tuner}/>
           break;
 
         case 5:
