@@ -31,8 +31,8 @@ class App extends React.Component {
     const params = this.getHashParams();
     const token = params.access_token;
 
-    const show_site = "http://localhost:8888/login";
-//     const show_site = "https://tonedeaf-auth.vercel.app/login"
+//     const show_site = "http://localhost:8888/login";
+    const show_site = "https://tonedeaf-auth.vercel.app/login"
     const show_logout = "https://accounts.spotify.com/en/status"
     
     if(token) {
