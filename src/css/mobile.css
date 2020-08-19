@@ -47,15 +47,15 @@
   .top-open {
     background: #212121f7;
     height: 35rem;
-    transition: background .5s ease;
-    transition: height .5s ease;
+    min-height: 0 !important;
+    transition: height .5s ease, background .5s ease !important;
   }
 
   .top-closed {
     background: #2d2d2d;
     height: 4rem;
-    transition: background .5s ease;
-    transition: .5s ease;
+    min-height: 0 !important;
+    transition: height .5s ease, background .5s ease !important;
   }
 
   .top-border {
@@ -264,6 +264,13 @@
 
   .label-subtext {
     font-size: .7rem;
+    font-weight: bold;
+    color: #212121;
+    padding-bottom: .2rem;
+  }
+
+  .label-tiny {
+    font-size: .6rem;
     font-weight: bold;
     color: #212121;
     padding-bottom: .2rem;

@@ -25,7 +25,8 @@ import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyWebApi = new SpotifyWebApi();
 
 class App extends React.Component {
-
+  
+  // v1
   constructor() {
     super();
     const params = this.getHashParams();
