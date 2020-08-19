@@ -203,9 +203,12 @@
     grid-gap: 0rem 1rem;
   }
 
+  /*************** scope ***************/
 
-
-
+  .div-selected-artists {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
 
 
   /*************** labels ***************/
