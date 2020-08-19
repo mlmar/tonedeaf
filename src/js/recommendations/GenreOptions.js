@@ -19,7 +19,7 @@ class GenreOptions extends React.Component {
         callback={(index) => {
           this.props.callback(index);
         }}
-        />
+      />
     )
   }
 }

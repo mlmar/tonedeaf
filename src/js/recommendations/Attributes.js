@@ -1,19 +1,12 @@
 import React from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 
+/*  attributes component
+ *  just displays min/max sliders for a specific song attribute
+ */
 class Attributes extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      attribute   : this.props.attribute,
-      min         : this.props.min,
-      max         : this.props.max,
-      step        : this.props.step,
-      defaultMin  : this.props.defaultMin,
-      defaultMax  : this.props.defaultMax
-    };
-    
     this.spotifyWebApi = new SpotifyWebApi();
   }
 
@@ -23,7 +16,7 @@ class Attributes extends React.Component {
       <div className={classes}>
         <a href="https://developer.spotify.com/documentation/web-api/reference/browse/get-recommendations/" className="cursor-help">
           <label className="label-medium label-bold label-nopadding noclick"> 
-            {this.state.attribute} ({this.state.min} to {this.state.max})
+            {this.props.attribute} ({this.props.min} to {this.props.max})
           </label>
         </a>
         <div className="panel-attribute--slider">
@@ -31,11 +24,11 @@ class Attributes extends React.Component {
             <label className="label-small"> minimum </label>
             <input className="input-item min" 
               type="range" 
-              name={this.state.attribute} 
-              min={this.state.min} 
-              max={this.state.max} 
-              step={this.state.step}
-              defaultValue={this.state.defaultMin}
+              name={this.props.attribute} 
+              min={this.props.min} 
+              max={this.props.max} 
+              step={this.props.step}
+              defaultValue={this.props.defaultMin}
               id={this.props.id}
             />
           </div>
@@ -43,11 +36,11 @@ class Attributes extends React.Component {
             <label className="label-small"> maximum </label>
             <input className="input-item max" 
               type="range" 
-              name={this.state.attribute} 
-              min={this.state.min} 
-              max={this.state.max} 
-              step={this.state.step}
-              defaultValue={this.state.defaultMax}
+              name={this.props.attribute} 
+              min={this.props.min} 
+              max={this.props.max} 
+              step={this.props.step}
+              defaultValue={this.props.defaultMax}
               id={this.props.id}
             />
           </div>

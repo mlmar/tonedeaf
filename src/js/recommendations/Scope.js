@@ -20,6 +20,8 @@ class Scope extends React.Component {
 
     this.selectedAmount = 0;
 
+
+    // method bindings
     this.artistAdd = this.artistAdd.bind(this);
     this.artistRemove = this.artistRemove.bind(this);
     this.getRecs = this.getRecs.bind(this);
@@ -30,7 +32,9 @@ class Scope extends React.Component {
     this.createPlaylist = this.createPlaylist.bind(this);
   }
 
-
+  
+  // call PlaylistCreator object and pass in current tracks
+  //  this function should be called from an options component
   createPlaylist() {
     if(this.state.tracks.length > 0) {
       this.playlistCreator.setTracks(this.state.tracks);
@@ -101,8 +105,7 @@ class Scope extends React.Component {
     var params = { limit : 50 }
     var types = ['artist'];
 
-    this.setState({artists: [], selectedIndex: 0});
-    console.log(e);
+    
     if(query.length > 0) {
       this.spotifyWebApi.search(query, types, params)
         .then((response) => {
@@ -112,6 +115,8 @@ class Scope extends React.Component {
           console.error("could not retrieve search query @")
           console.error(error);
         });
+    } else {
+      this.setState({artists: []});
     }
   }
 
@@ -137,6 +142,7 @@ class Scope extends React.Component {
     var display;
     if(this.state.selectedIndex === 0) {
       display = (
+
         <React.Fragment>
           <div className="div-selected-artists" onClick={this.artistRemove}>
             {
@@ -159,6 +165,7 @@ class Scope extends React.Component {
               })
             }
           </div>
+
           <div onClick={this.artistAdd}>
             {
               this.state.artists.map((artist, i) => {
@@ -185,6 +192,7 @@ class Scope extends React.Component {
           </div>
         </React.Fragment>
       )
+
     } else {
       display = (
         <div>

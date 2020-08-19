@@ -17,8 +17,6 @@ class TopArtists extends React.Component {
   }
 
   getTopArtists(index) {
-    this.setState({artists : []});
-
     var selected_range = {
       time_range : this.range[index],
       limit : 50

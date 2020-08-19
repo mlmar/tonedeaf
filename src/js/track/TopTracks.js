@@ -36,9 +36,6 @@ class TopTracks extends React.Component {
   // get top tracks
   getTopTracks(index) {
     this.selectedIndex = 0;
-
-    this.setState({tracks : []});
-    
     var selected_range = {
       time_range : this.range[index],
       limit : 50

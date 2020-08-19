@@ -6,7 +6,7 @@ import Track from '../track/Track.js';
 import PlaylistCreator from '../PlaylistCreator.js';
 
 // Recommendations based on genre
-class Rec extends React.Component {
+class Tuner extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -298,4 +298,4 @@ class Rec extends React.Component {
   }
 }
 
-export default Rec;
+export default Tuner;

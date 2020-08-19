@@ -1,11 +1,14 @@
 import React from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 
+/*  now playing component 
+ *
+ */
 class NowPlaying extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      labelText : "Last Played",
+
       playing : {
         artist : [],
         title : "",
@@ -13,12 +16,15 @@ class NowPlaying extends React.Component {
         url : "",
         duration : "",
         progress : "",
+        device : []
       },
-      full : this.props.full,
-      device : ""
+
+      labelText : "Last Played",
+      deviceText : "Current Device: ",
+      full : this.props.full
     };
 
-    this.timer = "";
+    this.timer = ""; // interval clock for retrieving song every 5 seconds
 
     this.spotifyWebApi = new SpotifyWebApi();
     this.getLastPlayed = this.getLastPlayed.bind(this);
@@ -34,15 +40,18 @@ class NowPlaying extends React.Component {
       .then((response) => {
         var track = response.items[0].track;
         this.setState({
-          labelText : "Last Played",
           playing: {
             artist : track.album.artists,
             title: track.name,
             image: track.album.images[0].url,
             url: track.external_urls.spotify,
             duration: track.duration_ms,
-            progress : track.progress_ms
-          }
+            progress : track.progress_ms,
+            device : ""
+          },
+
+          labelText : "Last Played",
+          deviceText  : ""
         });
         
         if(!interval) {
@@ -71,15 +80,18 @@ class NowPlaying extends React.Component {
         } else {
 
         this.setState({
-          labelText : "Now Playing",
           playing: {
             artist : response.item.artists,
             title: response.item.name,
             image: response.item.album.images[0].url,
             url: response.item.external_urls.spotify,
             duration: response.item.duration_ms,
-            progress : response.progress_ms
-          }
+            progress : response.progress_ms,
+            device : response.device
+          },
+
+          labelText : "Now Playing",
+          deviceText : "Current Device: "
         });
         
 
@@ -170,6 +182,7 @@ class NowPlaying extends React.Component {
 
           <div className="div-nowplaying-controls">
               <progress className="progressbar" max="100" value={this.compute()}></progress>
+              <label className="label-subtext"> {this.state.deviceText} {this.state.playing.device.name} </label>
           </div>
 
         </div>

@@ -1,12 +1,13 @@
 import React from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 
+/*  provides a simple options panel with buttons that return an index in a callback
+ *
+ */
 class Options extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text :  this.props.text,
-      options : this.props.options,
       index : 0
     };
 
@@ -36,10 +37,10 @@ class Options extends React.Component {
   render() {
     return (
       <div className="panel animate-drop">
-        <label className="label-subtitle"> {this.state.text} </label>
+        <label className="label-subtitle"> {this.props.text} </label>
         <div className="div-options" onClick={this.optionClick}>
           {
-            this.state.options.map((option, i) => {
+            this.props.options.map((option, i) => {
               var classes = (i !== this.state.index) ? "option-btn" : "option-btn option-btn--selected";
               return (
                 <button className={classes} key={i}> {option} </button>

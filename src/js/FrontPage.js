@@ -1,24 +1,28 @@
 import React from 'react';
-import SpotifyWebApi from 'spotify-web-api-js';
 
+/*  FrontPage.js
+ *  
+ *  shows a blank sign in page with text that fades in
+ */
 class FrontPage extends React.Component {
   constructor(props) {
     super(props);
 
-    // track is pased on through a prop as an object
+    // hide text by default to fade it in
     this.state = {
       classes : "div-frontpage hide"
     };
     
+    this.spotifyText = 
     this.front = React.createRef();
-    this.spotifyWebApi = new SpotifyWebApi();
   }
 
+  // after half a second, fade in the text
   componentDidMount() {
     setTimeout(() => {
       this.front.current.classList.toggle("show");
       this.front.current.classList.toggle("shadow-on")
-    }, 800)
+    }, 300)
   }
   
   render() {
@@ -26,13 +30,15 @@ class FrontPage extends React.Component {
       <div ref={this.front} className="div-frontpage hide shadow-off">
         <label className="label-super"> tonedeaf </label>
         <br/>
-        <a href={this.props.return}>
-          <label className="sign label-large label-underline cursor-pointer"> sign in with spotify </label>
+        <a href={this.props.return} className="sign-background">
+          <label className="sign label-large cursor-pointer"> sign in with spotify </label>
         </a>
         <div className="bottom label-center">
-          <label className="label-subtext"> marcus martinez </label>
+          <label className="label-tiny"> Marcus Martinez </label>
           <br/>
-          <label className="label-subtext"> 2020 </label>
+          <label className="label-tiny"> Spotify&copy; is a trademark of Spotify AB </label>
+          <br/>
+          <label className="label-tiny"> 2020 </label>
         </div>
       </div>
     )

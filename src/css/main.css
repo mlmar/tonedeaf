@@ -1,4 +1,4 @@
-/********* ELEMENT DEFAULTS *********/
+/****************** ELEMENT DEFAULTS ******************/
 * {
   margin: 0;
   padding: 0;
@@ -13,15 +13,7 @@
   -webkit-box-sizing: border-box;
 }
 
-
-.page {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: #f8f8f8;
-  color: white;
-  min-height: 100vh;
-}
+/********* SPECIAL DEFUALTS*********/
 
 
 div {
@@ -33,10 +25,6 @@ a[href] {
   cursor: pointer !important;
 }
 
-.cursor-pointer {
-  cursor: pointer;
-}
-
 button:focus {
   border: none;
   outline: none;
@@ -46,19 +34,35 @@ button:hover {
   cursor: pointer;
 }
 
+img {
+  box-shadow: 0 2px 6px 0 rgb(255 255 255 / 0%);
+  transition: box-shadow 1s ease;
+}
+
+
+/* apply to image to stretch to parent entirely if dimensions < parent width */
+.img {
+  width: 100%;
+  overflow: hidden;
+  margin: .5em 0 .5em 0;
+}
+
+
 .noclick {
   pointer-events: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .cursor-help {
   cursor: help !important;
 }
 
-.min-width {
-  width: min-content !important;
-}
 
-/********* SCROLLBAR *********/
+
+/****************** SCROLLBAR ******************/
 
 ::-webkit-scrollbar {
   width: .5rem;
@@ -78,7 +82,7 @@ button:hover {
 }
 
 
-/********* ANIMATION *********/
+/****************** ANIMATION ******************/
 
 @keyframes drop {
   from {
@@ -114,10 +118,17 @@ button:hover {
   width: 100%;
 }
 
-/********* SPECIFICS *********/
+/****************** SPECIFICS ******************/
+
+
+/********* BOUNDARIES *********/
 
 .max-width {
   width: 100%;
+}
+
+.min-width {
+  width: min-content !important;
 }
 
 .div--outline-off {
@@ -125,8 +136,11 @@ button:hover {
   outline-width: thin;
 }
 
-.hover-shadow, .btn:hover {
-  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%), 0 2px 15px 0 rgb(0 0 0 / 12%);
+/********* COLOR AND STYLE *********/
+
+.hover-shadow, img:hover {
+  box-shadow: 0 0 .8rem .1rem rgb(0 0 0 / 27%);
+  transition: box-shadow .3s ease;
 }
 
 .bg-blue {
@@ -135,32 +149,6 @@ button:hover {
 
 .bg-blue:hover {
   background: #4493da !important
-}
-
-.img {
-  width: 100%;
-  overflow: hidden;
-  padding: .5em 0 .5em 0;
-}
-
-.btn {
-  border: solid #ffffff3b;
-  border-width: 1px;
-  border-radius: .3rem;
-  font-size: 1rem;
-  font-weight: 100;
-  min-height: 5vh;
-  min-width: 15vh;
-  color: #ffffff;
-  background: #687d82;
-  transition: all .5s;
-  margin: .5rem 0 .5rem 0;
-}
-
-.btn:hover {
-  background: #1775cb;
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
-  color: #ffffff;
 }
 
 .text-white {
@@ -179,6 +167,9 @@ button:hover {
 .label-underline {
   text-decoration: underline;
 }
+
+
+/********* LABELS *********/
 
 .label-super {
   font-size: 10em;
@@ -235,8 +226,11 @@ button:hover {
   padding-bottom: .2rem;
 }
 
-.label-rank {
-  text-align: right;
+.label-tiny {
+  font-size: .6em;
+  font-weight: bold;
+  color: #212121;
+  padding-bottom: .2rem;
 }
 
 .label-nopadding {
@@ -258,6 +252,21 @@ button:hover {
 
 
 
+/********* MAIN CONTAINER *********/
+
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f8f8f8;
+  color: white;
+  min-height: 100vh;
+}
+
+
+
+
 
 /********* FRONT PAGE *********/
 
@@ -272,15 +281,24 @@ button:hover {
 }
 
 .sign {
-  color: #212121;
-  border-bottom: solid #4493da;
+  color: #ffffff;
+  /*   border-bottom: solid #4493da; do not uncomment */
   transition: color 1s ease;
 }
 
 .sign:hover {
-  border-bottom: solid #4493da !important;
+  /*   border-bottom: solid #4493da !important;  do not uncomment */
   color: #60a3e0;
   transition: color 1s ease;
+}
+
+.sign-background {
+  background: #212121;
+  border: solid #212121;
+  border-width: .5rem;
+  padding: 0 1rem 0 1rem;
+  border-radius: 2rem;
+  text-align: center;
 }
 
 .bottom {
@@ -329,7 +347,6 @@ button:hover {
 
 .nav-btn {
   border: none;
-  border-width: 1px;
   font-size: 1em;
   font-weight: 100;
   min-height: 1.5em;
@@ -337,7 +354,7 @@ button:hover {
   color: #ffffff;
   background: none;
   transition: all .1s;
-  margin: .5em .2rem .3rem .2em;
+  margin: .5em .2rem .3rem .2rem;
   text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
   border-width: .2em !important;
 }
@@ -405,10 +422,6 @@ button:hover {
 .div-track {
   display: flex;
 }
-
-/* .div-track--img {
-  width: 15vw;
-} */
 
 .div-track--info {
   display: flex;
@@ -568,20 +581,22 @@ button:hover {
   background: #299fd9;
 }
 
+/********* SCOPE BUTTONS *********/
+
 .add-btn, .sub-btn {
   position: absolute;
   right: 2rem;
   border: solid #ffffff3b;
   border-width: 1px;
   border-radius: .3rem;
-  font-size: 1rem;
+  font-size: .7rem;
   font-weight: 100;
   color: #ffffff;
-  background: #333333;
+  background: #212121;
   transition: all .5s;
   margin: .1rem 0 .1rem 0;
-  width: 1.2em;
-  height: 1.2rem;
+  width: 1.5em;
+  height: 1.5em;
 }
 
 .sub-btn {

@@ -1,23 +1,17 @@
 import React from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 
+/*  artist component
+ *  displays artists name, image, genres
+ *  can be displayed in a compact mode with props.compact
+ */
 class Artist extends React.Component {
   constructor(props) {
     super(props);
 
     // track is pased on through a prop as an object
-
     this.state = {
-      artist : {
-        image : this.props.image,
-        name : this.props.name,
-        url : this.props.url,
-        genre : this.props.genre,
-        popularity : this.props.popularity,
-        followers: this.props.followers,
-        rank : this.props.rank,
-        id : this.props.id
-      }
+      id : this.props.id
     };
     
     this.spotifyWebApi = new SpotifyWebApi();
@@ -26,38 +20,39 @@ class Artist extends React.Component {
   render() {
     // if rank is provided, prepend it to the name
     var check_undefined = void(0)
-    var rank = (this.state.artist.rank !== check_undefined) ? 
-      ( <React.Fragment> {this.state.artist.rank}. </React.Fragment> ) : ""
+    var rank = (this.props.rank !== check_undefined) ? 
+      ( <React.Fragment> {this.props.rank}. </React.Fragment> ) : ""
     
     if(this.props.compact) {
       return (
         <div className="panel min-width">
-          <img className="div-track--img" src={this.state.artist.image} width="100" height="100" alt="track art"/>
-          <label className="label-small label-bold label-center"> {rank} {this.state.artist.name} </label>
+          <img className="div-track--img" src={this.props.image} width="100" height="100" alt="track art"/>
+          <label className="label-small label-bold label-center"> {rank} {this.props.name} </label>
         </div>
       )
+
     } else {
       return (
         <div className="panel">
           <div className="div-track">
-            <a href={this.state.artist.url}>
-              <img className="div-track--img" src={this.state.artist.image} width="100" height="100" alt="track art"/>
+            <a href={this.props.url}>
+              <img className="div-track--img" src={ this.props.image} width="100" height="100" alt="track art"/>
             </a>
             <div className="div-track--info noclick">
               <div>
-                <label className="label-medium"> {rank} {this.state.artist.name} </label>
+                <label className="label-medium"> {rank} {this.props.name} </label>
               </div>
               <div className="div-track--info-item">
                 <label className="label-small label-bold"> genres </label>
-                <label className="label-small"> {this.state.artist.genre} </label>
+                <label className="label-small"> {this.props.genre} </label>
               </div>
               <div className="div-track--info-item">
                 <label className="label-small label-bold"> popularity index </label>
-                <label className="label-small"> {this.state.artist.popularity} </label>
+                <label className="label-small"> {this.props.popularity} </label>
               </div>
               <div className="div-track--info-item">
                 <label className="label-small label-bold"> followers </label>
-                <label className="label-small"> {this.state.artist.followers} </label>
+                <label className="label-small"> {this.props.followers} </label>
               </div>
             </div>
           </div>

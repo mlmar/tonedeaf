@@ -1,16 +1,23 @@
 import React from 'react';
 
 import './css/main.css';
+import './css/mobile.css';
+
+import FrontPage from './js/FrontPage';
+import Nav from './js/Nav.js'
+
+
 import Profile from './js/Profile.js';
 import NowPlaying from './js/NowPlaying.js';
 import TopArtists from './js/artist/TopArtists.js';
 import TopTracks from './js/track/TopTracks.js';
 import Recent from './js/track/Recent.js';
-import Options from './js/Options.js'
-import Rec from './js/recommendations/Rec.js';
-import GenreOptions from './js/recommendations/GenreOptions.js';
+import Tuner from './js/recommendations/Tuner.js';
 import Scope from './js/recommendations/Scope.js';
-import FrontPage from './js/FrontPage';
+
+import Options from './js/Options.js'
+import GenreOptions from './js/recommendations/GenreOptions.js';
+
 
 // Spotify Web API JS by Jose Perez on github
 // https://github.com/JMPerez/spotify-web-api-js
@@ -24,8 +31,8 @@ class App extends React.Component {
     const params = this.getHashParams();
     const token = params.access_token;
 
-//     const show_site = "http://localhost:8888/login";
-    const show_site = "https://tonedeaf-auth.vercel.app/login"
+    const show_site = "http://localhost:8888/login";
+//     const show_site = "https://tonedeaf-auth.vercel.app/login"
     const show_logout = "https://accounts.spotify.com/en/status"
     
     if(token) {
@@ -38,8 +45,8 @@ class App extends React.Component {
       loginButton   : token ? "Log Out" : "Log In",
       nav           : [ 
         "Now Playing", 
-        "Top Artists", 
-        "Top Tracks", 
+        "Artists", 
+        "Tracks", 
         "Recent",
         "Tuner",
         "Scope"
@@ -90,7 +97,7 @@ class App extends React.Component {
         }
       }
       
-      // reset options component if window changes from one top to the other top list
+      // reset options component if window changes
       if(this.options.current !== null) {
         if(this.optionsArrayIndex >= 0 && this.state.selectedIndex !== index) {
           this.options.current.setState({index: 0});
@@ -104,6 +111,8 @@ class App extends React.Component {
 
   // display based on selectedIndex
   render() {
+    var portrait = window.matchMedia("only screen and (orientation: portrait)").matches;
+
     var top;
     var frontpage;
     if(this.state.loggedIn) {
@@ -119,7 +128,7 @@ class App extends React.Component {
 
       var secondaryFocus;
       var display; // right side content panels
-      var showNowPlaying = <NowPlaying full="false"/>; // in sidebar
+      var showNowPlaying = portrait ? "" : <NowPlaying full="false"/>; // in sidebar
 
       switch(this.state.selectedIndex) {
         case 0:
@@ -204,10 +213,11 @@ class App extends React.Component {
             />
           )
 
-          display = <Rec userid={this.userid} ref={this.rec}/>
+          display = <Tuner userid={this.userid} ref={this.rec}/>
           break;
 
         case 5:
+          focus = "";
           secondaryFocus = ( // save tracks to playlist option
             <Options 
               text="Like these tracks? (let me know if this works)" 
@@ -233,35 +243,18 @@ class App extends React.Component {
       )
 
       top = (
-        <div className="top">
-          <label className="label-title text-white"> tonedeaf </label>
-          <div className="nav">
-            <div className="nav-buttons" onClick={(event) => this.navClick(event)}>
-              {
-                this.state.nav.map(function(item, i) {
-                    if (i === 0) {
-                        return <button className="nav-btn selected" key={i}>{item}</button>
-                    } else {
-                        return <button className="nav-btn" key={i}>{item}</button>
-                    }
-                })
-              }
-            </div>
-            <div className="div-log-btn">
-              <a href={this.state.returnPage}>
-                <button className="nav-btn log-btn"> {this.state.loginButton} </button>
-              </a>
-            </div>
-          </div>
-        </div>
+        <Nav
+          callback={this.navClick}
+          nav={this.state.nav}
+          returnPage={this.state.returnPage}
+          loginButton={this.state.loginButton}
+        />
       )
 
       frontpage = (
         <React.Fragment>
           <div className="div-sidebar div--outline">
-            <div>
-              {sidebar}
-            </div>
+            {sidebar}
           </div>
           <div className="div-panels div--outline">
             {display}
