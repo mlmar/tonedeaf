@@ -10,15 +10,11 @@ class Genre extends React.Component {
   }
   
   render() {
-    var classes = "panel panel-genre animate-drop";
-    if(this.props.selected === "true") {
-      classes += " panel-selected";
-    }
+    var classes = "option-btn genre-btn animate-drop label-bold";
+    classes += this.props.type === "-" ? " dark-btn" : "";
 
     return (
-      <div className={classes}>
-        <label className="label-small label-bold label-nopadding noclick"> {this.props.genre} </label>
-      </div>
+      <button className={classes} id={this.props.id}> {this.props.genre} </button>
     )
   }
 }

@@ -445,7 +445,7 @@ img {
 .div-nowplaying--info-full {
   display: flex;
   flex-direction: column;
-  padding: 0 0 2vw 2vw;
+  padding: 0 0 0 2vw;
   max-width: 100%;
 }
 
@@ -458,13 +458,20 @@ img {
 .nowplaying-full {
   display: grid;
   grid-template-columns: 40% 60%;
-  padding-bottom: 2vw;
+  padding-bottom: 1em;
 }
 
 .div-genres {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 0rem 1rem;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 1rem 1rem;
+}
+
+
+.div-selected-genres {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 1rem;
 }
 
 .div-artist--compact {
@@ -475,6 +482,7 @@ img {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
 }
+
 
 /********* PANEL *********/
 
@@ -492,13 +500,6 @@ img {
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%);
 }
 
-.panel-genre {
-  padding: .5rem;
-  text-align: center;
-  height: 80%;
-  transition: background 1 ease;
-}
-
 .panel-side {
   flex-direction: row;
 }
@@ -506,12 +507,6 @@ img {
 .panel-selected {
   background: #60a3e0;
   transition: background 1 ease;
-}
-
-.panel-genre:hover {
-  background: #4493da;
-  transition: background 1 ease;
-  cursor: pointer;
 }
 
 .panel-attribute {
@@ -581,6 +576,18 @@ img {
   background: #299fd9;
 }
 
+.genre-btn {
+  color: #212121;
+  background: #eaeaea;
+  height: 100%;
+  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%);
+}
+
+.dark-btn {
+  color: white;
+  background: #212121;
+}
+
 /********* SCOPE BUTTONS *********/
 
 .add-btn, .sub-btn {
@@ -602,4 +609,71 @@ img {
 .sub-btn {
   position: absolute;
   right: 0rem;
+}
+
+
+/********* NOWPLAYING CONTROL BUTTONS *********/
+
+.div-control-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.control-btn-previous--container, .control-btn-pause--container, .control-btn-skip--container {
+  align-items: center;  
+  padding: 0 .5em 0 .5em;
+}
+
+.control-btn-previous--container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.control-btn-pause--container {
+  display: flex;
+  justify-content: center;
+}
+
+.control-btn-skip--container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.control-btn-previous, .control-btn-skip {
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.control-btn-pause {
+  width: 3rem;
+  height: 3rem;
+}
+
+.control-btn-previous, .control-btn-pause, .control-btn-skip {
+  border: solid #ffffff3b;
+  border-width: 1px;
+  border-radius: 5rem;
+  font-size: .7rem;
+  font-weight: 900;
+  color: #ffffff;
+  background: #212121;
+  transition: all .5s;
+  margin: .1rem 0 .1rem 0;
+}
+
+.control-btn-previous:hover, .control-btn-pause:hover, .control-btn-skip:hover {
+  background: #212121d6;
+  transiton: all .1s ease;
+}
+
+.hide-controls {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+
+.show-controls {
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 1s ease;
 }

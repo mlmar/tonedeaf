@@ -11,6 +11,7 @@ class Tuner extends React.Component {
     super(props);
     this.state = {
       index : 0,
+      selectedGenres : [],
       genres : [],
       tracks : [],
 
@@ -31,14 +32,31 @@ class Tuner extends React.Component {
         ["valence",           0, 1, .1,   0,  1]
       ]
     };
+    
+    // attribute descriptions
+    this.descriptions = [
+      '1 = high chance to acoustic',
+      'Based on "tempo, rhythm stability, beat strength, and overall regularity"',
+      '0 is a "Bach prelude" and 1 is "death metal"',
+      'Values above .5 are more likely to be instrumental',
+      '0 = C, 1 = C#, etc.',
+      'Values above .8 are more likely to be live',
+      'Loudness in decibels, typically between -60 and 0',
+      'Major = 1, Minor = 0',
+      'Based on total number of plays and recency',
+      'Values between .33-.66 may contain both speech and music',
+      'Beats per minute',
+      'Beats per bar',
+      '0 = Sad, 1 = Happy'
+    ]
 
     this.spotifyWebApi = new SpotifyWebApi();
     this.playlistCreator = new PlaylistCreator(this.props.userid);
 
     this.selectedAmount = 0;
-    this.selectedGenres = "";
 
-    this.genreClick = this.genreClick.bind(this);
+    this.genreAdd = this.genreAdd.bind(this);
+    this.genreRemove = this.genreRemove.bind(this);
     this.attributeClick = this.attributeClick.bind(this);
     this.parameters = this.parameters.bind(this);
     this.getRecs = this.getRecs.bind(this);
@@ -58,7 +76,7 @@ class Tuner extends React.Component {
   // recommendation button
   //  gets parameters for recommendations
   getRecs() {
-    if(this.selectedGenres.length > 0) {
+    if(this.state.selectedGenres.length > 0) {
       this.spotifyWebApi.getRecommendations(this.parameters())
         .then((response) => {
           this.setState({tracks: response.tracks, index: 2})
@@ -78,7 +96,7 @@ class Tuner extends React.Component {
   // creates a json object of parameters specified by the user or defaults
   parameters() {
     var params = {
-      seed_genres : this.selectedGenres,
+      seed_genres : this.state.selectedGenres.join(),
       limit : 50,
 
       min_acousticness      : this.state.attributes[0][4],
@@ -159,33 +177,33 @@ class Tuner extends React.Component {
       });
   }
 
-  // detect which button was clicked and pass index to callback prop function
-  genreClick(event) {
-    var tempArray = "";
-    if(event.target.classList.contains("panel-genre")) {
-      for (var i = 0; i < event.currentTarget.childNodes.length; i++) {
-        var li = event.currentTarget.childNodes[i];
-
-        // select the child that matches the button that was pressed
-        if (event.target === li) {
-          // select up to 5 genres
-          if(!event.target.classList.contains("panel-selected") && this.selectedAmount < 5) {
-            event.target.classList.add("panel-selected");
-            this.selectedAmount++;
-          } else if(event.target.classList.contains("panel-selected")){
-            event.target.classList.remove("panel-selected");
-            this.selectedAmount--;
-          }
-        }
-
-        if(li.classList.contains("panel-selected")) {
-          var innerText = li.childNodes[0].innerText;
-          tempArray += tempArray.length > 0 ? "," +  innerText : innerText;
+  // detect which button was clicked for REMOVING a genre
+  genreRemove(event) {
+    var tempArray = [];
+    if(event.target.tagName === "BUTTON") {
+      for(var i = 0; i < this.state.selectedGenres.length; i++) {
+        if(i !== parseFloat(event.target.id)) {
+          tempArray.push(this.state.selectedGenres[i]);
         }
       }
-      
-      console.log("setting selected genre indices to " + tempArray)
-      this.selectedGenres = tempArray;
+      this.selectedAmount--;
+      this.setState({ selectedGenres : tempArray });
+      console.log(tempArray);
+    }
+  }
+
+  // detect which button was clicked for ADDING a genre
+  genreAdd(event) {
+    if(this.selectedAmount < 5) {
+      var tempArray = this.state.selectedGenres;
+      var innerText = event.target.innerText;
+      var duplicate = tempArray.includes(event.target.innerText);
+      if(event.target.tagName === "BUTTON" && !duplicate) {
+        tempArray.push(innerText)
+        this.selectedAmount++;
+        this.setState({ selectedGenres : tempArray});
+        console.log(tempArray);
+      }
     }
   }
 
@@ -216,15 +234,11 @@ class Tuner extends React.Component {
     var board;
     if(this.state.index === 0) {
       board = (
-        <div className="div-genres" onClick={this.genreClick}>
+        <div className="div-genres" onClick={this.genreAdd}>
           {
             this.state.genres.map((genre, i) => {
-              var sel = "null";
-              if(this.selectedGenres.includes({genre}.genre)) {
-                sel = "true";
-              }
               return (
-                <Genre genre={genre} selected={sel} key={i}/>
+                <Genre genre={genre} key={i} id={i} type="+"/>
               )
             })
           }
@@ -234,6 +248,18 @@ class Tuner extends React.Component {
       display = (
         <React.Fragment>
           {recButton}
+          <div className="panel"> 
+            <label className="label-medium"> Selected genres will show up here. Press to them to remove. </label>
+            <div className="div-selected-genres" onClick={this.genreRemove}>
+              {
+                this.state.selectedGenres.map((genre, i) => {
+                  return (
+                    <Genre genre={genre} key={i} id={i} type="-"/>
+                  )
+                })
+              }
+            </div>
+          </div>
           {board}
         </React.Fragment>
       )
@@ -251,6 +277,7 @@ class Tuner extends React.Component {
                   step={attribute[3]}
                   defaultMin={attribute[4]}
                   defaultMax={attribute[5]}
+                  desc={this.descriptions[i]}
                   key={i}
                   id={i}
                 />

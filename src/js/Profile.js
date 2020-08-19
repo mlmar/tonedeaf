@@ -62,7 +62,9 @@ class Profile extends React.Component {
           <img className="img" src={this.state.image} width="70" alt="Profile not found"/>
         </a>
         <div className="div-profile--info">
-          <label className="label-small label-bold"> {this.state.product} {this.state.type} </label>
+          <label className="label-small label-bold"> 
+            {this.state.product.toUpperCase()} {this.state.type.toUpperCase()} 
+          </label>
           <label className="label-small label-bold label-right"> {this.state.followers} followers </label>
         </div>
       </div>

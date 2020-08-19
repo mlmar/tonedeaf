@@ -11,12 +11,20 @@ class Nav extends React.Component {
     this.portraitNav = React.createRef();
     this.unselect = React.createRef();
     this.controlMenu = this.controlMenu.bind(this);
+    this.selectMenu = this.selectMenu.bind(this);
   }
 
+  // menu animations
   controlMenu(event) {
     this.portraitNav.current.classList.toggle("top-open");
     this.portraitNav.current.classList.toggle("top-closed");
     this.unselect.current.classList.toggle("top-open");
+  }
+
+  // close the menu automatically then go to new page
+  selectMenu(event) {
+    this.controlMenu();
+    this.props.callback(event);
   }
 
   render() {
@@ -57,7 +65,7 @@ class Nav extends React.Component {
               </div>
             </div>
 
-            <div className="nav-buttons" onClick={this.props.callback}>
+            <div className="nav-buttons" onClick={this.selectMenu}>
                 {
                   this.props.nav.map(function(item, i) {
                       if (i === 0) {

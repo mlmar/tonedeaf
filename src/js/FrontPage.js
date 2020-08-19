@@ -12,8 +12,7 @@ class FrontPage extends React.Component {
     this.state = {
       classes : "div-frontpage hide"
     };
-    
-    this.spotifyText = 
+     
     this.front = React.createRef();
   }
 

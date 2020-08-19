@@ -14,11 +14,11 @@
     display: initial;
   }
 
-  .panel:hover, .panel:focus {
+/*   .panel:hover, .panel:focus {
     -webkit-transform: initial;
     transform: initial;
     background: none;
-  }
+  } */
 
 
   /*************** nav bar ***************/
@@ -46,7 +46,7 @@
 
   .top-open {
     background: #212121f7;
-    height: 35rem;
+    height: 32rem;
     min-height: 0 !important;
     transition: height .5s ease, background .5s ease !important;
   }
@@ -132,14 +132,14 @@
   .nav-btn {
     border: none;
     background: #373737;
-    font-size: 1.3em;
+    font-size: 1.1em;
     font-weight: 100;
     min-height: 2em;
     width: 100%;
     color: #ffffff;
     background: none;
     transition: all .1s;
-    padding: .8rem .2rem .8rem .2rem;
+    padding: .4rem .2rem .4rem .2rem;
     text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
     border-width: .1em !important;
     border-radius: .2rem;
@@ -150,7 +150,7 @@
   }
 
   .selected {
-    background: #2d2d2da3;
+    background: #2d2d2dd6;
   }
 
   .log-btn-container {
@@ -200,7 +200,14 @@
   .div-genres {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 0rem 1rem;
+    grid-gap: 1rem 1rem;
+  }
+
+  .div-selected-genres {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1rem;
+    padding-bottom: 1rem;
   }
 
   /*************** scope ***************/
