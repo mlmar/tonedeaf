@@ -32,13 +32,13 @@ class FrontPage extends React.Component {
         <a href={this.props.return} className="sign-background">
           <label className="sign label-large cursor-pointer"> sign in with spotify </label>
         </a>
-        <div className="bottom label-center">
+        {/*<div className="bottom label-center">
           <label className="label-tiny"> Marcus Martinez </label>
           <br/>
           <label className="label-tiny"> Spotify&copy; is a trademark of Spotify AB </label>
           <br/>
           <label className="label-tiny"> 2020 </label>
-        </div>
+        </div> */}
       </div>
     )
   }
