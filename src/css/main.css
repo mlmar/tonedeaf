@@ -11,7 +11,7 @@
   transition: border 1s;
 
   font-family: sans-serif;
-  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 /********* SPECIAL DEFUALTS*********/
@@ -129,8 +129,7 @@ img {
 
 .show {
   opacity: 1  !important;
-  tranisition: opacity 2s ease !important;
-
+  transition: opacity 2s ease !important;
 }
 
 .progressbar {
@@ -471,7 +470,7 @@ img {
 }
 
 .div-nowplaying-controls {
-  diplay: flex;
+  display: flex;
   flex-direction: column;
   width: 100%;
 }
@@ -727,7 +726,7 @@ img {
 
 .control-btn-previous:hover, .control-btn-pause:hover, .control-btn-skip:hover {
   background: #212121d6;
-  transiton: all .1s ease;
+  transition: all .1s ease;
 }
 
 .hide-controls {
