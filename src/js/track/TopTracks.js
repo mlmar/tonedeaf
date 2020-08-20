@@ -88,28 +88,32 @@ class TopTracks extends React.Component {
   }
   
   render() {
-    return (
-      <div>
-        {
-          this.state.tracks.map((track, i) => {
-            return (
-              <div className="animate-drop" key={i}>
-                <Track
-                  image={track.album.images[0].url}
-                  title={track.name}
-                  artist={this.artistsToString(track.artists)}
-                  url={track.external_urls.spotify}
-                  year={track.album.release_date.split("-")[0]}
-                  type={track.album.type}
-                  album={track.album.name}
-                  rank={i+1}
-                />
-              </div>
-            )
-          })
-        }
-      </div>
-    )
+    if(this.state.tracks.length === 0) {
+      return <span/>;
+    } else {
+      return (
+        <div>
+          {
+            this.state.tracks.map((track, i) => {
+              return (
+                <div className="animate-drop" key={i}>
+                  <Track
+                    image={track.album.images[0].url}
+                    title={track.name}
+                    artist={this.artistsToString(track.artists)}
+                    url={track.external_urls.spotify}
+                    year={track.album.release_date.split("-")[0]}
+                    type={track.album.type}
+                    album={track.album.name}
+                    rank={i+1}
+                  />
+                </div>
+              )
+            })
+          }
+        </div>
+      )
+    }
   }
 }
 

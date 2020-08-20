@@ -39,7 +39,7 @@ class App extends React.Component {
   constructor() {
     super();
     /********* FOR DEVELOPMENT ONLY *********/
-    const local = false;
+    const local = false; // set to false before deployment
     const local_site = "http://localhost:8888/login";
 
     /********* TONEDEAF-AUTH SHOULD BE THE REDIRECT PAGE BY DEFAULT *********/
@@ -314,7 +314,6 @@ class App extends React.Component {
     } else {
       frontpage = <FrontPage return={this.state.returnPage}/>
     }
-
 
     /******* MAIN RETURN FOR THE APP.JS RENDER METHOD *******/
     return (

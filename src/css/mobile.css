@@ -4,7 +4,7 @@
 }
 
 @media only screen 
-  and (orientation: portrait) {
+  and (max-width: 768px) {
  
   .landscape {
     display: none !important;
@@ -202,6 +202,13 @@
   .div-panels {
     margin: 0;
   }
+
+  /*************** nowplaying ***************/
+
+  .div-nowplaying--info-full {
+    overflow: auto;
+    max-height: 9rem;
+  }
   
   /*************** tuner ***************/
   
@@ -263,7 +270,7 @@
 
 
   .label-large {
-    font-size: 2em;
+    font-size: 1.6em;
     font-weight: bold;
     color: #212121;
     padding-bottom: .5rem;
@@ -316,8 +323,6 @@
     align-items: center;
     font-size: 2vw;
   }
-
-
 
   .sign {
     color: #ffffff;
