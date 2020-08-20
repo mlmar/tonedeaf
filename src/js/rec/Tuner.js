@@ -241,10 +241,9 @@ class Tuner extends React.Component {
     var display;
     var recButton = (
       <div className="panel animate-drop">
-         <label className="label-medium"> 1 &mdash; Select up to 5 genres </label>
-         <label className="label-subtext"> * Will add function to select artists later </label>
-         <label className="label-medium"> 2 &mdash; Modify song attribute preferences </label>
-         <label className="label-medium"> 3 &mdash; Press 'Get Recommendations' </label>
+         <label className="label-medium"> Get recommendations based on song attribute and genres </label>
+         <label className="label-subtext label-bold"> * Select up to 5 genres </label>
+         <label className="label-subtext label-bold"> * Modify your song attribute preferences </label>
         <button className="option-btn" onClick={this.getRecs}> Get Recommendations </button>
       </div>
     )

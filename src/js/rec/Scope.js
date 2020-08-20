@@ -156,7 +156,7 @@ class Scope extends React.Component {
               this.state.selectedResults.map((result, i) => {
                 if(result.type === "artist") {
                   return (
-                    <div className="div-artist--compact animate-drop min-width" key={i} >
+                    <div className="div-artist--compact animate-drop" key={i} >
                       <button className="sub-btn" id={i}> - </button>
                       <Artist
                         image={result.images[0].url}
@@ -172,7 +172,7 @@ class Scope extends React.Component {
                   )
                 } else if(result.type === "track") {
                   return (
-                    <div className="div-artist--compact animate-drop min-width" key={i} >
+                    <div className="div-artist--compact animate-drop" key={i} >
                       <button className="sub-btn" id={i}> - </button>
                       <Track
                         image={result.album.images[0].url}
@@ -263,10 +263,7 @@ class Scope extends React.Component {
     return (
       <div>
         <div className="panel animate-drop">
-          <div>
-            <label className="label-large"> Scope </label>
-            <label className="label-medium"> &mdash; Get recommendations based on artists and tracks </label>
-          </div>
+          <label className="label-medium"> Get recommendations based on artists and tracks </label>
           <br/>
           <label className="label-subtext label-bold"> * Search and add a combination of up to 5 artists or songs, then press 'Get Recommendations' </label>
           <label className="label-subtext label-bold label-italic"> * if it glitches, press backspace </label>
