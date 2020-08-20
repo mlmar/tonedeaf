@@ -25,7 +25,7 @@ class Track extends React.Component {
       return (
         <div className="panel animate-drop">
           <div className="div-track">
-            <a href={this.props.url}>
+            <a href={this.props.url} className="link-center">
               <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>
             </a>
             <div className="div-track--info">

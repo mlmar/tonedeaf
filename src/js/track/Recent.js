@@ -83,6 +83,7 @@ class Recent extends React.Component {
                   year={track.track.album.release_date.split("-")[0]}
                   type={track.track.album.type}
                   album={track.track.album.name}
+                  time={track.played_at}
                 />
               </div>
             )
