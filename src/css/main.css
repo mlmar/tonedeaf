@@ -126,13 +126,14 @@ img {
   }
   100% {
     opacity: 1;
-    width: 50%;
+    width: 80%;
   }
 }
 
 .animate-load {
   width: 2rem;
   height: 2rem;
+  margin: 10%;
   border-radius: 100rem;
   background: #212121;
   animation: load 1s ease-in;
