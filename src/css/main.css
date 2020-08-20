@@ -136,7 +136,7 @@ img {
   margin: 10%;
   border-radius: 100rem;
   background: #212121;
-  animation: load 3s ease-in;
+  animation: load 2s ease-in;
   animation-fill-mode: both;
 }
 

@@ -20,7 +20,6 @@ class TopTracks extends React.Component {
 
 
     this.playlistCreator = new PlaylistCreator(this.props.userid);
-    this.selectedIndex = 0;
 
     this.cleanRange = ["last few years", "6 months", "4 weeks"]
     this.range = ["long_term", "medium_term", "short_term"];
@@ -41,13 +40,12 @@ class TopTracks extends React.Component {
     }
   }
  
-  /*  Retrieves top tracks based on selectedIndex of range
+  /*  Retrieves top tracks based on index of range
    *    if no cache is found, use api to retrieve tracks then cache,
    *    otherwise setState from cache
    */
   getTopTracks(index) {
     if(this.props.cache[index].length === 0) {
-      this.selectedIndex = 0;
       var selected_range = {
         time_range : this.range[index],
         limit : 50
@@ -88,9 +86,7 @@ class TopTracks extends React.Component {
   }
   
   render() {
-    if(this.state.tracks.length === 0) {
-      return <div className="animate-load"> </div>;
-    } else {
+    if(this.state.tracks.length !== 0) {
       return (
         <div>
           {
@@ -114,6 +110,7 @@ class TopTracks extends React.Component {
         </div>
       )
     }
+    return <div className="animate-load"> </div>;
   }
 }
 

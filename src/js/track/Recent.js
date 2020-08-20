@@ -69,9 +69,7 @@ class Recent extends React.Component {
   }
   
   render() {
-    if(this.state.tracks.length === 0) {
-      return <div className="animate-load"> </div>;
-    } else {
+    if(this.state.tracks.length !== 0) {
       return (
         <div>
           {
@@ -95,6 +93,7 @@ class Recent extends React.Component {
         </div>
       )
     }
+    return <div className="animate-load"> </div>;
   }
 }
 

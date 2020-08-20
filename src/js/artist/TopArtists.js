@@ -66,9 +66,7 @@ class TopArtists extends React.Component {
    *  Pass each artist's attributes to an Artist component
    */
   render() {
-    if(this.state.artists.length === 0) {
-      return <div className="animate-load"> </div>;
-    } else {
+    if(this.state.artists.length !== 0) {
       return (
         <div>
           {
@@ -90,6 +88,8 @@ class TopArtists extends React.Component {
         </div>
       )
     }
+
+    return <div className="animate-load"> </div>;
   }
 }
 
