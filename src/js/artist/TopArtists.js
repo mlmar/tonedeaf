@@ -67,7 +67,7 @@ class TopArtists extends React.Component {
    */
   render() {
     if(this.state.artists.length === 0) {
-      return <span/>;
+      return <div className="animate-load"> </div>;
     } else {
       return (
         <div>

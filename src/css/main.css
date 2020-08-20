@@ -119,6 +119,25 @@ img {
   animation-duration: .3s;
 }
 
+@keyframes load {
+  0% {
+    opacity: .5;
+    width: 0%;
+  }
+  100% {
+    opacity: 1;
+    width: 50%;
+  }
+}
+
+.animate-load {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100rem;
+  background: #212121;
+  animation: load 1s ease-in;
+  animation-fill-mode: both;
+}
 
 
 /* set hide by default then toggle show */

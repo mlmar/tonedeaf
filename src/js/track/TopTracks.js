@@ -89,7 +89,7 @@ class TopTracks extends React.Component {
   
   render() {
     if(this.state.tracks.length === 0) {
-      return <span/>;
+      return <div className="animate-load"> </div>;
     } else {
       return (
         <div>
