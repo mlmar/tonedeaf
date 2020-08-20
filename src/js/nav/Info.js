@@ -22,10 +22,19 @@ class Info extends React.Component {
 
         <div className="panel animate-drop">
           <label className="label-medium">
+            Why am I seeing this page?
+          </label>  <br/>
+          <label className="label-small">  
+            If you're here and didn't click on this page, something broke. 
+          </label>
+        </div>
+
+        <div className="panel animate-drop">
+          <label className="label-medium">
             Where are my stats?
           </label>  <br/>
           <label className="label-small">  
-            Spotify doesn't give me numbers, just tracks and artists.
+            Spotify API doesn't give access to numbers &mdash; only tracks, artists and recommendations.
           </label>
         </div>
 
@@ -34,17 +43,8 @@ class Info extends React.Component {
             Is the website lagging?
           </label>  <br/>
           <label className="label-small">  
-            If you're talking about the music player, it only updates every 5 seconds.
-            If you're on mobile, the website is slower.
-          </label>
-        </div>
-
-        <div className="panel animate-drop">
-          <label className="label-medium">
-            Why am I seeing this page?
-          </label>  <br/>
-          <label className="label-small">  
-            If you're here and didn't click on this page, something broke. 
+            The music player only updates every 5 seconds.
+            If you're on a phone, the website is slower.
           </label>
         </div>
 
