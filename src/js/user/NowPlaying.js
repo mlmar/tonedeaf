@@ -26,6 +26,9 @@ class NowPlaying extends React.Component {
     };
 
     this.controls = React.createRef();
+    this.pauseBtn = React.createRef();
+    this.pauseText = "| |";
+    this.playText = "&#8883;"
 
     this.timer = ""; // interval clock for retrieving song every 5 seconds
 
@@ -73,6 +76,7 @@ class NowPlaying extends React.Component {
       .catch((error) => {
         console.error("Could not retrieve recently played tracks @")
         console.error(error)
+        console.warn("Is your access token still valid?")
       });
   }
 
@@ -162,25 +166,23 @@ class NowPlaying extends React.Component {
     // check if something is already playing
     this.spotifyWebApi.pause()
       .then((response) => {
+        this.pauseBtn.current.innerHTML = this.playText;
         console.log("Successfully paused device @");
-        console.log(response);
       })
       .catch((error) => {
         this.play(); // if could not puase, try playing
         console.log("Could not pause device @");
-        console.log(error);
       });
   }
 
   play() {
     this.spotifyWebApi.play()
       .then((response) => {
+        this.pauseBtn.current.innerHTML = this.pauseText;
         console.log("Successfully played device @");
-        console.log(response);
       })
       .catch((error) => {
         console.log("Could not play device @");
-        console.log(error);
       });
   }
 
@@ -188,6 +190,7 @@ class NowPlaying extends React.Component {
     // check if something is already playing
     this.spotifyWebApi.skipToNext()
       .then((response) => {
+        this.pauseBtn.current.innerHTML = this.pauseText;
         console.log("Successfully skipped device @");
         console.log(response);
       })
@@ -235,19 +238,19 @@ class NowPlaying extends React.Component {
 
           </div>
 
-          <div className="div-nowplaying-controls">
-              <div className="div-control-buttons hide-controls" ref={this.controls}>
+          <div className="div-nowplaying-controls hide-controls" ref={this.controls}>
+              <div className="div-control-buttons">
                 <span className="control-btn-previous--container">
                   <button className="control-btn-previous" onClick={this.previous}> &lt; </button>
                 </span>
                 <span className="control-btn-pause--container">
-                  <button className="control-btn-pause" onClick={this.pause}> | | </button>
+                  <button className="control-btn-pause" onClick={this.pause} ref={this.pauseBtn}> {this.pauseText} </button>
                 </span>
                 <span className="control-btn-skip--container">
                   <button className="control-btn-skip" onClick={this.skip}> &gt; </button>
                 </span>
               </div>
-              <progress className="progressbar" max="100" value={this.compute()}></progress>
+              <progress className="progressbar" max="100" value={this.compute()}/>
               <label className="label-subtext"> {this.state.deviceText} {this.state.playing.device.name} </label>
           </div>
 

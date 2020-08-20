@@ -94,8 +94,8 @@
   }
 
   .menu-btn {
-    border: solid #ffffff !important;
-    border-width: 1px;
+    border: thin #7a7a7a;
+    border-style: double;
     border-radius: .3rem;
     font-size: 1rem;
     font-weight: 100;

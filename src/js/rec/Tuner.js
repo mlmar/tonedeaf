@@ -3,7 +3,7 @@ import SpotifyWebApi from 'spotify-web-api-js';
 import Genre from './Genre.js'
 import Attributes from './Attributes.js'
 import Track from '../track/Track.js';
-import PlaylistCreator from '../PlaylistCreator.js';
+import PlaylistCreator from '../helper/PlaylistCreator.js';
 
 // Recommendations based on genre
 class Tuner extends React.Component {
@@ -15,7 +15,8 @@ class Tuner extends React.Component {
       genres : [],
       tracks : [],
 
-      // attribute, min, max, step, default
+      // attribute, min, max, step, defaultMin, defaultMax
+      // only defaults will be changed by the user
       attributes : [
         ["acousticness",      0, 1, .1,   0, 1],
         ["danceabilitiy",     0, 1, .1,   0, 1],
@@ -55,6 +56,7 @@ class Tuner extends React.Component {
 
     this.selectedAmount = 0;
 
+    /********* BINDINGS *********/
     this.genreAdd = this.genreAdd.bind(this);
     this.genreRemove = this.genreRemove.bind(this);
     this.attributeClick = this.attributeClick.bind(this);
@@ -93,12 +95,16 @@ class Tuner extends React.Component {
     }
   }
 
-  // creates a json object of parameters specified by the user or defaults
+  /* creates a json object of parameters specified by the user or defaults
+   *  seed_genres come from the selectedGenres list created by the user
+   *  if not attribute sliders are changed then default values will be used anyway
+   */
   parameters() {
     var params = {
+      limit : 50, // number of items to return, 50 is max
       seed_genres : this.state.selectedGenres.join(),
-      limit : 50,
 
+      // attributes
       min_acousticness      : this.state.attributes[0][4],
       max_acousticness      : this.state.attributes[0][5],
 
@@ -123,7 +129,7 @@ class Tuner extends React.Component {
       min_mode              : this.state.attributes[7][4],
       max_mode              : this.state.attributes[7][5],
       
-      min_popularity        : this.state.attributes[8][4],
+      min_popularity        : this.state.attributes[8][4], 
       max_popularity        : this.state.attributes[8][5],
 
       min_speechiness       : this.state.attributes[9][4],
@@ -142,8 +148,11 @@ class Tuner extends React.Component {
     return(params);
   }
 
-  // check when the attribute div was pressed
+  /*  Check which attribute slider was affected
+   *    - get index of pressed item and match to correct attrbiute min/max
+   */
   attributeClick(event) {
+    // since onClick is on the div, confirm tagName
     if(event.target.tagName === "INPUT") {
       var min = event.target.classList.contains("min");
       var index = event.target.id;
@@ -162,19 +171,28 @@ class Tuner extends React.Component {
     }
   }
 
-
   // get list of generes
   getGenreSeeds() {
-    this.spotifyWebApi.getAvailableGenreSeeds()
-      .then((response) => {
-        this.setState({genres: response.genres});
-        console.log("Succesfully retrieved genre seeds @");
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error("Could not retrieve genre seeds @");
-        console.error(error)
-      });
+    if(this.props.cache.length === 0) {
+      this.spotifyWebApi.getAvailableGenreSeeds()
+        .then((response) => {
+          this.setState({genres: response.genres});
+          this.props.callback(response.genres); // cache artist lsits
+          
+          console.log("Succesfully retrieved genre seeds @");
+          console.log("CACHING @ ");
+          console.log(response);
+          console.log("Genre seeds should only retrieved remotely once per session");
+        })
+        .catch((error) => {
+          console.error("Could not retrieve genre seeds @");
+          console.error(error)
+        });
+    } else {
+      this.setState({ genres : this.props.cache })
+      console.log("Successfully retrieved genre seeds FROM CACHE @ ");
+      console.log(this.props.cache);
+    }
   }
 
   // detect which button was clicked for REMOVING a genre
@@ -223,10 +241,10 @@ class Tuner extends React.Component {
     var display;
     var recButton = (
       <div className="panel animate-drop">
-         <label className="label-medium"> 1 — Select up to 5 genres </label>
+         <label className="label-medium"> 1 &mdash; Select up to 5 genres </label>
          <label className="label-subtext"> * Will add function to select artists later </label>
-         <label className="label-medium"> 2 — Modify song attribute preferences </label>
-         <label className="label-medium"> 3 — Press 'Get Recommendations' </label>
+         <label className="label-medium"> 2 &mdash; Modify song attribute preferences </label>
+         <label className="label-medium"> 3 &mdash; Press 'Get Recommendations' </label>
         <button className="option-btn" onClick={this.getRecs}> Get Recommendations </button>
       </div>
     )

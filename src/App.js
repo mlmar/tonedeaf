@@ -3,21 +3,23 @@ import React from 'react';
 import './css/main.css';
 import './css/mobile.css';
 
-import FrontPage from './js/FrontPage';
-import Nav from './js/Nav.js';
-import Info from './js/Info.js';
+import FrontPage from './js/nav/FrontPage';
+import Nav from './js/nav/Nav.js';
+import Info from './js/nav/Info.js';
 
+import Profile from './js/user/Profile.js';
+import NowPlaying from './js/user/NowPlaying.js';
 
-import Profile from './js/Profile.js';
-import NowPlaying from './js/NowPlaying.js';
 import TopArtists from './js/artist/TopArtists.js';
 import TopTracks from './js/track/TopTracks.js';
 import Recent from './js/track/Recent.js';
-import Tuner from './js/recommendations/Tuner.js';
-import Scope from './js/recommendations/Scope.js';
 
-import Options from './js/Options.js'
-import GenreOptions from './js/recommendations/GenreOptions.js';
+import Tuner from './js/rec/Tuner.js';
+import Scope from './js/rec/Scope.js';
+// import GenreOptions from './js/rec/GenreOptions.js';
+
+import Options from './js/helper/Options.js'
+
 
 
 // Spotify Web API JS by Jose Perez on github
@@ -25,55 +27,82 @@ import GenreOptions from './js/recommendations/GenreOptions.js';
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyWebApi = new SpotifyWebApi();
 
+
+/*  MAIN COMPONENT
+ *    - sets access tokens for api calls
+ *    - conditional rendering of the page based on login and navigation
+ *    - handles pseudo caches (local copies to reduce api calls)
+ */
 class App extends React.Component {
   
   // v1
   constructor() {
     super();
-    const params = this.getHashParams();
-    const token = params.access_token;
+    /********* FOR DEVELOPMENT ONLY *********/
+    const local = false;
+    const local_site = "http://localhost:8888/login";
 
-//     const show_site = "http://localhost:8888/login";
-    const show_site = "https://tonedeaf-auth.vercel.app/login"
-    const show_logout = "https://accounts.spotify.com/en/status"
+    /********* TONEDEAF-AUTH SHOULD BE THE REDIRECT PAGE BY DEFAULT *********/
+    const deployed_site = "https://tonedeaf-auth.vercel.app/login";
+    const show_site = local ? local_site : deployed_site;
+    const show_logout = "https://accounts.spotify.com/en/status";
     
+    const params = this.getHashParams(); // use hahing function to get tokens
+    const token = params.access_token; // set token in js api wrapper
     if(token) {
       spotifyWebApi.setAccessToken(token);
     }
 
+    /********* COMPONENT STATES *********/
     this.state = {
-      loggedIn      : token ? true : false,
-      returnPage    : token ? show_logout : show_site,
-      loginButton   : token ? "Log Out" : "Log In",
-      nav           : [ 
-        "Now Playing", 
-        "Artists", 
-        "Tracks", 
-        "Recent",
-        "Tuner",
-        "Scope",
-        "Info"
-      ],
-      selectedIndex : 0
+      loggedIn      : token ? true : false, // true  a token is retrieved
+      returnPage    : token ? show_logout : show_site, // log button url
+      loginButton   : token ? "Log Out" : "Log In", // log button text
+
+      nav           : [ // nav elements
+                        "Now Playing", 
+                        "Artists", 
+                        "Tracks", 
+                        "Recent",
+                        "Tuner",
+                        "Scope",
+                        "Info"
+                      ],
+      selectedIndex : 0 // selected nav element
     }
 
-    this.userid = 0;
+    this.userid = 0; // passed to components that use PlaylistCreator
 
-    this.topArtists = React.createRef();
-    this.topTracks = React.createRef();
-    this.recent = React.createRef();
-    this.tuner = React.createRef();
-    this.scope = React.createRef();
-    this.options = React.createRef();
+    /********* REFERENCES *********/
+    this.topArtists = React.createRef();  // call createPlaylist(), change index
+    this.topTracks = React.createRef();   // call createPlaylist(), change index
+    this.recent = React.createRef();      // call createPlaylist()
+    this.tuner = React.createRef();       // call createPlaylist(), change index
+    this.scope = React.createRef();       // call createPlaylist()
+    this.options = React.createRef();     // reset options index
 
-    this.optionsArray = ["Long Term", "6 Months", "4 Weeks"];
-    this.optionsArrayIndex = 0; // generic tracker to reset index upon component change
+    /********* TEXTS *********/
+    this.timeRanges = ["Long Term", "6 Months", "4 Weeks"]; // time ranges for options
+    this.likeText = "Like these tracks?"; // playlist option text
+    this.saveText = ["Save as Spotify Playlist"]; // only one option
+
     
+    /********* CACHE *********/
+    // pseudo cache : local copies of lists that cannot change within one session
+    // cache whereever possible to reduce api calls
+    this.CACHED_ARTISTS = [[],[],[]];
+    this.CACHED_TRACKS = [[],[],[]];
+    this.CACHED_GENRES = []
+
+    
+    /********* BINDINGS *********/
     this.navClick = this.navClick.bind(this);
+    this.createOptions = this.createOptions.bind(this);
   }
 
-  // From Spotify's index.html in their authentication examples
-  //  used to get access token to send api requests
+  /*  From Spotify's index.html in their authentication examples
+   *    - used to get access token to send api requests
+   */
   getHashParams() {
     var hashParams = {};
     var e, r = /([^&;=]+)=?([^&;]*)/g,
@@ -84,8 +113,14 @@ class App extends React.Component {
     return hashParams;
   }
 
-  // change selectedIndex to index of selected nav element
+  
+  /*  Called as callback from the Nav component
+   *    - loops through all childnode buttons of the navbar
+   *    - remove selected css if possible
+   *    - assign selectedIndex and selected css to clicked button
+   */
   navClick(event) {
+    // since onClick is called from, confirm a button was clicked
     if(event.target.tagName === "BUTTON") {
       var index = 0;
       for (var i = 0; i < event.currentTarget.childNodes.length; i++) {
@@ -96,14 +131,6 @@ class App extends React.Component {
         if (event.target === li) {
             index = i;
             event.target.classList.add("selected");
-            console.log(event.target + " " + index);
-        }
-      }
-      
-      // reset options component if window changes
-      if(this.options.current !== null) {
-        if(this.optionsArrayIndex >= 0 && this.state.selectedIndex !== index) {
-          this.options.current.setState({index: 0});
         }
       }
 
@@ -112,163 +139,184 @@ class App extends React.Component {
     }
   }
 
-  // display based on selectedIndex
+  /*  function to create options in sidebar
+   *    - called to navigate within displayed components save playlist
+   *    - params : 
+   *        text      : title of options component
+   *        options   : options to be shown as buttons
+   *        callback  : callback function that returns pressed index
+   */
+  createOptions(text, options, callback, i) {
+    return (
+      <Options 
+        text={text}
+        options={options}
+        callback={callback}
+        ref={this.options}
+        key={i}
+      />
+    );
+  }
+
+  /*  render components based on selectedIndex
+   *    - each cae represents a selectedIndex
+   *    
+   *    - 2 areas change upon logging in
+   *        - top       : only render navbar if logged in
+   *        - frontPage : show sidebar and display if logged in, 
+   *                      show sign in page otherwise
+   *
+   *    - 4 areas can change upon navigation:
+   *        - focus           : top of sidebar -- profile/options
+   *        - secondaryFocus  : middle of sidebar -- boolean save
+   *        - showNowPlaying  : bottom of sidebar -- boolean
+   *        - display         : the main component area for navigaiton
+   */
   render() {
     var portrait = window.matchMedia("only screen and (orientation: portrait)").matches;
 
-    var top;
-    var frontpage;
+    var top; // only assign if logged in
+    var frontpage; // shows front page if not logged in
+    
     if(this.state.loggedIn) {
 
-      // focus on profile by default
-      var focus = (
+      var focus = ( // focus on profile by default
         <Profile callback={(id) => {
-            this.userid = id;
+            this.userid = id; // get user id from current profile
             console.log("succesfllly found user id on mount @ " + id);
           }}
         /> 
       );
 
-      var secondaryFocus;
+      var secondaryFocus; // show save option for playlists
       var display; // right side content panels
       var showNowPlaying = portrait ? "" : <NowPlaying full="false"/>; // in sidebar
 
+
+      /*************** REDNDER COMPONENTS BASED ON SELECTED INDEX ***************/
       switch(this.state.selectedIndex) {
-        case 0:
+
+        case 0: /*** 0 is the the default page upon logging in ***/
           display = <NowPlaying full="true"/>; // in right panel
-          showNowPlaying = <span className="empty"/>; // replace with an empty span
+          showNowPlaying = ""; // set to nothing
           break;
 
-        case 1:
-          var text1 = "Your Top Artists"
+        case 1: /*** Top Artists, time ranges ***/
+          focus = this.createOptions("Your Top Artists", this.timeRanges, 
+            (index) => {
+              this.topArtists.current.getTopArtists(index);
+              this.optionsChanged = true;
+            }, 1);
 
-          focus = ( // for time range selection
-            <Options 
-              text={text1} 
-              options={this.optionsArray}
-              callback={(index) => {
-                this.topArtists.current.getTopArtists(index);
-                this.optionsArrayIndex = index;
+          display = (
+            <TopArtists ref={this.topArtists} cache={this.CACHED_ARTISTS}
+              callback={(index, list) => {
+                this.CACHED_ARTISTS[index] = list;
               }}
-              ref={this.options}
-            /> 
-          )
-          display = <TopArtists ref={this.topArtists}/>
-          break;
-
-        case 2:
-          var text2 = "Your Top Tracks"
-          focus = ( // for time range selection
-            <Options 
-              text={text2} 
-              options={this.optionsArray}
-              callback={(index) => {
-                this.topTracks.current.getTopTracks(index);
-                this.optionsArrayIndex = index;
-              }}
-              ref={this.options}
             />
-          )
+          );
+
+          break;
+
+        case 2: /*** Top Tracks, time ranges, playlist creator ***/
+          focus = this.createOptions("Your Top Tracks", this.timeRanges, 
+            (index) => {
+              this.topTracks.current.getTopTracks(index);
+              this.optionChanged = true;
+            }, 2);
           
-          secondaryFocus = ( // save tracks to playlist option
-            <Options 
-              text="Like these tracks?"
-              options={["Save as spotify playlist"]}
-              callback={(index) => {
-                this.topTracks.current.createPlaylist();
+          secondaryFocus = this.createOptions(this.likeText, this.saveText, 
+            (index) => {
+              this.topTracks.current.createPlaylist();
+            });
+          
+          display = 
+            <TopTracks userid={this.userid} ref={this.topTracks} cache={this.CACHED_TRACKS}
+              callback={(index, list) => {
+                this.CACHED_TRACKS[index] = list;
               }}
             />
-          )
-          
-          display = <TopTracks userid={this.userid} ref={this.topTracks}/>
           break;
 
-        case 3:
-          secondaryFocus = ( // save tracks to playlist option
-            <Options 
-              text="Like these tracks?"
-              options={["Save as spotify playlist"]}
-              callback={(index) => {
-                this.recent.current.createPlaylist();
-              }}
-            />
-          )
+        case 3: /*** Recent Tracks, time ranges, playlist creator ***/
+          secondaryFocus = this.createOptions(this.likeText, this.saveText, 
+            (index) => {
+              this.recent.current.createPlaylist();
+            });
 
           display = <Recent userid={this.userid} ref={this.recent}/>
           break;
         
-        case 4:
-          focus = (
-            <GenreOptions
-              callback={(index) => {
+        case 4: /*** Tuner, Genres/Attributes options, playlist creator ***/
+          focus = this.createOptions("Tuner", ["Genres","Attributes"], 
+            (index) => {
                 this.tuner.current.setState({index: index})
+            }, 3);
+
+          secondaryFocus = this.createOptions(this.likeText, this.saveText, 
+            (index) => {
+              this.tuner.current.createPlaylist();
+            });
+
+          display =
+            <Tuner userid={this.userid} ref={this.tuner} cache={this.CACHED_GENRES}
+              callback={(list) => {
+                this.CACHED_GENRES = list;
               }}
             />
-          )
-
-          secondaryFocus = ( // save tracks to playlist option
-            <Options 
-              text="Like these tracks?" 
-              options={["Save as spotify playlist"]}
-              callback={(index) => {
-                this.tuner.current.createPlaylist();
-              }}
-            />
-          )
-
-          display = <Tuner userid={this.userid} ref={this.tuner}/>
           break;
 
-        case 5:
-          focus = "";
-          secondaryFocus = ( // save tracks to playlist option
-            <Options 
-              text="Like these tracks?" 
-              options={["Save as spotify playlist"]}
-              callback={(index) => {
-                this.scope.current.createPlaylist();
-              }}
-            />
-          )
+        case 5: /*** Scope, playlist creator ***/
+          focus = this.createOptions("Scope", ["Artists","Tracks"], 
+            (index) => {
+                this.scope.current.setSearchType(index);
+            }, 4);
+            
+          secondaryFocus = this.createOptions(this.likeText, this.saveText, 
+            (index) => {
+              this.scope.current.createPlaylist();
+            });
+
           display = <Scope userid={this.userid} ref={this.scope}/>
           break;
 
-        default:
+        default: /*** show info page if the page breaks ***/
           display = <Info/>
           break;
       }
 
-      var sidebar = (
-        <React.Fragment>
-          {focus}
-          {secondaryFocus}
-          {showNowPlaying}
-        </React.Fragment>
-      )
 
-      top = (
+      /*************** CONSTRUCT THE PAGE BASED ON PREVIOUS CONDITIONS ***************/
+
+      // constructor sidebar
+      var sidebar = (<React.Fragment> {focus}{secondaryFocus}{showNowPlaying} </React.Fragment>);
+
+      // construct naavbar
+      top =
         <Nav
           callback={this.navClick}
           nav={this.state.nav}
           returnPage={this.state.returnPage}
           loginButton={this.state.loginButton}
         />
-      )
 
-      frontpage = (
+      // contruct the front page
+      frontpage =
         <React.Fragment>
-          <div className="div-sidebar div--outline">
-            {sidebar}
-          </div>
-          <div className="div-panels div--outline">
-            {display}
-          </div>
+          <div className="div-sidebar"> {sidebar} </div>
+          <div className="div-panels"> {display} </div>
         </React.Fragment>
-      )
+  
+
+    /*  If not logged in, just show the sign in page
+     *    - one button that leads to spotify permissions page
+     */
     } else {
       frontpage = <FrontPage return={this.state.returnPage}/>
     }
 
+
+    /******* MAIN RETURN FOR THE APP.JS RENDER METHOD *******/
     return (
       <div className="App">
         <div className="page">

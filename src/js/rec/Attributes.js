@@ -1,7 +1,7 @@
 import React from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 
-/*  attributes component
+/*  ATTRIBUTE COMPONENT
  *  just displays min/max sliders for a specific song attribute
  */
 class Attributes extends React.Component {
@@ -34,6 +34,7 @@ class Attributes extends React.Component {
               id={this.props.id}
             />
           </div>
+          
           <div className="side-label">
             <label className="label-small"> maximum </label>
             <input className="input-item max" 
@@ -46,6 +47,7 @@ class Attributes extends React.Component {
               id={this.props.id}
             />
           </div>
+          
         </div>
       </div>
     )

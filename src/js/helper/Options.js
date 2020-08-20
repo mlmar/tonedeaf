@@ -29,7 +29,7 @@ class Options extends React.Component {
       }
       
       this.setState({index : tempIndex})
-      console.log("callback with " + tempIndex + " from " + this.state.text)
+      console.log("callback with " + tempIndex + " from " + this.props.text)
       this.props.callback(tempIndex);
     }
   }

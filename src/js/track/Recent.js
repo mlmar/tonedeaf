@@ -1,7 +1,7 @@
 import React from 'react';
 import Track from './Track.js';
 import SpotifyWebApi from 'spotify-web-api-js';
-import PlaylistCreator from '../PlaylistCreator.js';
+import PlaylistCreator from '../helper/PlaylistCreator.js';
 
 class Recent extends React.Component {
   constructor(props) {

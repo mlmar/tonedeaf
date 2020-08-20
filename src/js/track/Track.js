@@ -13,21 +13,31 @@ class Track extends React.Component {
     var rank = (this.props.rank !== check_undefined) ?
       ( <React.Fragment> {this.props.rank}. </React.Fragment> ) : ""
 
-    return (
-      <div className="panel">
-        <div className="div-track">
-          <a href={this.props.url}>
-            <img className="div-track--img" src={this.props.image} width="100" height="100" alt="track art"/>
-          </a>
-          <div className="div-track--info">
-            <label className="label-medium"> {rank} {this.props.title} </label>
-            <label className="label-small"> {this.props.artist} </label>
-            <br/>
-            <label className="label-small"> {this.props.album} | {this.props.year} </label>
+    if(this.props.compact) {
+      return (
+        <div className="panel min-width animate-drop">
+          <img className="div-track--img" src={this.props.image} width="100" height="100" alt="track art"/>
+          <label className="label-small label-bold label-center"> {rank} {this.props.title} </label>
+          <label className="label-small label-center nopadding"> {this.props.artist} </label>
+        </div>
+      )
+    } else {
+      return (
+        <div className="panel animate-drop">
+          <div className="div-track">
+            <a href={this.props.url}>
+              <img className="div-track--img" src={this.props.image} width="100" height="100" alt="track art"/>
+            </a>
+            <div className="div-track--info">
+              <label className="label-medium"> {rank} {this.props.title} </label>
+              <label className="label-small"> {this.props.artist} </label>
+              <br/>
+              <label className="label-small"> {this.props.album} | {this.props.year} </label>
+            </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
 }
 

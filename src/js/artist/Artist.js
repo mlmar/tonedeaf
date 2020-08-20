@@ -25,7 +25,7 @@ class Artist extends React.Component {
     
     if(this.props.compact) {
       return (
-        <div className="panel min-width">
+        <div className="panel min-width animate-drop">
           <img className="div-track--img" src={this.props.image} width="100" height="100" alt="track art"/>
           <label className="label-small label-bold label-center"> {rank} {this.props.name} </label>
         </div>
@@ -33,7 +33,7 @@ class Artist extends React.Component {
 
     } else {
       return (
-        <div className="panel">
+        <div className="panel animate-drop">
           <div className="div-track">
             <a href={this.props.url}>
               <img className="div-track--img" src={ this.props.image} width="100" height="100" alt="track art"/>

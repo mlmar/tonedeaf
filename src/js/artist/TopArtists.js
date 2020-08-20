@@ -2,70 +2,85 @@ import React from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 import Artist from './Artist.js'
 
+
+/*  TOP ARTISTS COMPONENT
+ *    - Required props: cache
+ *        cache : needed to cache top artists to reduce api calls
+ *
+ *    - implements Artist component to display individual artists
+ *    - uses SpotifyWebApi to retrieve top artist based on user's id
+ */
 class TopArtists extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      artists : []
+      artists : [] // store current list of artists here
     };
 
     this.range = ["long_term", "medium_term", "short_term"];
 
     this.spotifyWebApi = new SpotifyWebApi();
     this.getTopArtists = this.getTopArtists.bind(this);
-    this.genresToString = this.genresToString.bind(this);
   }
 
+  /*  Retrieves top artists based on selectedIndex of range
+   *    if no cache is found, use api to retrieve artists then cache,
+   *    otherwise setState from cache
+   */
   getTopArtists(index) {
-    var selected_range = {
-      time_range : this.range[index],
-      limit : 50
-    }
+    if(this.props.cache[index].length === 0) {
+      var params = { // options to pass to api caller
+        time_range : this.range[index],
+        limit : 50
+      }
 
-    this.spotifyWebApi.getMyTopArtists(selected_range)
-      .then((response) => {
-        this.setState({
-          artists : response.items
+      this.spotifyWebApi.getMyTopArtists(params)
+        .then((response) => {
+          this.setState({ artists : response.items })
+          this.props.callback(index, response.items); // cache artist lsits
+          
+          console.log("Succesfully retrieved top artists @ " + index);
+          console.log("CACHING @ " + index);
+          console.log(response.items);
+          console.log("Each artist list should only retrieved remotely once per session");
         })
-        console.log("Succesfully retrieved top artists @ " + index);
-        console.log(response.items);
-      })
-      .catch((error) => {
-        console.error("Could not retrieve top artists @")
-        console.error(error)
-      });
-  }
-  
+        .catch((error) => {
+          console.error("Could not retrieve top artists @")
+          console.error(error)
+        });
 
-  genresToString(genres) {
-    var result = "";
-    for(var i = 0; i < genres.length; i++) {
-      result += (i < genres.length - 1) ? genres[i] + ", " : genres[i];
+    } else {
+      this.setState({ artists : this.props.cache[index] })
+      console.log("Successfully retrieved top artists FROM CACHE @ " + index);
+      console.log(this.props.cache);
     }
-    return result;
   }
 
+  /*  get top artists for long term upon mounting
+   */
   componentDidMount() {
     this.getTopArtists(0);
   }
   
+  /*  Iterate through artists array
+   *  Pass each artist's attributes to an Artist component
+   */
   render() {
     return (
       <div>
         {
           this.state.artists.map((artist, i) => {
             return (
-              <div className="animate-drop" key={i}>
-                <Artist
-                  image={artist.images[0].url}
-                  name={artist.name}
-                  url={artist.external_urls.spotify}
-                  genre={this.genresToString(artist.genres)}
-                  popularity={artist.popularity}
-                  followers={artist.followers.total}
-                  rank={i+1}
-                />
-              </div>
+              <Artist
+                image={artist.images[0].url}
+                name={artist.name}
+                url={artist.external_urls.spotify}
+                genre={artist.genres.join(", ")}
+                popularity={artist.popularity}
+                followers={artist.followers.total}
+                rank={i+1}
+                key={i}
+              />
             )
           })
         }
