@@ -226,6 +226,15 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .add-btn, .sub-btn {
+    height: 2.2em;
+    width: 2.2em;
+  }
+
+  .add-btn {
+    right: .5rem;
+  }
+
 
   /*************** labels ***************/
 
