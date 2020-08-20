@@ -15,8 +15,8 @@ class Track extends React.Component {
 
     if(this.props.compact) {
       return (
-        <div className="panel animate-drop">
-          <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>
+        <div className="panel-compact animate-drop">
+          <img className="img--small" src={this.props.image} width="100" height="100" alt="track art"/>
           <label className="label-small label-bold label-center"> {rank} {this.props.title} </label>
           <label className="label-small label-center nopadding"> {this.props.artist} </label>
         </div>

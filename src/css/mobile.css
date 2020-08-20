@@ -25,6 +25,11 @@
     height: 6em;
   }
 
+  .img--small {
+    width: 5em;
+    height: 5em;
+  }
+
   /*************** nav bar ***************/
 
   .top {
