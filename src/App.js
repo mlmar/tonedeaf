@@ -16,10 +16,9 @@ import Recent from './js/track/Recent.js';
 
 import Tuner from './js/rec/Tuner.js';
 import Scope from './js/rec/Scope.js';
-// import GenreOptions from './js/rec/GenreOptions.js';
 
-import Options from './js/helper/Options.js'
-
+import Options from './js/helper/Options.js';
+import List from './js/helper/List.js';
 
 
 // Spotify Web API JS by Jose Perez on github
@@ -68,7 +67,12 @@ class App extends React.Component {
                         "Scope",
                         "Info"
                       ],
-      selectedIndex : 0 // selected nav element
+      selectedIndex : 0, // selected nav element
+
+      averages : {
+        names   : [],
+        values  : []
+      }
     }
 
     this.userid = 0; // passed to components that use PlaylistCreator
@@ -90,10 +94,14 @@ class App extends React.Component {
     /********* CACHE *********/
     // pseudo cache : local copies of lists that cannot change within one session
     // cache whereever possible to reduce api calls
-    this.CACHED_ARTISTS = [[],[],[]];
-    this.CACHED_TRACKS = [[],[],[]];
-    this.CACHED_GENRES = []
-
+    // each array represents the amount of lists a component generates
+    this.CACHE = {
+      ARTISTS     : [[],[],[]],
+      TRACKS      : [[],[],[]],
+      GENRES      : [],
+      FEATURES    : [[],[],[]],
+      AVERAGES    : [[],[],[]]
+    }
     
     /********* BINDINGS *********/
     this.navClick = this.navClick.bind(this);
@@ -135,7 +143,7 @@ class App extends React.Component {
       }
 
       this.setState({selectedIndex : index});
-      console.log("Selected Index: " + this.state.selectedIndex);
+      console.log("Selected  nav ndex @ " + this.state.selectedIndex);
     }
   }
 
@@ -173,6 +181,8 @@ class App extends React.Component {
    *        - display         : the main component area for navigaiton
    */
   render() {
+    console.log('yo');
+    
     var portrait = window.matchMedia("only screen and (orientation: portrait)").matches;
 
     var top; // only assign if logged in
@@ -189,6 +199,7 @@ class App extends React.Component {
       );
 
       var secondaryFocus; // show save option for playlists
+      var tertiaryFocus;
       var display; // right side content panels
       var showNowPlaying = portrait ? "" : <NowPlaying full="false"/>; // in sidebar
 
@@ -205,16 +216,14 @@ class App extends React.Component {
           focus = this.createOptions("Your Top Artists", this.timeRanges, 
             (index) => {
               this.topArtists.current.getTopArtists(index);
-              this.optionsChanged = true;
             }, 1);
 
-          display = (
-            <TopArtists ref={this.topArtists} cache={this.CACHED_ARTISTS}
+          display =
+            <TopArtists ref={this.topArtists} cache={this.CACHE.ARTISTS}
               callback={(index, list) => {
-                this.CACHED_ARTISTS[index] = list;
+                this.CACHE.ARTISTS[index] = list;
               }}
-            />
-          );
+            />;
 
           break;
 
@@ -229,13 +238,31 @@ class App extends React.Component {
             (index) => {
               this.topTracks.current.createPlaylist();
             });
+
+          tertiaryFocus = 
+            <List text="Attribute Averages" 
+              items={this.state.averages.names} 
+              descriptions={this.state.averages.values}
+            />
           
           display = 
-            <TopTracks userid={this.userid} ref={this.topTracks} cache={this.CACHED_TRACKS}
+            <TopTracks userid={this.userid} ref={this.topTracks} 
+              cache={this.CACHE.TRACKS}
               callback={(index, list) => {
-                this.CACHED_TRACKS[index] = list;
+                this.CACHE.TRACKS[index] = list;
               }}
-            />
+              cacheFeatures={this.CACHE.FEATURES}
+              callbackFeatures={(index, list) => {
+                this.CACHE.FEATURES[index] = list;
+              }}
+              cacheAverages={this.CACHE.AVERAGES}
+              callbackAverages={(index, list) => {
+                this.CACHE.AVERAGES[index] = list;
+              }}
+              showAverages={(items, descriptions) => {
+                this.setState({ averages : { names : items, values : descriptions }});
+              }}
+            />;
           break;
 
         case 3: /*** Recent Tracks, time ranges, playlist creator ***/
@@ -244,7 +271,7 @@ class App extends React.Component {
               this.recent.current.createPlaylist();
             });
 
-          display = <Recent userid={this.userid} ref={this.recent}/>
+          display = <Recent userid={this.userid} ref={this.recent}/>;
           break;
         
         case 4: /*** Tuner, Genres/Attributes options, playlist creator ***/
@@ -259,17 +286,17 @@ class App extends React.Component {
             });
 
           display =
-            <Tuner userid={this.userid} ref={this.tuner} cache={this.CACHED_GENRES}
+            <Tuner userid={this.userid} ref={this.tuner} cache={this.CACHE.GENRES}
               callback={(list) => {
-                this.CACHED_GENRES = list;
+                this.CACHE.GENRES = list;
               }}
-            />
+            />;
           break;
 
         case 5: /*** Scope, playlist creator ***/
           focus = this.createOptions("Scope", ["Artists","Tracks"], 
             (index) => {
-                this.scope.current.setSearchType(index);
+              this.scope.current.setSearchType(index);
             }, 4);
             
           secondaryFocus = this.createOptions(this.likeText, this.saveText, 
@@ -277,7 +304,7 @@ class App extends React.Component {
               this.scope.current.createPlaylist();
             });
 
-          display = <Scope userid={this.userid} ref={this.scope}/>
+          display = <Scope userid={this.userid} ref={this.scope}/>;
           break;
 
         default: /*** show info page if the page breaks ***/
@@ -289,7 +316,7 @@ class App extends React.Component {
       /*************** CONSTRUCT THE PAGE BASED ON PREVIOUS CONDITIONS ***************/
 
       // constructor sidebar
-      var sidebar = (<React.Fragment> {focus}{secondaryFocus}{showNowPlaying} </React.Fragment>);
+      var sidebar = (<React.Fragment> {focus}{secondaryFocus}{tertiaryFocus}{showNowPlaying} </React.Fragment>);
 
       // construct naavbar
       top =

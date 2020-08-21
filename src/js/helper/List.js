@@ -1,0 +1,18 @@
+import React from 'react';
+
+class List extends React.Component {
+  render() {
+    return (
+      <div className="panel animate-drop">
+        <label className="label-medium"> {this.props.text} </label>
+        {
+          this.props.items.map((item, i) => {
+            return <label className="label-small div-item" key={i}> <span className="label-bold"> {item} </span> {this.props.descriptions[i]} </label>
+          })
+        }
+      </div>
+    )
+  }
+}
+
+export default List;

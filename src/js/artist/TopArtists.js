@@ -25,7 +25,7 @@ class TopArtists extends React.Component {
   }
 
   /*  Retrieves top artists based on selectedIndex of range
-   *    if no cache is found, use api to retrieve artists then cache,
+   *    if cache is empty, use api to retrieve artists then cache,
    *    otherwise setState from cache
    */
   getTopArtists(index) {
@@ -44,7 +44,7 @@ class TopArtists extends React.Component {
             () => {this.props.callback(index, this.state.artists)} );
             
           console.log("Succesfully retrieved top artists @ " + index);
-          console.log("CACHING @ " + index);
+          console.log("CACHING ARTISTS @ CACHE.ARTIST" + index);
           console.log(response.items);
           console.log("Each artist list should only retrieved remotely once per session");
         })
@@ -55,7 +55,7 @@ class TopArtists extends React.Component {
 
     } else {
       this.setState({ artists : this.props.cache[index], fetching : false })
-      console.log("Successfully retrieved top artists FROM CACHE @ CACHED ARTISTS " + index);
+      console.log("Successfully retrieved top artists FROM CACHE @ CACHE.ARTISTS " + index);
       console.log(this.props.cache);
     }
   }
@@ -64,21 +64,14 @@ class TopArtists extends React.Component {
    */
   componentDidMount() {
     this.getTopArtists(0);
-    setTimeout(() => {
-      if(this.state.fetching) {
-        this.getTopArtists(0);
-      } else {
-        console.log("timeout was not needed");
-      }
-    }, 2000);
   }
   
   /*  Iterate through artists array
    *  Pass each artist's attributes to an Artist component
    */
   render() {
-    console.log("fetching @ " + this.state.fetching + 
-      ", with length of " + this.state.artists.length);
+//     console.log("fetching @ " + this.state.fetching + 
+//       ", with length of " + this.state.artists.length);
 
     if(!this.state.fetching) {
       return (

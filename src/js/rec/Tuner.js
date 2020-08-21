@@ -182,7 +182,7 @@ class Tuner extends React.Component {
           () => { this.props.callback(this.state.genres) });
           
           console.log("Succesfully retrieved genre seeds @");
-          console.log("CACHING @ ");
+          console.log("CACHING GENRES @ CACHE.GENRES ");
           console.log(response);
           console.log("Genre seeds should only retrieved remotely once per session");
         })
@@ -192,8 +192,7 @@ class Tuner extends React.Component {
         });
     } else {
       this.setState({ genres : this.props.cache })
-      console.log("Successfully retrieved genre seeds FROM CACHE @ ");
-      console.log(this.props.cache);
+      console.log("Successfully retrieved genre seeds FROM CACHE @ CACHE.GENRES");
     }
   }
 

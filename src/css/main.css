@@ -310,9 +310,6 @@ img {
 }
 
 
-
-
-
 /********* FRONT PAGE *********/
 
 .div-frontpage {
@@ -466,6 +463,8 @@ img {
   width: 100%;
 }
 
+/********* TRACKS *********/
+
 .div-track {
   display: flex;
 }
@@ -482,6 +481,55 @@ img {
   grid-template-columns: 30% 70%;
   width: 100%;
 }
+
+.div-track--features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  padding-top: .7rem;
+  opacity: 1;
+
+  height: auto;
+  max-height: 20rem;
+  transition: opacity .5s, padding.3s, max-height .3s ease;
+}
+
+/* unused */
+.drop-down {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+  transition: opacity .5s, padding .3s, max-height .3s ease, visible 0s;
+}
+
+.div-item {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  width: 100%; 
+}
+
+.info-btn {
+  border: none;
+  border-width: 1px;
+  border-radius: 1rem;
+  font-size: .8rem;
+  font-weight: 400;
+  font-stretch: 200%;
+  color: #21212175;
+  transition: color .5s ease !important;
+  background: none;
+  transition: all .5s;
+  width: 100%;
+  text-align: center;
+}
+
+.info-btn:hover {
+  color: #212121;
+  transition: color .5s ease !important;
+}
+
+/********* NOWPLAYING *********/
 
 .div-nowplaying--info {
   display: flex;
@@ -508,6 +556,9 @@ img {
   padding-bottom: 1em;
 }
 
+
+/********* TUNER *********/
+
 .div-genres {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -520,6 +571,8 @@ img {
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 1rem;
 }
+
+/********* SCOPE *********/
 
 .div-artist--compact {
   position: relative;

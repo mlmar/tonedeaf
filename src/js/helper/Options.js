@@ -1,5 +1,4 @@
 import React from 'react';
-import SpotifyWebApi from 'spotify-web-api-js';
 
 /*  provides a simple options panel with buttons that return an index in a callback
  *
@@ -11,7 +10,6 @@ class Options extends React.Component {
       index : 0
     };
 
-    this.spotifyWebApi = new SpotifyWebApi();
     this.optionClick = this.optionClick.bind(this);
   }
 

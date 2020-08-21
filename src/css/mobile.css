@@ -209,6 +209,12 @@
     overflow: auto;
     max-height: 9rem;
   }
+
+  /*************** track ***************/
+
+  .div-track--features {
+    grid-template-columns: 1fr;
+  }
   
   /*************** tuner ***************/
   
