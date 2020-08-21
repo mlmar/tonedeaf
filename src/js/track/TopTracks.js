@@ -181,8 +181,8 @@ class TopTracks extends React.Component {
         duration          += features[i].duration_ms / 1000;
         energy            += features[i].energy;
         instrumentalness  += features[i].instrumentalness;
-        key               += features[i].instrumentalness;
-        liveness          += features[i].instrumentalness;
+        key               += features[i].key;
+        liveness          += features[i].liveness;
         loudness          += features[i].loudness;
         mode              += features[i].mode;
         speechiness       += features[i].speechiness;
@@ -199,7 +199,7 @@ class TopTracks extends React.Component {
       ];
 
       for(var j = 0; j < averages.length; j++) {
-        averages[i] = averages[i] / length;
+        averages[j] = Math.round(averages[j] / length * 100) / 100;
       }
       
       this.props.callbackAverages(index, averages)
