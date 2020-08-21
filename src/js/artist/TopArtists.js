@@ -37,9 +37,11 @@ class TopArtists extends React.Component {
 
       this.spotifyWebApi.getMyTopArtists(params)
         .then((response) => {
+
+          // cache using setState callback to ensure the most recent variables are being cached
           this.setState(
             { artists : response.items, fetching : false }, 
-            this.props.callback(index, response.items));
+            () => {this.props.callback(index, this.state.artists)} );
             
           console.log("Succesfully retrieved top artists @ " + index);
           console.log("CACHING @ " + index);
@@ -53,7 +55,7 @@ class TopArtists extends React.Component {
 
     } else {
       this.setState({ artists : this.props.cache[index], fetching : false })
-      console.log("Successfully retrieved top artists FROM CACHE @ " + index);
+      console.log("Successfully retrieved top artists FROM CACHE @ CACHED ARTISTS " + index);
       console.log(this.props.cache);
     }
   }
@@ -62,14 +64,21 @@ class TopArtists extends React.Component {
    */
   componentDidMount() {
     this.getTopArtists(0);
+    setTimeout(() => {
+      if(this.state.fetching) {
+        this.getTopArtists(0);
+      } else {
+        console.log("timeout was not needed");
+      }
+    }, 2000);
   }
   
   /*  Iterate through artists array
    *  Pass each artist's attributes to an Artist component
    */
   render() {
-    console.log("fetching @ " + this.state.fetching);
-    console.log("length @ " + this.state.artists.length);
+    console.log("fetching @ " + this.state.fetching + 
+      ", with length of " + this.state.artists.length);
 
     if(!this.state.fetching) {
       return (

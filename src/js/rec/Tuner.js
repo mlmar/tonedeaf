@@ -176,8 +176,10 @@ class Tuner extends React.Component {
     if(this.props.cache.length === 0) {
       this.spotifyWebApi.getAvailableGenreSeeds()
         .then((response) => {
-          this.setState({genres: response.genres});
-          this.props.callback(response.genres); // cache artist lsits
+
+          // cache using setState callback to ensure the most recent variables are being cached
+          this.setState({genres: response.genres},
+          () => { this.props.callback(this.state.genres) });
           
           console.log("Succesfully retrieved genre seeds @");
           console.log("CACHING @ ");

@@ -53,8 +53,11 @@ class TopTracks extends React.Component {
 
       this.spotifyWebApi.getMyTopTracks(selected_range)
         .then((response) => {
-          this.setState({ tracks : response.items, fetching : false })
-          this.props.callback(index, response.items); // cache artist lsits
+
+          // cache using setState callback to ensure the most recent variables are being cached
+          this.setState(
+            { tracks : response.items, fetching : false }, 
+            () => {this.props.callback(index, this.state.tracks)} );
           
           console.log("Succesfully retrieved top tracks @ " + index);
           console.log("CACHING @ " + index);
@@ -67,7 +70,7 @@ class TopTracks extends React.Component {
         });
     } else {
       this.setState({ tracks : this.props.cache[index], fetching : false })
-      console.log("Successfully retrieved top tracks FROM CACHE @ " + index);
+      console.log("Successfully retrieved top tracks FROM CACHE @ CACHED_TRACKS " + index);
       console.log(this.props.cache);
     }
   }
@@ -83,11 +86,19 @@ class TopTracks extends React.Component {
 
   componentDidMount() {
     this.getTopTracks(0);
+    
+    setTimeout(() => {
+      if(this.state.fetching) {
+        this.getTopTracks(0);
+      } else {
+        console.log("timeout was not needed");
+      }
+    }, 2000);
   }
   
   render() {
-    console.log("fetching @ " + this.state.fetching);
-    console.log("length @ " + this.state.tracks.length);
+    console.log("fetching @ " + this.state.fetching + 
+      ", with length of " + this.state.tracks.length);
     
     if(!this.state.fetching) {
       return (
