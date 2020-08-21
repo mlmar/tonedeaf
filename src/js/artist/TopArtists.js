@@ -14,7 +14,8 @@ class TopArtists extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      artists : [] // store current list of artists here
+      artists : [], // store current list of artists here
+      fetching : true
     };
 
     this.range = ["long_term", "medium_term", "short_term"];
@@ -36,7 +37,7 @@ class TopArtists extends React.Component {
 
       this.spotifyWebApi.getMyTopArtists(params)
         .then((response) => {
-          this.setState({ artists : response.items })
+          this.setState({ artists : response.items, fetching : false });
           this.props.callback(index, response.items); // cache artist lsits
           
           console.log("Succesfully retrieved top artists @ " + index);
@@ -50,7 +51,7 @@ class TopArtists extends React.Component {
         });
 
     } else {
-      this.setState({ artists : this.props.cache[index] })
+      this.setState({ artists : this.props.cache[index], fetching : false })
       console.log("Successfully retrieved top artists FROM CACHE @ " + index);
       console.log(this.props.cache);
     }
@@ -66,7 +67,10 @@ class TopArtists extends React.Component {
    *  Pass each artist's attributes to an Artist component
    */
   render() {
-    if(this.state.artists.length !== 0) {
+    console.log("fetching @ " + this.state.fetching);
+    console.log("length @ " + this.state.artists.length);
+
+    if(!this.state.fetching) {
       return (
         <div>
           {

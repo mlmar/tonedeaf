@@ -57,8 +57,8 @@ class Profile extends React.Component {
   render() {    
     return (
       <div className="panel div-profile animate-drop">
-        <a href={this.state.uri}>
-          <label className="label-subtitle"> {this.state.display_name} </label>
+        <label className="label-subtitle"> {this.state.display_name} </label>
+        <a href={this.state.uri} className="link-center">
           <img className="img" src={this.state.image} width="70" alt="Profile not found"/>
         </a>
         <div className="div-profile--info">

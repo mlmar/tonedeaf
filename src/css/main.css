@@ -44,12 +44,12 @@ img {
 .img {
   width: 100%;
   overflow: hidden;
-  margin: .5em 0 .5em 0;
+  margin: 0em 0 .5em 0;
 }
 
 .img--medium {
-  width: 9em;
-  height: 9em;
+  width: 7em;
+  height: 7em;
   align-self: center;
 }
 
@@ -77,6 +77,7 @@ img {
 .link-center {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 
@@ -217,13 +218,13 @@ img {
 }
 
 .label-title {
-  font-size: 2.5em;
+  font-size: 2em;
   font-weight: 500;
   color: #212121;
 }
 
 .label-subtitle {
-  font-size: 2.5rem;
+  font-size: 1.4rem;
   font-weight: bold;
   color: #212121;
   padding-bottom: .5rem;
@@ -231,28 +232,28 @@ img {
 
 
 .label-large {
-  font-size: 3em;
+  font-size: 2.4em;
   font-weight: bold;
   color: #212121;
   padding-bottom: .5rem;
 }
 
 .label-sublarge {
-  font-size: 2em;
+  font-size: 1.7em;
   font-weight: bold;
   color: #212121;
   padding-bottom: .5rem;
 }
 
 .label-medium {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: bolder;
   color: #212121;
   padding-bottom: .5rem;
 }
 
 .label-small {
-  font-size: 1rem;
+  font-size: .9rem;
   color: #212121;
   padding-bottom: .2rem;
 }
@@ -352,7 +353,7 @@ img {
 .top {
   display: flex;
   text-align: left;
-  height: 4.5rem;
+  height: 4rem;
   width: 100vw;
 
   position: fixed;
@@ -372,7 +373,7 @@ img {
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  padding: 0 0 0 6vw;
+  margin: 0 0 0 6vw;
   height: min-content;
   width: 100vw;
 }
@@ -385,14 +386,14 @@ img {
 
 .nav-btn {
   border: none;
-  font-size: 1em;
+  font-size: .9em;
   font-weight: 100;
   min-height: 1.5em;
   min-width: 15vh;
   color: #ffffff;
   background: none;
   transition: all .1s;
-  margin: .5em .2rem .3rem .2rem;
+  margin: .5em .5vw .3rem .5vw;
   text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
   border-width: .2em !important;
 }
@@ -430,7 +431,7 @@ img {
 .div-content {
   display: flex;
   padding-top: 2rem;
-  margin-top: 4.5rem;
+  margin-top: 3.5rem;
 
   padding: 2rem;
   width: 100%;
@@ -466,7 +467,7 @@ img {
 .div-track--info {
   display: flex;
   flex-direction: column;
-  padding: .5rem 0 1rem 1rem;
+  padding: .5rem 0 .2rem 1rem;
   width: 100%;
 }
 

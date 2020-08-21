@@ -39,9 +39,7 @@ class Artist extends React.Component {
               <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>
             </a>
             <div className="div-track--info noclick">
-              <div>
-                <label className="label-medium"> {rank} {this.props.name} </label>
-              </div>
+              <label className="label-medium"> {rank} {this.props.name} </label>
               <div className="div-track--info-item">
                 <label className="label-small label-bold"> genres </label>
                 <label className="label-small"> {this.props.genre} </label>

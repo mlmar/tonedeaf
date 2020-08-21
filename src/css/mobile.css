@@ -242,6 +242,12 @@
   }
 
 
+  /*************** options ***************/
+
+  .option-btn {
+    font-size: .9rem; 
+  }
+
   /*************** labels ***************/
 
   .title {
@@ -262,7 +268,7 @@
   }
 
   .label-subtitle {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: bold;
     color: #212121;
     padding-bottom: .5rem;

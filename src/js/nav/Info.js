@@ -55,7 +55,7 @@ class Info extends React.Component {
           <label className="label-small">  
             I just used the
             <a href="https://developer.spotify.com/documentation/web-api/">
-              &nbsp; Spotify API &nbsp;
+              &nbsp;Spotify API&nbsp;
             </a>
             and then you gave me permission to access your account when you logged in.
           </label>

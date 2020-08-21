@@ -7,7 +7,8 @@ class Recent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tracks : []
+      tracks : [],
+      fetching : true
     };
 
     this.spotifyWebApi = new SpotifyWebApi();
@@ -43,9 +44,7 @@ class Recent extends React.Component {
 
     this.spotifyWebApi.getMyRecentlyPlayedTracks(selected_range)
       .then((response) => {
-        this.setState({
-          tracks : response.items
-        })
+        this.setState({ tracks : response.items, fetching : false })
         console.log("Succesfully retrieved recently played tracks @");
         console.log(response.items);
       })
@@ -69,7 +68,7 @@ class Recent extends React.Component {
   }
   
   render() {
-    if(this.state.tracks.length !== 0) {
+    if(!this.state.tracks.fetching) {
       return (
         <div>
           {

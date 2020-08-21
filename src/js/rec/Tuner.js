@@ -266,7 +266,7 @@ class Tuner extends React.Component {
         <React.Fragment>
           {recButton}
           <div className="panel"> 
-            <label className="label-medium"> Selected genres will show up here. Press to them to remove. </label>
+            <label className="label-small label-bold"> Selected genres will show up here. Press to them to remove. </label>
             <div className="div-selected-genres" onClick={this.genreRemove}>
               {
                 this.state.selectedGenres.map((genre, i) => {
