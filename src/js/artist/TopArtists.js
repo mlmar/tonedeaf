@@ -37,9 +37,10 @@ class TopArtists extends React.Component {
 
       this.spotifyWebApi.getMyTopArtists(params)
         .then((response) => {
-          this.setState({ artists : response.items, fetching : false });
-          this.props.callback(index, response.items); // cache artist lsits
-          
+          this.setState(
+            { artists : response.items, fetching : false }, 
+            this.props.callback(index, response.items));
+            
           console.log("Succesfully retrieved top artists @ " + index);
           console.log("CACHING @ " + index);
           console.log(response.items);

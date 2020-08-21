@@ -227,7 +227,6 @@ img {
   font-size: 1.4rem;
   font-weight: bold;
   color: #212121;
-  padding-bottom: .5rem;
 }
 
 
@@ -235,41 +234,35 @@ img {
   font-size: 2.4em;
   font-weight: bold;
   color: #212121;
-  padding-bottom: .5rem;
 }
 
 .label-sublarge {
   font-size: 1.7em;
   font-weight: bold;
   color: #212121;
-  padding-bottom: .5rem;
 }
 
 .label-medium {
   font-size: 1.4rem;
   font-weight: bolder;
   color: #212121;
-  padding-bottom: .5rem;
 }
 
 .label-small {
   font-size: .9rem;
   color: #212121;
-  padding-bottom: .2rem;
 }
 
 .label-subtext {
   font-size: 1em;
   font-weight: bold;
   color: #212121;
-  padding-bottom: .2rem;
 }
 
 .label-tiny {
   font-size: .6em;
   font-weight: bold;
   color: #212121;
-  padding-bottom: .2rem;
 }
 
 .label-nopadding {
@@ -289,7 +282,20 @@ img {
   text-align: right;
 }
 
+.label-padding--bottom,
+.label-subtitle,
+.label-large,
+.label-sublarge,
+.label-medium {
+  padding-bottom: .5rem;
+}
 
+.label-padding--bottom-small,
+.label-small,
+.label-subtext,
+.label-tiny {
+  padding-bottom: .2rem;
+}
 
 /********* MAIN CONTAINER *********/
 
