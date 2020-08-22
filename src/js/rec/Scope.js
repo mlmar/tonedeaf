@@ -12,9 +12,11 @@ class Scope extends React.Component {
       tracks : [],
       results : [],
       selectedResults : [],
-      selectedIndex : 0,
-      searchType : 0
+      selectedIndex : 0, // 0 = search page, 1 = recommednations
+      searchType : 0, // 0 = artists, 1 = track
     };
+
+    this.searchTimeout = 0; // only search when user stops typing
 
     this.spotifyWebApi = new SpotifyWebApi();
     this.playlistCreator = new PlaylistCreator(this.props.userid);
@@ -109,31 +111,43 @@ class Scope extends React.Component {
 
   // use spotify api to search for artists as a person types
   search(e) {
-    var query = e.target.value.replace(" ", "+");
-    var params = { limit : 50 }
-
-    var searchArtists = this.state.searchType === 0; // if not 0, search for tracks
-    var types = searchArtists ? ["artist"] : ["track"];
-
-    
-    if(query.length > 0) {
-      this.spotifyWebApi.search(query, types, params)
-        .then((response) => {
-          
-          if(searchArtists) {
-            this.setState({results: response.artists.items, tracks: [], selectedIndex: 0});
-          } else {
-            this.setState({results: response.tracks.items, tracks: [], selectedIndex: 0});
-          }
-          //console.log(response);
-        })
-        .catch((error) => {
-          console.error("could not retrieve search query @")
-          console.error(error);
-        });
-    } else {
-      this.setState({ results : [],  tracks: [], selectedIndex: 0});
+    if(this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
     }
+
+    var query = e.target.value.replace(" ", "+"); // search queries cannot have white space
+    var params = { limit : 50 } // number of items to return (max is 50)
+
+    /*  Once this times out after 300ms the search will start
+     *    - reduces api calls by only searching once the user stops typing
+     */
+    this.searchTimeout = setTimeout(() => {
+
+      var searchArtists = this.state.searchType === 0; // if not 0, search for tracks
+      var types = searchArtists ? ["artist"] : ["track"];
+
+      if(query.length > 0) {
+        this.spotifyWebApi.search(query, types, params)
+          .then((response) => {
+
+            if(searchArtists) {
+              this.setState({results: response.artists.items, tracks: [], selectedIndex: 0});
+            } else {
+              this.setState({results: response.tracks.items, tracks: [], selectedIndex: 0});
+            }
+            console.log("Searching...");
+          })
+          .catch((error) => {
+            console.error("could not retrieve search query @")
+            console.error(error);
+          });
+      } else {
+        this.setState({ results : [],  tracks: [], selectedIndex: 0});
+      }
+
+    }, 500);
+
+
   }
 
   // convert artist array into comma string

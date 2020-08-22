@@ -85,7 +85,7 @@ class TopTracks extends React.Component {
     } else {
       this.setState({ tracks : this.props.cache[index] },
         () => { this.getFeatures(index, this.props.cache[index]) });
-      console.log("Successfully retrieved top tracks FROM CACHE @ CACHE.TRACKS " + index);
+      console.log("Successfully retrieved top tracks from cache @ CACHE.TRACKS " + index);
       console.log(this.props.cache);
     }
   }
