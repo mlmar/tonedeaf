@@ -25,7 +25,6 @@ class NowPlaying extends React.Component {
       full : this.props.full
     };
 
-    this.controls = React.createRef();
     this.pauseBtn = React.createRef();
     this.pauseText = "| |";
     this.playText = "&#8883;"
@@ -48,6 +47,7 @@ class NowPlaying extends React.Component {
     this.spotifyWebApi.getMyRecentlyPlayedTracks()
       .then((response) => {
         var track = response.items[0].track;
+
         this.setState({
           playing: {
             artist : track.album.artists,
@@ -64,10 +64,6 @@ class NowPlaying extends React.Component {
           deviceText  : ""
         });
         
-        // hide controls if not playing
-        this.controls.current.classList.add("hide-controls");
-        this.controls.current.classList.remove("show-controls");
-        
         if(!interval) {
           console.log("Succesfully retrieved last played track @");
           console.log(track);
@@ -76,7 +72,6 @@ class NowPlaying extends React.Component {
       .catch((error) => {
         console.error("Could not retrieve recently played tracks @")
         console.error(error)
-        console.warn("Is your access token still valid?")
       });
   }
 
@@ -84,8 +79,7 @@ class NowPlaying extends React.Component {
   getNowPlaying(interval = false) {
     this.spotifyWebApi.getMyCurrentPlaybackState()
       .then((response) => {
-        var check_undefined = void(0);
-        if(response.item === check_undefined) {
+        if(typeof response.item === "undefined") {
           this.getLastPlayed(true); // get last played song if no song currently playing
 
           if(!interval) { // only show responses if not called from an interval
@@ -110,11 +104,6 @@ class NowPlaying extends React.Component {
             deviceText : "Current Device: "
           });
 
-          // show controls if not playing
-          this.controls.current.classList.remove("hide-controls");
-          this.controls.current.classList.add("show-controls");
-        
-
           if(!interval) { // only show responses if not called from an interval
             console.log("Succesfully retrieved now playing info @");
             console.log(response);
@@ -124,6 +113,14 @@ class NowPlaying extends React.Component {
       .catch((error) => {
         console.error("Could not retrieve artist info @");
         console.error(error);
+        console.warn("Is your access token still valid?");
+
+        /*** not really good solutions but will workout later ***/
+        // if access token is no longer valid log the user out
+        // if rate limiting has been applied log user out
+        if(error.status === 401 || error.status === 429) { 
+          window.location.replace(this.props.logout);
+        }
       });
   }
 
@@ -222,6 +219,27 @@ class NowPlaying extends React.Component {
   
   render() {
     if(this.state.full === "true") {
+      // only show controls if playing
+      var controls = !this.state.playing.is_playing ? "" :
+        (
+          <div className="div-nowplaying-controls animate-drop">
+            <div className="div-control-buttons">
+              <span className="control-btn-previous--container">
+                <button className="control-btn-previous" onClick={this.previous}> &lt; </button>
+              </span>
+              <span className="control-btn-pause--container">
+                <button className="control-btn-pause" onClick={this.pause} ref={this.pauseBtn}> {this.pauseText} </button>
+              </span>
+              <span className="control-btn-skip--container">
+                <button className="control-btn-skip" onClick={this.skip}> &gt; </button>
+              </span>
+            </div>
+            <progress className="progressbar" max="100" value={this.compute()}/>
+            <label className="label-subtext"> {this.state.deviceText} {this.state.playing.device.name} </label>
+          </div>
+        );
+
+
       return (
         <div className="panel animate-drop">
           <label className="label-subtitle"> {this.state.labelText} </label>
@@ -237,23 +255,7 @@ class NowPlaying extends React.Component {
             </div>
 
           </div>
-
-          <div className="div-nowplaying-controls hide-controls" ref={this.controls}>
-              <div className="div-control-buttons">
-                <span className="control-btn-previous--container">
-                  <button className="control-btn-previous" onClick={this.previous}> &lt; </button>
-                </span>
-                <span className="control-btn-pause--container">
-                  <button className="control-btn-pause" onClick={this.pause} ref={this.pauseBtn}> {this.pauseText} </button>
-                </span>
-                <span className="control-btn-skip--container">
-                  <button className="control-btn-skip" onClick={this.skip}> &gt; </button>
-                </span>
-              </div>
-              <progress className="progressbar" max="100" value={this.compute()}/>
-              <label className="label-subtext"> {this.state.deviceText} {this.state.playing.device.name} </label>
-          </div>
-
+          {controls}
         </div>
       )
     } else {

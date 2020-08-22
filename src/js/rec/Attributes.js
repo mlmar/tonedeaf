@@ -23,7 +23,7 @@ class Attributes extends React.Component {
         
         <div className="panel-attribute--slider">
           <div className="side-label">
-            <label className="label-small"> minimum </label>
+            <label className="label-small div-item"> minimum <span className="label-bold"> {this.props.defaultMin} </span> </label>
             <input className="input-item min" 
               type="range" 
               name={this.props.attribute} 
@@ -36,7 +36,7 @@ class Attributes extends React.Component {
           </div>
           
           <div className="side-label">
-            <label className="label-small"> maximum </label>
+            <label className="label-small div-item"> maximum <span className="label-bold"> {this.props.defaultMax} </span> </label>
             <input className="input-item max" 
               type="range" 
               name={this.props.attribute} 

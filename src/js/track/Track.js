@@ -14,6 +14,9 @@ class Track extends React.Component {
     this.getKey = this.getKey.bind(this);
   }
 
+  /*  Returns the actual key for features key number
+   *
+   */
   getKey(number) {
     switch(number) {
       case 0:   return "C";
@@ -65,6 +68,7 @@ class Track extends React.Component {
             <label className="label-small div-item"> <span className="label-bold"> Liveness          </span> {this.props.features.liveness} </label>
             <label className="label-small div-item"> <span className="label-bold"> Loudness          </span> {this.props.features.loudness} </label>
             <label className="label-small div-item"> <span className="label-bold"> Mode              </span> {this.props.features.mode} </label>
+            <label className="label-small div-item"> <span className="label-bold"> Popularity        </span> {this.props.popularity} </label>
             <label className="label-small div-item"> <span className="label-bold"> Speechiness       </span> {this.props.features.speechiness} </label>
             <label className="label-small div-item"> <span className="label-bold"> Tempo             </span> {this.props.features.tempo} </label>
             <label className="label-small div-item"> <span className="label-bold"> Time Signature    </span> {this.props.features.time_signature} </label>

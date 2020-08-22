@@ -144,7 +144,6 @@ class Tuner extends React.Component {
       min_valence           : this.state.attributes[12][4],
       max_valence           : this.state.attributes[12][5]
     }
-
     return(params);
   }
 

@@ -503,12 +503,6 @@ img {
   transition: opacity .5s, padding .3s, max-height .3s ease, visible 0s;
 }
 
-.div-item {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  width: 100%; 
-}
-
 .info-btn {
   border: none;
   border-width: 1px;
@@ -528,6 +522,27 @@ img {
   color: #212121;
   transition: color .5s ease !important;
 }
+
+
+/* for quick item separation in lists */
+.div-item-40-60, .div-item-50-50, .div-item-60-40, .div-item {
+  display: grid;
+  width: 100%; 
+}
+
+.div-item-40-60, .div-item {
+  grid-template-columns: 40% 60%;
+}
+
+.div-item-50-50 {
+  grid-template-columns: 50% 50%;
+}
+
+.div-item-60-40 {
+  grid-template-columns: 60% 40%;
+}
+
+
 
 /********* NOWPLAYING *********/
 
@@ -790,6 +805,7 @@ img {
   width: 3rem;
   height: 3rem;
   font-size: 1rem !important;
+  padding-bottom: .2rem;
 }
 
 .control-btn-previous, .control-btn-pause, .control-btn-skip {

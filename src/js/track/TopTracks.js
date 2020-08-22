@@ -5,8 +5,12 @@ import PlaylistCreator from '../helper/PlaylistCreator.js';
 
 /*  TOP TRACKS COMPONENT
  *    - Required props: userid, cache
- *        userid  : needed to for PlaylistCreator
- *        cache   : needed to cache top artists to reduce api calls
+ *        userid            : needed for PlaylistCreator
+ *        cache             : needed to retrieve top artists to reduce api calls
+ *        callback          : callback used to cache tracks in parent component
+ *        cacheAverages     : needed to retrieve average track attributes
+ *        callbackAverages  : used to cache averages in parent component
+ *        
  *
  *    - implements Track component to display individual artists
  *    - uses SpotifyWebApi to retrieve top artist and create playlists based on user's id
@@ -35,6 +39,7 @@ class TopTracks extends React.Component {
     this.getFeatures = this.getFeatures.bind(this);
     this.getIds = this.getIds.bind(this);
     this.average = this.average.bind(this);
+    this.getKey = this.getKey.bind(this);
   }
   
 
@@ -118,7 +123,7 @@ class TopTracks extends React.Component {
           console.error(error);
         }); 
     } else {
-      console.log("Successfully retrieved features FROM CACHE @ CACHE.FEATURES " + index);
+      console.log("Successfully retrieved features from cache @ CACHE.FEATURES " + index);
       this.setState({ features : this.props.cacheFeatures[index], fetching : false },
         () => { this.average(index, this.state.features) })
     }
@@ -152,9 +157,9 @@ class TopTracks extends React.Component {
     var items = [
       "Acousticness", "Danceability", "Duration (S)",
       "Energy", "Instrumentalness", "Key",
-      "Liveness", "Loudness", "Mode",
-      "Speechinesss", "Tempo", "Time Signature",
-      "Valence"];
+      "Liveness", "Loudness", "Mode", 
+      "Popularity", "Speechinesss", "Tempo", 
+      "Time Signature", "Valence"];
 
     var descriptions = [];
 
@@ -170,6 +175,7 @@ class TopTracks extends React.Component {
       var liveness = 0;
       var loudness = 0;
       var mode = 0;
+      var popularity = 0; // only stat that isn't retrieved by audio features call
       var speechiness = 0;
       var tempo = 0;
       var time_signature = 0;
@@ -185,6 +191,7 @@ class TopTracks extends React.Component {
         liveness          += features[i].liveness;
         loudness          += features[i].loudness;
         mode              += features[i].mode;
+        popularity        += this.state.tracks[i].popularity;
         speechiness       += features[i].speechiness;
         tempo             += features[i].tempo;
         time_signature    += features[i].time_signature;
@@ -194,13 +201,16 @@ class TopTracks extends React.Component {
       var averages = [
         acousticness, danceability, duration,
         energy, instrumentalness, key,
-        liveness, loudness, mode, speechiness,
-        tempo, time_signature, valence
+        liveness, loudness, mode, 
+        popularity, speechiness, tempo, 
+        time_signature, valence
       ];
 
       for(var j = 0; j < averages.length; j++) {
         averages[j] = Math.round(averages[j] / length * 100) / 100;
       }
+
+      averages[5] = this.getKey(Math.round(averages[5]));
       
       this.props.callbackAverages(index, averages)
       console.log("Calculating averages @");
@@ -215,6 +225,27 @@ class TopTracks extends React.Component {
     
     // show averages using callback function to setstate of a list component
     this.props.showAverages(items, descriptions);
+  }
+
+    /*  Returns the actual key for features key number
+   *
+   */
+  getKey(number) {
+    switch(number) {
+      case 0:   return "C";
+      case 1:   return "C#";
+      case 2:   return "D";
+      case 3:   return "D#";
+      case 4:   return "E";
+      case 5:   return "F";
+      case 6:   return "F#";
+      case 7:   return "G";
+      case 8:   return "G#";
+      case 9:   return "A";
+      case 10:  return "A#";
+      case 11:  return "B";
+      default:  return "?";
+    }
   }
 
   componentDidMount() {
@@ -241,6 +272,7 @@ class TopTracks extends React.Component {
                     type={track.album.type}
                     album={track.album.name}
                     rank={i+1}
+                    popularity={track.popularity}
                     features={this.state.features[i]}
                     key={track.name + track.album.release_date.split("-")[0]}
                   />

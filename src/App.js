@@ -44,7 +44,7 @@ class App extends React.Component {
     /********* TONEDEAF-AUTH SHOULD BE THE REDIRECT PAGE BY DEFAULT *********/
     const deployed_site = "https://tonedeaf-auth.vercel.app/login";
     const show_site = local ? local_site : deployed_site;
-    const show_logout = "https://accounts.spotify.com/en/status";
+    const show_logout = "https://accounts.spotify.com/logout";
     
     const params = this.getHashParams(); // use hahing function to get tokens
     const token = params.access_token; // set token in js api wrapper
@@ -54,6 +54,7 @@ class App extends React.Component {
 
     /********* COMPONENT STATES *********/
     this.state = {
+      logoutUrl     : show_logout,
       loggedIn      : token ? true : false, // true  a token is retrieved
       returnPage    : token ? show_logout : show_site, // log button url
       loginButton   : token ? "Log Out" : "Log In", // log button text
@@ -70,6 +71,11 @@ class App extends React.Component {
       selectedIndex : 0, // selected nav element
 
       averages : {
+        names   : [],
+        values  : []
+      },
+
+      genreCounts : {
         names   : [],
         values  : []
       }
@@ -100,7 +106,8 @@ class App extends React.Component {
       TRACKS      : [[],[],[]],
       GENRES      : [],
       FEATURES    : [[],[],[]],
-      AVERAGES    : [[],[],[]]
+      AVERAGES    : [[],[],[]],
+      GENRECOUNTS : [[],[],[]]
     }
     
     /********* BINDINGS *********/
@@ -181,8 +188,6 @@ class App extends React.Component {
    *        - display         : the main component area for navigaiton
    */
   render() {
-    console.log('yo');
-    
     var portrait = window.matchMedia("only screen and (orientation: portrait)").matches;
 
     var top; // only assign if logged in
@@ -201,14 +206,14 @@ class App extends React.Component {
       var secondaryFocus; // show save option for playlists
       var tertiaryFocus;
       var display; // right side content panels
-      var showNowPlaying = portrait ? "" : <NowPlaying full="false"/>; // in sidebar
+      var showNowPlaying = portrait ? "" : <NowPlaying logout={this.state.logoutUrl} full="false"/>; // in sidebar
 
 
       /*************** REDNDER COMPONENTS BASED ON SELECTED INDEX ***************/
       switch(this.state.selectedIndex) {
 
         case 0: /*** 0 is the the default page upon logging in ***/
-          display = <NowPlaying full="true"/>; // in right panel
+          display = <NowPlaying logout={this.state.logoutUrl} full="true"/>; // in right panel
           showNowPlaying = ""; // set to nothing
           break;
 
@@ -218,10 +223,23 @@ class App extends React.Component {
               this.topArtists.current.getTopArtists(index);
             }, 1);
 
+          tertiaryFocus = 
+            <List text="Genre Counts" 
+              items={this.state.genreCounts.names} 
+              descriptions={this.state.genreCounts.values}
+            />
+
           display =
             <TopArtists ref={this.topArtists} cache={this.CACHE.ARTISTS}
               callback={(index, list) => {
                 this.CACHE.ARTISTS[index] = list;
+              }}
+              cacheGenreCounts={this.CACHE.GENRECOUNTS}
+              callbackGenreCounts={(index, list) => {
+                this.CACHE.GENRECOUNTS[index] = list;
+              }}
+              showCounts={(items, descriptions) => {
+                this.setState({ genreCounts : { names : items, values : descriptions }});
               }}
             />;
 

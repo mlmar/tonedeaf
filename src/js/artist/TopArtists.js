@@ -22,6 +22,7 @@ class TopArtists extends React.Component {
 
     this.spotifyWebApi = new SpotifyWebApi();
     this.getTopArtists = this.getTopArtists.bind(this);
+    this.genres = this.genres.bind(this);
   }
 
   /*  Retrieves top artists based on selectedIndex of range
@@ -41,23 +42,59 @@ class TopArtists extends React.Component {
           // cache using setState callback to ensure the most recent variables are being cached
           this.setState(
             { artists : response.items, fetching : false }, 
-            () => {this.props.callback(index, this.state.artists)} );
+            () => {
+              this.props.callback(index, this.state.artists);
+              this.genres(index, this.state.artists);
+            } 
+          );
             
           console.log("Succesfully retrieved top artists @ " + index);
-          console.log("CACHING ARTISTS @ CACHE.ARTIST" + index);
+          console.log("CACHING ARTISTS @ CACHE.ARTIST " + index);
           console.log(response.items);
           console.log("Each artist list should only retrieved remotely once per session");
         })
         .catch((error) => {
-          console.error("Could not retrieve top artists @")
-          console.error(error)
+          console.error("Could not retrieve top artists @");
+          console.error(error);
         });
 
     } else {
-      this.setState({ artists : this.props.cache[index], fetching : false })
-      console.log("Successfully retrieved top artists FROM CACHE @ CACHE.ARTISTS " + index);
+      this.setState(
+        { artists : this.props.cache[index], fetching : false },
+        () => {
+          this.genres(index, this.state.artists);
+        } 
+      );
+      console.log("Successfully retrieved top artists FROM CACHE @ CACHE.GENRECOUNTS " + index);
       console.log(this.props.cache);
     }
+  }
+
+  genres(index, artists) {
+    var counts = {};
+
+    if(this.props.cacheGenreCounts[index].length === 0) {
+      var tempGenres = []
+      for(var i = 0; i < artists.length; i++) {
+        tempGenres = tempGenres.concat(artists[i].genres);
+      }
+
+      // from stackoverflow
+      tempGenres.forEach(function(x) { 
+        counts[x] = (counts[x] || 0) + 1; 
+      });
+
+      this.props.callbackGenreCounts(index, counts)
+      console.log("Calculating genre coutns @");
+      console.log("CACHING GENRE COUTNS @ CACHE.GENRECOUNTS " + index)
+      console.log(counts);
+
+    } else {
+      console.log("Successfully retrieved genre counts from cache @ CACHE.AVERAGES " + index);
+      counts = this.props.cacheGenreCounts[index];
+    }
+
+    this.props.showCounts(Object.keys(counts), Object.values(counts));
   }
 
   /*  get top artists for long term upon mounting
