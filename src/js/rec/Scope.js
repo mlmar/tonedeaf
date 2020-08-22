@@ -135,7 +135,7 @@ class Scope extends React.Component {
             } else {
               this.setState({results: response.tracks.items, tracks: [], selectedIndex: 0});
             }
-            console.log("Searching...");
+            console.log("Searching @ " + query);
           })
           .catch((error) => {
             console.error("could not retrieve search query @")
