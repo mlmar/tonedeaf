@@ -242,8 +242,8 @@ class Tuner extends React.Component {
     var recButton = (
       <div className="panel animate-drop">
          <label className="label-medium"> Get recommendations based on song attribute and genres </label>
-         <label className="label-subtext label-bold"> * Select up to 5 genres </label>
-         <label className="label-subtext label-bold"> * Modify your song attribute preferences </label>
+         <label className="label-subtext"> * Select up to 5 genres </label>
+         <label className="label-subtext"> * Modify your song attribute preferences </label>
         <button className="option-btn" onClick={this.getRecs}> Get Recommendations </button>
       </div>
     )
@@ -267,6 +267,7 @@ class Tuner extends React.Component {
           {recButton}
           <div className="panel"> 
             <label className="label-small label-bold"> Selected genres will show up here. Press to them to remove. </label>
+            <br/>
             <div className="div-selected-genres" onClick={this.genreRemove}>
               {
                 this.state.selectedGenres.map((genre, i) => {

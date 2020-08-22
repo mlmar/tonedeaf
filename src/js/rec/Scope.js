@@ -278,10 +278,8 @@ class Scope extends React.Component {
       <div>
         <div className="panel animate-drop">
           <label className="label-medium"> Get recommendations based on artists and tracks </label>
-          <br/>
-          <label className="label-subtext label-bold"> * Search and add a combination of up to 5 artists or songs, then press 'Get Recommendations' </label>
-          <label className="label-subtext label-bold"> * If you press 'Get Recommendations' and nothing shows up, Spotify returned no recommendations. </label>
-          <label className="label-subtext label-bold label-italic"> * If the search glitches, press backspace. </label>
+          <label className="label-subtext"> * Search and add a combination of up to 5 artists or songs, then press 'Get Recommendations' </label>
+          <label className="label-subtext"> * If you press 'Get Recommendations' and nothing shows up, Spotify returned no recommendations. </label>
           <input type="text" className="input-item input-search" onChange={(e) => this.search(e)} ref={this.searchBar}/>
           <button className="option-btn" onClick={this.getRecs}> Get Recommendations </button>
         </div>
