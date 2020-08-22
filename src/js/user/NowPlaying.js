@@ -112,14 +112,14 @@ class NowPlaying extends React.Component {
       })
       .catch((error) => {
         console.error("Could not retrieve artist info @");
-        console.error(error);
-        console.warn("Is your access token still valid?");
+        console.error(error.message);
 
-        /*** not really good solutions but will workout later ***/
+        /*** not really a good solutions but will workout later ***/
         // if access token is no longer valid log the user out
         // if rate limiting has been applied log user out
-        if(error.status === 401 || error.status === 429) { 
-          window.location.replace(this.props.logout);
+        if(error.status === 429) { 
+          //window.location.replace(this.props.logout);
+          console.warn("Rate limiting has been applied");
         }
       });
   }

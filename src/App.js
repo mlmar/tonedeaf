@@ -81,6 +81,19 @@ class App extends React.Component {
       }
     }
 
+    /********* CACHE *********/
+    // pseudo cache : local copies of lists that cannot change within one session
+    // cache whereever possible to reduce api calls
+    // each array represents the amount of lists a component generates
+    this.CACHE = {
+      ARTISTS     : [[],[],[]],
+      TRACKS      : [[],[],[]],
+      GENRES      : [],
+      FEATURES    : [[],[],[]],
+      AVERAGES    : [[],[],[]],
+      GENRECOUNTS : [[],[],[]]
+    }
+
     this.userid = 0; // passed to components that use PlaylistCreator
 
     /********* REFERENCES *********/
@@ -95,24 +108,11 @@ class App extends React.Component {
     this.timeRanges = ["Long Term", "6 Months", "4 Weeks"]; // time ranges for options
     this.likeText = "Like these tracks?"; // playlist option text
     this.saveText = ["Save as Spotify Playlist"]; // only one option
-
-    
-    /********* CACHE *********/
-    // pseudo cache : local copies of lists that cannot change within one session
-    // cache whereever possible to reduce api calls
-    // each array represents the amount of lists a component generates
-    this.CACHE = {
-      ARTISTS     : [[],[],[]],
-      TRACKS      : [[],[],[]],
-      GENRES      : [],
-      FEATURES    : [[],[],[]],
-      AVERAGES    : [[],[],[]],
-      GENRECOUNTS : [[],[],[]]
-    }
     
     /********* BINDINGS *********/
     this.navClick = this.navClick.bind(this);
     this.createOptions = this.createOptions.bind(this);
+    this.renderControl = this.renderControl.bind(this);
   }
 
   /*  From Spotify's index.html in their authentication examples
@@ -130,28 +130,11 @@ class App extends React.Component {
 
   
   /*  Called as callback from the Nav component
-   *    - loops through all childnode buttons of the navbar
-   *    - remove selected css if possible
-   *    - assign selectedIndex and selected css to clicked button
+   *    - assign selectedIndex
    */
-  navClick(event) {
-    // since onClick is called from, confirm a button was clicked
-    if(event.target.tagName === "BUTTON") {
-      var index = 0;
-      for (var i = 0; i < event.currentTarget.childNodes.length; i++) {
-        var li = event.currentTarget.childNodes[i];
-        li.classList.remove("selected");
-
-        // select the child that matches the button that was pressed
-        if (event.target === li) {
-            index = i;
-            event.target.classList.add("selected");
-        }
-      }
-
-      this.setState({selectedIndex : index});
-      console.log("Selected  nav ndex @ " + this.state.selectedIndex);
-    }
+  navClick(index) {
+    this.setState({selectedIndex : index});
+    console.log("Selected nav index @ " + this.state.selectedIndex);
   }
 
   /*  function to create options in sidebar
@@ -187,7 +170,7 @@ class App extends React.Component {
    *        - showNowPlaying  : bottom of sidebar -- boolean
    *        - display         : the main component area for navigaiton
    */
-  render() {
+  renderControl() {
     var portrait = window.matchMedia("only screen and (orientation: portrait)").matches;
 
     var top; // only assign if logged in
@@ -359,15 +342,24 @@ class App extends React.Component {
     } else {
       frontpage = <FrontPage return={this.state.returnPage}/>
     }
+    
+    return (
+      <React.Fragment>
+        {top}
+        <div className="div-content">
+          {frontpage}
+        </div>
+      </React.Fragment>
+    )
+  }
 
-    /******* MAIN RETURN FOR THE APP.JS RENDER METHOD *******/
+   /******* MAIN RETURN FOR THE APP.JS RENDER METHOD *******/
+  render() {
     return (
       <div className="App">
         <div className="page">
-          {top}
-          <div className="div-content">
-            {frontpage}
-          </div>
+          {/* states are passed to this method but are only needed to cause a rerender, not as parameters */}
+          {this.renderControl(this.state.selectedIndex, this.state.loggedIn)}
         </div>
       </div>
     );

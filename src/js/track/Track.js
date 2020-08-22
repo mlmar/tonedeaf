@@ -59,20 +59,20 @@ class Track extends React.Component {
           <div className="div-track--features animate-drop" ref={this.dropDown}>
             <label  className="label-medium"> Track Attributes </label>
             <span/>
-            <label className="label-small div-item"> <span className="label-bold"> Acousticness      </span> {this.props.features.acousticness} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Danceability      </span> {this.props.features.danceability} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Duration (S)      </span> {this.props.features.duration_ms / 1000} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Energy            </span> {this.props.features.energy} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Instrumentalness  </span> {this.props.features.instrumentalness} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Key               </span> {this.getKey(this.props.features.key)} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Liveness          </span> {this.props.features.liveness} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Loudness          </span> {this.props.features.loudness} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Mode              </span> {this.props.features.mode} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Popularity        </span> {this.props.popularity} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Speechiness       </span> {this.props.features.speechiness} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Tempo             </span> {this.props.features.tempo} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Time Signature    </span> {this.props.features.time_signature} </label>
-            <label className="label-small div-item"> <span className="label-bold"> Valence           </span> {this.props.features.valence} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Acousticness      </span> {this.props.features.acousticness} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Danceability      </span> {this.props.features.danceability} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Duration (S)      </span> {this.props.features.duration_ms / 1000} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Energy            </span> {this.props.features.energy} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Instrumentalness  </span> {this.props.features.instrumentalness} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Key               </span> {this.getKey(this.props.features.key)} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Liveness          </span> {this.props.features.liveness} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Loudness          </span> {this.props.features.loudness} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Mode              </span> {this.props.features.mode} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Popularity        </span> {this.props.popularity} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Speechiness       </span> {this.props.features.speechiness} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Tempo             </span> {this.props.features.tempo} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Time Signature    </span> {this.props.features.time_signature} </label>
+            <label className="label-small div-item-50-50"> <span className="label-bold"> Valence           </span> {this.props.features.valence} </label>
           </div>
         )
       }

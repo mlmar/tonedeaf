@@ -81,7 +81,7 @@ class Tuner extends React.Component {
     if(this.state.selectedGenres.length > 0) {
       this.spotifyWebApi.getRecommendations(this.parameters())
         .then((response) => {
-          this.setState({tracks: response.tracks, index: 2})
+          this.setState({tracks: response.tracks, index: 2 })
           console.log("Succesfully retrieved recommendations  @");
           console.log(response);
         })
@@ -177,7 +177,7 @@ class Tuner extends React.Component {
         .then((response) => {
 
           // cache using setState callback to ensure the most recent variables are being cached
-          this.setState({genres: response.genres},
+          this.setState({genres: response.genres },
           () => { this.props.callback(this.state.genres) });
           
           console.log("Succesfully retrieved genre seeds @");

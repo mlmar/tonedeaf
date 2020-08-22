@@ -8,6 +8,10 @@ class Nav extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      selectedIndex : 0
+    }
+
     this.portraitNav = React.createRef();
     this.unselect = React.createRef();
     this.controlMenu = this.controlMenu.bind(this);
@@ -23,8 +27,17 @@ class Nav extends React.Component {
 
   // close the menu automatically then go to new page
   selectMenu(event) {
-    this.controlMenu();
-    this.props.callback(event);
+    this.controlMenu(); // for mobile menu animations
+
+    // since onClick is called from, confirm a button was clicked
+    if(event.target.tagName === "BUTTON") {
+      this.setState(
+        { selectedIndex : parseFloat(event.target.id) },
+        () => {
+          this.props.callback(this.state.selectedIndex);
+        }
+      );
+    }
   }
 
   render() {
@@ -34,13 +47,13 @@ class Nav extends React.Component {
           <div className="top">
             <label className="label-title text-white"> tonedeaf </label>
             <div className="nav">
-              <div className="nav-buttons" onClick={this.props.callback}>
+              <div className="nav-buttons" onClick={this.selectMenu}>
                 {
-                  this.props.nav.map(function(item, i) {
-                      if (i === 0) {
-                          return <button className="nav-btn selected" key={i}>{item}</button>
+                  this.props.nav.map((item, i) => {
+                      if (i === this.state.selectedIndex) {
+                          return <button className="nav-btn selected" key={i} id={i}>{item}</button>
                       } else {
-                          return <button className="nav-btn" key={i}>{item}</button>
+                          return <button className="nav-btn" key={i} id={i}>{item}</button>
                       }
                   })
                 }
@@ -67,11 +80,11 @@ class Nav extends React.Component {
 
             <div className="nav-buttons" onClick={this.selectMenu}>
                 {
-                  this.props.nav.map(function(item, i) {
-                      if (i === 0) {
-                          return <button className="nav-btn selected" key={i}>{item}</button>
+                  this.props.nav.map((item, i) => {
+                      if (i === this.state.selectedIndex) {
+                          return <button className="nav-btn selected" key={i} id={i}>{item}</button>
                       } else {
-                          return <button className="nav-btn" key={i}>{item}</button>
+                          return <button className="nav-btn" key={i} id={i}>{item}</button>
                       }
                   })
                 }
