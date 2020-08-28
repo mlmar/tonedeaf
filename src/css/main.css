@@ -392,7 +392,7 @@ img {
   font-size: .9em;
   font-weight: 100;
   min-height: 1.5em;
-  min-width: 15vh;
+  min-width: 7vw;
   color: #ffffff;
   background: none;
   transition: all .1s;
@@ -433,13 +433,11 @@ img {
 
 .div-content {
   display: flex;
-  padding-top: 2rem;
-  margin-top: 3.5rem;
+  margin-top: 4rem;
 
-  padding: 2rem;
   width: 100%;
   
-  background: #f8f8f8;
+  background: none;
 }
 
 .div-sidebar {
@@ -448,7 +446,7 @@ img {
   width: fit-content;
   width: 40vw;
   min-height: fit-content;
-  padding-right: .7rem;
+  padding: 2rem;
 }
 
 .div-profile--info {
@@ -459,8 +457,8 @@ img {
 .div-panels {
   display: block;
   padding: 0rem;
-  margin-left: 1rem;
   width: 100%;
+  padding: 2rem 2rem 2rem 0rem;
 }
 
 /********* TRACKS *********/
@@ -617,14 +615,13 @@ img {
 .panel {
   display: flex;
   flex-direction: column;
-  border-radius: .5rem;
   background: #eaeaea;
   width: 100%;
   height: min-content;
   padding: 1rem;
   text-align: left;
   margin: 0rem 0 1.2rem 0;
-  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 0.20);
+  box-shadow: 0 4px 6px 0 rgb(0 0 0 / 14%);
 }
 
 .panel-compact {

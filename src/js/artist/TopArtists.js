@@ -124,7 +124,7 @@ class TopArtists extends React.Component {
                   popularity={artist.popularity}
                   followers={artist.followers.total}
                   rank={i+1}
-                  key={i}
+                  key={artist.name + artist.popularity}
                 />
               )
             })

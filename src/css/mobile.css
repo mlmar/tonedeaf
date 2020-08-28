@@ -110,7 +110,7 @@
     height: 2.3rem;
     width: 2.3rem;
     color: #ffffff;
-    background: #2d2d2d;
+    background: none;
     transition: all .5s;
   }
 
@@ -201,6 +201,7 @@
 
   .div-panels {
     margin: 0;
+    padding: 0;
   }
 
   /*************** nowplaying ***************/
