@@ -38,6 +38,7 @@ class App extends React.Component {
   // v1
   constructor() {
     super();
+    
     /********* FOR DEVELOPMENT ONLY *********/
     const local = false; // set to false before deployment
     const local_site = "http://localhost:8888/login";

@@ -37,6 +37,7 @@ button:hover {
 img {
   box-shadow: 0 2px 6px 0 rgb(255 255 255 / 0%);
   transition: box-shadow 1s ease;
+  border-radius: .2rem;
 }
 
 
@@ -302,11 +303,12 @@ img {
 
 .page {
   display: flex;
-  flex-direction: column;
   height: 100%;
   background: #f8f8f8;
   color: white;
-  min-height: 100vh;
+
+  flex-direction: column;
+  overflow: hidden;
 }
 
 
@@ -359,11 +361,6 @@ img {
   text-align: left;
   height: 4rem;
   width: 100vw;
-
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 99;
 
   padding: 1rem 2em 1rem 2em;
   background: #2d2d2d;
@@ -434,11 +431,11 @@ img {
 
 .div-content {
   display: flex;
-  margin-top: 4rem;
-
+  height: 100%;
   width: 100%;
-  
   background: none;
+
+  overflow: overlay;
 }
 
 .div-sidebar {
@@ -459,7 +456,7 @@ img {
   display: block;
   padding: 0rem;
   width: 100%;
-  padding: 2rem 2rem 2rem 0rem;
+  padding: 1.8rem 1.8rem 1.8rem 0rem;
 }
 
 /********* TRACKS *********/

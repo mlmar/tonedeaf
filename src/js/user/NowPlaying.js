@@ -264,11 +264,11 @@ class NowPlaying extends React.Component {
           <label className="label-subtitle"> {this.state.labelText} </label>
           <a href={this.state.playing.url}>
             <img className="img" src={this.state.playing.image} width="70" alt="Album art not found"/>
-            <div className="div-nowplaying--info">
-              <label className="label-medium"> {this.state.playing.title} </label>
-              <label className="label-small"> {this.artistsToString(this.state.playing.artist)} </label>
-            </div>
           </a>
+          <div className="div-nowplaying--info">
+            <label className="label-medium"> {this.state.playing.title} </label>
+            <label className="label-small"> {this.artistsToString(this.state.playing.artist)} </label>
+          </div>
           <span ref={this.controls}/>
         </div>
       )
