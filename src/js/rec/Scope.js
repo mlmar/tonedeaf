@@ -312,7 +312,7 @@ class Scope extends React.Component {
           <label className="label-subtext"> * Search and add a combination of up to 5 artists or tracks. </label>
           <span className="flex-row search-container"> 
             <input type="text" className="input-item input-search" onChange={(e) => this.search(e)} ref={this.searchBar} placeholder={placeholder}/>
-            <button className="option-btn glass-btn" onClick={() => this.getRecs(false)}> <img src={glassIcon} className="glass-icon" alt="glass-icon"/> </button>
+            <button className="option-btn" onClick={() => this.getRecs(false)}> Get Recs </button>
           </span>
           
         </div>

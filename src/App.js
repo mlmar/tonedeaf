@@ -40,7 +40,7 @@ class App extends React.Component {
     super();
     
     /********* FOR DEVELOPMENT ONLY *********/
-    const local = false; // set to false before deployment
+    const local = true; // set to false before deployment
     const local_site = "http://localhost:8888/login";
 
     /********* TONEDEAF-AUTH SHOULD BE THE REDIRECT PAGE BY DEFAULT *********/

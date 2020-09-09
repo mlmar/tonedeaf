@@ -191,7 +191,7 @@ class NowPlaying extends React.Component {
   }
 
   renderPlayerControls(playing) {
-    if(!playing) {
+    if(!playing.is_playing) {
       return "";
     } else {
       return (

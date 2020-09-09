@@ -89,10 +89,6 @@ img {
 
 /****************** ICON ******************/
 
-.glass-btn {
-  width: 3rem !important;
-}
-
 .glass-btn img {
   height: 1rem;
   width: 1rem;
@@ -896,4 +892,5 @@ img {
 
 .search-container button {
   margin: 0;
+  width: 15rem;
 }

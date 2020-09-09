@@ -5,6 +5,8 @@ import Attributes from './Attributes.js'
 import Track from '../track/Track.js';
 import PlaylistCreator from '../helper/PlaylistCreator.js';
 
+const glassIcon = require("../../icon/glass.svg");
+
 // Recommendations based on genre
 class Tuner extends React.Component {
   constructor(props) {
@@ -244,7 +246,7 @@ class Tuner extends React.Component {
          <label className="label-medium"> Get recommendations based on song attribute and genres </label>
          <label className="label-subtext"> * Select up to 5 genres </label>
          <label className="label-subtext"> * Modify your song attribute preferences </label>
-        <button className="option-btn" onClick={this.getRecs}> Get Recommendations </button>
+         <button className="option-btn glass-btn" onClick={() => this.getRecs(false)}> <img src={glassIcon} className="glass-icon" alt="glass-icon"/> </button>
       </div>
     )
 
