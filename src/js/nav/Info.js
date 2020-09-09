@@ -1,14 +1,10 @@
 import React from 'react';
 
-/*  FAQ.js
+/*  Info.js
  *  
  *  an faq page
  */
 class Info extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  
   render() {
     return (
       <div className="div-info">

@@ -1,7 +1,7 @@
 import React from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 
-const glassIcon = require("../../icon/glass.svg");
+import glassIcon from "../../icon/glass.svg";
 
 /*  now playing component 
  *
@@ -274,7 +274,9 @@ class NowPlaying extends React.Component {
     }
     
     var searchButton = !this.props.searchCurrent ? "" :
-      <button className="option-btn glass-btn" onClick={() => this.props.searchCurrent(this.state.playing.artist, this.state.playing.trackId)}> <img src={glassIcon} className="glass-icon" alt="glass-icon"/> </button>;
+      <button className="option-btn glass-btn" onClick={() => this.props.searchCurrent(this.state.playing.artist, this.state.playing.trackId)}> 
+        <img src={glassIcon} className="glass-icon" alt="glass-icon"/> 
+      </button>;
       
     return (
       <div className="panel animate-drop">

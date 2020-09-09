@@ -4,8 +4,6 @@ import Artist from '../artist/Artist.js';
 import Track from '../track/Track.js';
 import PlaylistCreator from '../helper/PlaylistCreator.js';
 
-const glassIcon = require("../../icon/glass.svg");
-
 // Recommendations based on genre
 class Scope extends React.Component {
   constructor(props) {
@@ -311,8 +309,7 @@ class Scope extends React.Component {
           <label className="label-medium"> Get recommendations based on artists and tracks </label>
           <label className="label-subtext"> * Search and add a combination of up to 5 artists or tracks. </label>
           <input type="text" className="input-item input-search" onChange={(e) => this.search(e)} ref={this.searchBar} placeholder={placeholder}/>
-          <button className="option-btn" onClick={() => this.getRecs(false)}> Get Recs </button>
-          
+          <button className="option-btn" onClick={() => this.getRecs(false)}> Get Recommendations </button>
         </div>
         {display}
       </div>
