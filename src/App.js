@@ -312,7 +312,9 @@ class App extends React.Component {
               this.scope.current.createPlaylist();
             });
 
-            showNowPlaying = <NowPlaying logout={this.state.logoutUrl} full="false" searchCurrent={this.searchCurrent}/>; // in sidebar
+          showNowPlaying = portrait ?
+            <NowPlaying logout={this.state.logoutUrl} full="true" searchCurrent={this.searchCurrent}/> :
+            <NowPlaying logout={this.state.logoutUrl} full="false" searchCurrent={this.searchCurrent}/>; // in sidebar
 
           display = <Scope userid={this.userid} ref={this.scope}/>;
           break;
