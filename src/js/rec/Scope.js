@@ -4,6 +4,8 @@ import Artist from '../artist/Artist.js';
 import Track from '../track/Track.js';
 import PlaylistCreator from '../helper/PlaylistCreator.js';
 
+const glassIcon = require("../../icon/glass.svg");
+
 // Recommendations based on genre
 class Scope extends React.Component {
   constructor(props) {
@@ -35,6 +37,7 @@ class Scope extends React.Component {
     this.artistsToString = this.artistsToString.bind(this);
     this.createPlaylist = this.createPlaylist.bind(this);
     this.setSearchType = this.setSearchType.bind(this);
+    this.externalSearch = this.externalSearch.bind(this);
   }
 
   
@@ -46,6 +49,21 @@ class Scope extends React.Component {
       this.playlistCreator.createPlaylist("tonedeaf scope");
     }
   }
+  
+  /* called from a callback in the NowPlaying component to search recommendations based on current artist and song
+   *  sets the state of the externalQuery to parameter ids then calls getRecs()
+   */
+  externalSearch(artistArray, trackId) {
+    var length = artistArray.length > 4 ? 4 : artistArray.length;
+    
+    var ids = [trackId];
+    for(var i = 0; i < length; i++) {
+      ids.push(artistArray[i].id);
+    }
+    
+    // tell getRecs that an external query is being used
+    this.getRecs(ids);
+  }
 
   // called when option seelction changes
   setSearchType(index) {
@@ -55,9 +73,12 @@ class Scope extends React.Component {
 
   // recommendation button
   //  gets parameters for recommendations
-  getRecs() {
-    if(this.state.selectedResults.length > 0) {
-      this.spotifyWebApi.getRecommendations(this.parameters())
+  getRecs(externalQuery) {
+    // only search if there are selected artists or an external query is being used
+    if(this.state.selectedResults.length > 0 || externalQuery) {
+      var params = externalQuery ? { limit : 50, seed_artists : externalQuery} : this.parameters();
+
+      this.spotifyWebApi.getRecommendations(params)
         .then((response) => {
           this.setState({ tracks : response.tracks, selectedIndex : 1 })
           console.log("Succesfully retrieved recommendations  @");
@@ -66,6 +87,9 @@ class Scope extends React.Component {
         .catch((error) => {
           console.error("Could not retrieve recommendations @");
           console.error(error)
+          if(error.status === 429) {
+            alert("TOO MANY REQUESTS");
+          }
         });
 
     } else {
@@ -73,12 +97,14 @@ class Scope extends React.Component {
     }
   }
 
-  // get spotify ids for selected artists
+  /* get spotify ids for selected artists
+   */
   parameters() {
     var ids = [];
     for(var i = 0; i < this.state.selectedResults.length; i++) {
       ids.push(this.state.selectedResults[i].id)
     }
+    
     return { limit : 50, seed_artists : ids };
   }
 
@@ -251,12 +277,14 @@ class Scope extends React.Component {
       )
 
     } else {
-      display = (
-        <div>
-          {
-            this.state.tracks.map((track, i) => {
-              return (
-                <div className="animate-drop" key={i}>
+      if(this.state.tracks.length === 0) {
+        display = <label className="label-medium"> No recommednations were found. Try adding more artists and tracks. </label>
+      } else {
+        display = (
+          <React.Fragment>
+            {
+              this.state.tracks.map((track, i) => {
+                return (
                   <Track
                     image={track.album.images[0].url}
                     title={track.name}
@@ -265,23 +293,28 @@ class Scope extends React.Component {
                     year={track.album.release_date.split("-")[0]}
                     type={track.album.type}
                     album={track.album.name}
+                    key={i}
                   />
-                </div>
-              )
-            })
-          }
-        </div>
-      )
+                )
+              })
+            }
+          </React.Fragment>
+        )
+      }
     }
+    
+    var placeholder = "Search for " + ["Artist","Track"][this.state.searchType];
 
     return (
-      <div>
+      <div className="div-scope">
         <div className="panel animate-drop">
           <label className="label-medium"> Get recommendations based on artists and tracks </label>
-          <label className="label-subtext"> * Search and add a combination of up to 5 artists or songs, then press 'Get Recommendations' </label>
-          <label className="label-subtext"> * If you press 'Get Recommendations' and nothing shows up, Spotify returned no recommendations. </label>
-          <input type="text" className="input-item input-search" onChange={(e) => this.search(e)} ref={this.searchBar}/>
-          <button className="option-btn" onClick={this.getRecs}> Get Recommendations </button>
+          <label className="label-subtext"> * Search and add a combination of up to 5 artists or tracks. </label>
+          <span className="flex-row search-container"> 
+            <input type="text" className="input-item input-search" onChange={(e) => this.search(e)} ref={this.searchBar} placeholder={placeholder}/>
+            <button className="option-btn glass-btn" onClick={() => this.getRecs(false)}> <img src={glassIcon} className="glass-icon" alt="glass-icon"/> </button>
+          </span>
+          
         </div>
         {display}
       </div>

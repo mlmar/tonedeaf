@@ -7,18 +7,11 @@ import React from 'react';
 class Info extends React.Component {
   constructor(props) {
     super(props);
-
-    // hide text by default to fade it in
-    this.state = {
-      classes : "div-frontpage hide"
-    };
-    
-    this.page = React.createRef();
   }
   
   render() {
     return (
-      <div ref={this.page}>
+      <div className="div-info">
 
         <div className="panel animate-drop">
           <label className="label-medium">
@@ -69,7 +62,7 @@ class Info extends React.Component {
           <label className="label-small">  
             If you've had this page open for over an hour, for some reason, 
             your Spotify access token expired. Just log back in. 
-            If that doesn't work, the server broke.
+            If that doesn't work, the server broke or I haven't fixed a mobile bug.
           </label>
         </div>
 

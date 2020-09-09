@@ -336,7 +336,7 @@ class Tuner extends React.Component {
     }
 
     return (
-      <div>
+      <div className="div-tuner">
         {display}
       </div>
     )

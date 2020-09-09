@@ -258,7 +258,7 @@ class TopTracks extends React.Component {
     
     if(!this.state.fetching) {
       return (
-        <div>
+        <div className="div-top-tracks">
           {
             this.state.tracks.map((track, i) => {
               return (

@@ -2,15 +2,16 @@ import React from 'react';
 
 /*  navbar component
  *  changes depending on portrait mode
+ *  required props:
+ *    {this.props.callback} : function to call when nav button is clicked
+ *    {returnPage}          : page to return to when log out is clicked
+ *    {loginButton}         : login/logout button text
+ *    {selectedIndex}       : currently selected nav index
  */
 class Nav extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      selectedIndex : 0
-    }
 
     this.portraitNav = React.createRef();
     this.unselect = React.createRef();
@@ -31,12 +32,7 @@ class Nav extends React.Component {
 
     // since onClick is called from, confirm a button was clicked
     if(event.target.tagName === "BUTTON") {
-      this.setState(
-        { selectedIndex : parseFloat(event.target.id) },
-        () => {
-          this.props.callback(this.state.selectedIndex);
-        }
-      );
+      this.props.callback(parseFloat(event.target.id));
     }
   }
 
@@ -50,7 +46,7 @@ class Nav extends React.Component {
               <div className="nav-buttons" onClick={this.selectMenu}>
                 {
                   this.props.nav.map((item, i) => {
-                      if (i === this.state.selectedIndex) {
+                      if (i === this.props.selectedIndex) {
                           return <button className="nav-btn selected" key={i} id={i}>{item}</button>
                       } else {
                           return <button className="nav-btn" key={i} id={i}>{item}</button>
@@ -58,11 +54,9 @@ class Nav extends React.Component {
                   })
                 }
               </div>
-              <div className="div-log-btn">
-                <a href={this.props.returnPage}>
-                  <button className="nav-btn log-btn"> {this.props.loginButton} </button>
-                </a>
-              </div>
+              <a href={this.props.returnPage}>
+                <button className="nav-btn log-btn"> {this.props.loginButton} </button>
+              </a>
             </div>
           </div>
         </div>
@@ -81,7 +75,7 @@ class Nav extends React.Component {
             <div className="nav-buttons" onClick={this.selectMenu}>
                 {
                   this.props.nav.map((item, i) => {
-                      if (i === this.state.selectedIndex) {
+                      if (i === this.props.selectedIndex) {
                           return <button className="nav-btn selected" key={i} id={i}>{item}</button>
                       } else {
                           return <button className="nav-btn" key={i} id={i}>{item}</button>

@@ -70,22 +70,21 @@ class Recent extends React.Component {
   render() {
     if(!this.state.tracks.fetching) {
       return (
-        <div>
+        <div className="div-recent">
           {
             this.state.tracks.map((track, i) => {
               return (
-                <div className="animate-drop" key={i}>
-                  <Track
-                    image={track.track.album.images[0].url}
-                    title={track.track.name}
-                    artist={this.artistsToString(track.track.artists)}
-                    url={track.track.external_urls.spotify}
-                    year={track.track.album.release_date.split("-")[0]}
-                    type={track.track.album.type}
-                    album={track.track.album.name}
-                    time={track.played_at}
-                  />
-                </div>
+                <Track
+                  image={track.track.album.images[0].url}
+                  title={track.track.name}
+                  artist={this.artistsToString(track.track.artists)}
+                  url={track.track.external_urls.spotify}
+                  year={track.track.album.release_date.split("-")[0]}
+                  type={track.track.album.type}
+                  album={track.track.album.name}
+                  time={track.played_at}
+                  key={i + track.track.name + track.track.album.release_date.split("-")[0]}
+                />
               )
             })
           }

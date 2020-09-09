@@ -30,7 +30,7 @@ class FrontPage extends React.Component {
         <label className="label-super"> tonedeaf </label>
         <br/>
         <a href={this.props.return} className="sign-background">
-          <label className="sign label-large cursor-pointer"> sign in with spotify </label>
+          <label className="sign label-large cursor-pointer"> sign in with Spotify </label>
         </a>
         {/*<div className="bottom label-center">
           <label className="label-tiny"> Marcus Martinez </label>

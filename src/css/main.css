@@ -1,5 +1,11 @@
 /****************** ELEMENT DEFAULTS ******************/
 
+:root {
+  --bg-dark: #212121;
+  --bg-light: #efefef;
+}
+
+
 * {
   margin: 0;
   padding: 0;
@@ -81,6 +87,18 @@ img {
   justify-content: center;
 }
 
+/****************** ICON ******************/
+
+.glass-btn {
+  width: 3rem !important;
+}
+
+.glass-btn img {
+  height: 1rem;
+  width: 1rem;
+  filter: invert(1);
+}
+
 
 
 /****************** SCROLLBAR ******************/
@@ -123,11 +141,9 @@ img {
 
 @keyframes load {
   0% {
-    opacity: .5;
     width: 0%;
   }
   100% {
-    opacity: 1;
     width: 80%;
   }
 }
@@ -137,9 +153,10 @@ img {
   height: 2rem;
   margin: 10%;
   border-radius: 100rem;
-  background: #212121;
+  background: var(--bg-dark);
   animation: load 2s ease-in;
   animation-fill-mode: both;
+  opacity: .5;
 }
 
 
@@ -178,7 +195,7 @@ img {
 
 /********* COLOR AND STYLE *********/
 
-.hover-shadow, img:hover {
+.hover-shadow, .img:hover, .img--small:hover, .img--medium:hover {
   box-shadow: 0 0 .8rem .1rem rgb(0 0 0 / 27%);
   transition: box-shadow .3s ease;
 }
@@ -214,56 +231,56 @@ img {
 .label-super {
   font-size: 10em;
   font-weight: 500;
-  color: #212121;
+  color: var(--bg-dark);
   transition: all 1s;
 }
 
 .label-title {
   font-size: 2em;
   font-weight: 500;
-  color: #212121;
+  color: var(--bg-dark);
 }
 
 .label-subtitle {
   font-size: 1.4rem;
   font-weight: bold;
-  color: #212121;
+  color: var(--bg-dark);
 }
 
 
 .label-large {
   font-size: 2.4em;
   font-weight: bold;
-  color: #212121;
+  color: var(--bg-dark);
 }
 
 .label-sublarge {
   font-size: 1.7em;
   font-weight: bold;
-  color: #212121;
+  color: var(--bg-dark);
 }
 
 .label-medium {
   font-size: 1.4rem;
   font-weight: bolder;
-  color: #212121;
+  color: var(--bg-dark);
 }
 
 .label-small {
   font-size: .9rem;
-  color: #212121;
+  color: var(--bg-dark);
 }
 
 .label-subtext {
   font-size: 1em;
   font-weight: bold;
-  color: #212121;
+  color: var(--bg-dark);
 }
 
 .label-tiny {
   font-size: .6em;
   font-weight: bold;
-  color: #212121;
+  color: var(--bg-dark);
 }
 
 .label-nopadding {
@@ -304,9 +321,7 @@ img {
 .page {
   display: flex;
   height: 100%;
-  background: #f8f8f8;
   color: white;
-
   flex-direction: column;
   overflow: hidden;
 }
@@ -318,7 +333,7 @@ img {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 70vh;
+  height: 90%;
   padding: 2vh 10rem 2vh 10rem;
   text-align: center;
   align-items: center;
@@ -333,13 +348,13 @@ img {
 
 .sign:hover {
   /*   border-bottom: solid #4493da !important;  do not uncomment */
-  color: #60a3e0;
-  transition: color 1s ease;
+  color: #6fb0ec;
+  transition: all 1s ease;
 }
 
 .sign-background {
-  background: #212121;
-  border: solid #212121;
+  background: var(--bg-dark);
+  border: solid var(--bg-dark);
   border-width: .5rem;
   padding: 0 1rem 0 1rem;
   border-radius: 2rem;
@@ -364,18 +379,15 @@ img {
 
   padding: 1rem 2em 1rem 2em;
   background: #2d2d2d;
-
-  border-bottom: solid;
-  border-width: 1px;
-  border-color: #e1e1e1;
 }
 
 .nav {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   width: 100%;
   margin: 0 0 0 6vw;
-  height: min-content;
+  height: 100%;
   width: 100vw;
 }
 
@@ -386,37 +398,24 @@ img {
 }
 
 .nav-btn {
-  border: none;
-  font-size: .9em;
-  font-weight: 100;
   min-height: 1.5em;
   min-width: 7vw;
+  padding: .2rem;
+  margin: .3rem .5vw .3rem .5vw;
   color: #ffffff;
   background: none;
+
+  font-size: .9em;
+  font-weight: 100;
+
+  border: none;
+  border-width: .2rem !important;
+
   transition: all .1s;
-  margin: .5em .5vw .3rem .5vw;
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
-  border-width: .2em !important;
 }
 
 .nav-btn:hover {
 /*   border-bottom: solid #ffffffb5 !important; */
-  border-width: .2em !important;
-}
-
-.div-log-btn {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-}
-
-.log-btn {
-  border-bottom: double #60a3e0 !important;
-  margin-bottom: -1px;
-}
-
-.log-btn:hover {
-  border-bottom: solid #4493da !important;
   border-width: .2em !important;
 }
 
@@ -433,7 +432,6 @@ img {
   display: flex;
   height: 100%;
   width: 100%;
-  background: none;
 
   overflow: overlay;
 }
@@ -453,10 +451,19 @@ img {
 }
 
 .div-panels {
-  display: block;
-  padding: 0rem;
+  display: flex;
   width: 100%;
-  padding: 1.8rem 1.8rem 1.8rem 0rem;
+  padding: 2rem 2rem 2rem 0rem;
+  
+  flex-direction: column;
+  align-items: center;
+}
+
+.div-top-artists, .div-top-tracks, .div-recent, .div-tuner, .div-scope, .div-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
 }
 
 /********* TRACKS *********/
@@ -515,7 +522,7 @@ img {
 }
 
 .info-btn:hover {
-  color: #212121;
+  color: var(--bg-dark);
   transition: color .5s ease !important;
 }
 
@@ -538,6 +545,9 @@ img {
   grid-template-columns: 60% 40%;
 }
 
+.flex-row {
+  display: flex; 
+}
 
 
 /********* NOWPLAYING *********/
@@ -567,6 +577,27 @@ img {
   padding-bottom: 1em;
 }
 
+.nowplaying-search-container {
+  display: flex;
+  align-items: center;
+  padding-bottom: .5rem;
+}
+
+.nowplaying-search-container label {
+  width: 100%;
+  padding: 0;
+}
+
+.nowplaying-search-container button {
+  border-radius: 2rem;
+  min-height: 1.5rem;
+  margin: 0;
+}
+
+.nowplaying-search-container button img {
+  height: .9rem !important;
+  width: .9rem !important;
+}
 
 /********* TUNER *********/
 
@@ -609,30 +640,27 @@ img {
 
 /********* PANEL *********/
 
+.panel, .panel-compact {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  box-shadow: 0 3px 4px 0 rgb(0 0 0 / 14%);
+  background: var(--bg-light);
+}
 
 .panel {
-  display: flex;
-  flex-direction: column;
-  background: #eaeaea;
-  width: 100%;
   height: min-content;
   padding: 1rem;
   text-align: left;
   margin: 0rem 0 1.2rem 0;
-  box-shadow: 0 4px 6px 0 rgb(0 0 0 / 14%);
 }
 
 .panel-compact {
-  display: flex;
-  flex-direction: column;
   border-radius: .5rem;
-  background: #eaeaea;
-  width: 100%;
   height: 100%;
   padding: 1.5rem 0 1rem 0;
   text-align: center;
   align-items: center;
-  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%);
 }
 
 /* .panel:hover {
@@ -686,28 +714,30 @@ img {
   outline: none;
 }
 
-.input-search {
-  height: 2.5rem;
-  font-size: 1rem;
-}
-
 .option-btn {
+  display: flex;
+  width: 100%;
+  min-height: 4vh;
+  color: #ffffff;
+  background: #333333;
+
+  margin: .3rem 0 .3rem 0;
+
+  align-items: center;
+  justify-content: center;
+
   border: solid #ffffff3b;
   border-width: 1px;
   border-radius: .3rem;
+
   font-size: 1rem;
   font-weight: 100;
-  min-height: 5vh;
-  min-width: 15vh;
-  color: #ffffff;
-  background: #333333;
-  transition: all .5s;
-  margin: .1rem 0 .1rem 0;
-  width: 100%;
+
+  transition: all .3s;
 }
 
 .option-btn:hover, .add-btn:hover {
-  background: #2184b5;
+  background: #238ec3;
   text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
   color: #ffffff;
 }
@@ -717,8 +747,8 @@ img {
 }
 
 .genre-btn {
-  color: #212121;
-  background: #eaeaea;
+  color: var(--bg-dark);
+  background: var(--bg-light);
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%);
   border: solid #ffffff3b;
   border-width: 1px;
@@ -726,7 +756,7 @@ img {
   font-size: 1rem;
   font-weight: 100;
   height: 5vh;
-  transition: all .5s;
+  transition: all .4s;
   width: 100%;
 }
 
@@ -736,7 +766,7 @@ img {
 
 .dark-btn {
   color: white;
-  background: #212121;
+  background: var(--bg-dark);
 }
 
 /********* SCOPE BUTTONS *********/
@@ -749,12 +779,12 @@ img {
   font-size: .7rem;
   font-weight: 100;
   color: #ffffff;
-  background: #212121;
+  background: var(--bg-dark);
   transition: all .5s;
   margin: .1rem 0 .1rem 0;
   width: 2.5em;
   height: 2.5em;
-  right: 2rem;
+  right: 0;
   z-index: 99;
 }
 
@@ -810,7 +840,7 @@ img {
   font-size: .7rem;
   font-weight: 900;
   color: #ffffff;
-  background: #212121;
+  background: var(--bg-dark);
   transition: all .5s;
   margin: .1rem 0 .1rem 0;
 }
@@ -830,4 +860,40 @@ img {
   opacity: 1;
   pointer-events: all;
   transition: opacity 1s ease;
+}
+
+
+
+
+/******************** SEARCH *******************/
+
+.search-container {
+  display: flex;
+  align-items: center;
+  
+  height: 2rem;;
+  width: 100%;
+  margin: .3rem 0 .3rem 0;
+  background: white;
+
+  border: solid #b1b1b1;
+  border-radius: .5rem;
+  border-width: .5px;
+
+  transition: all .5s;
+  text-align: center;
+
+  overflow: hidden;
+}
+
+.search-container input[type="text"] {
+  height: 2.5rem;
+  font-size: 1rem;
+  margin-right: .5rem;
+  border: none;
+  margin: 0;
+}
+
+.search-container button {
+  margin: 0;
 }

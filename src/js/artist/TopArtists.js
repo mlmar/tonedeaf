@@ -112,7 +112,7 @@ class TopArtists extends React.Component {
 
     if(!this.state.fetching) {
       return (
-        <div>
+        <div className="div-top-artists">
           {
             this.state.artists.map((artist, i) => {
               return (
@@ -124,7 +124,7 @@ class TopArtists extends React.Component {
                   popularity={artist.popularity}
                   followers={artist.followers.total}
                   rank={i+1}
-                  key={artist.name + artist.popularity}
+                  key={i+artist.name + artist.popularity}
                 />
               )
             })

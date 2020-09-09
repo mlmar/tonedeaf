@@ -1,6 +1,8 @@
 import React from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 
+const glassIcon = require("../../icon/glass.svg");
+
 /*  now playing component 
  *
  */
@@ -17,7 +19,8 @@ class NowPlaying extends React.Component {
         duration : "",
         progress : "",
         is_playing : false,
-        device : []
+        device : [],
+        trackId : ""
       },
 
       labelText : "Last Played",
@@ -34,7 +37,6 @@ class NowPlaying extends React.Component {
     this.spotifyWebApi = new SpotifyWebApi();
     this.getLastPlayed = this.getLastPlayed.bind(this);
     this.getNowPlaying = this.getNowPlaying.bind(this);
-    this.getDevices = this.getDevices.bind(this);
     this.previous = this.previous.bind(this);
     this.pause = this.pause.bind(this);
     this.play = this.play.bind(this);
@@ -57,7 +59,8 @@ class NowPlaying extends React.Component {
             duration: track.duration_ms,
             progress : track.progress_ms,
             is_playing : false,
-            device : ""
+            device : "",
+            trackId: track.id
           },
 
           labelText : "Last Played",
@@ -97,7 +100,8 @@ class NowPlaying extends React.Component {
               duration: response.item.duration_ms,
               progress : response.progress_ms,
               is_playing : response.is_playing,
-              device : response.device
+              device : response.device,
+              trackId : response.item.id
             },
 
             labelText : "Now Playing",
@@ -130,18 +134,6 @@ class NowPlaying extends React.Component {
       result += (i < artists.length - 1) ? artists[i].name + ", " : artists[i].name;
     }
     return result;
-  }
-
-  getDevices() {
-    this.spotifyWebApi.getMyDevices()
-      .then((response) => {
-        console.log("Successfully retrieved device @");
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error("Could not retrieve device @");
-        console.error(error);
-      });
   }
 
   /************** playback functions **************/
@@ -198,6 +190,31 @@ class NowPlaying extends React.Component {
       });
   }
 
+  renderPlayerControls(playing) {
+    if(!playing) {
+      return "";
+    } else {
+      return (
+        <div className="div-nowplaying-controls animate-drop">
+          <div className="div-control-buttons">
+            <span className="control-btn-previous--container">
+              <button className="control-btn-previous" onClick={this.previous}> &lt; </button>
+            </span>
+            <span className="control-btn-pause--container">
+              <button className="control-btn-pause" onClick={this.pause} ref={this.pauseBtn}> {this.pauseText} </button>
+            </span>
+            <span className="control-btn-skip--container">
+              <button className="control-btn-skip" onClick={this.skip}> &gt; </button>
+            </span>
+          </div>
+          <progress className="progressbar" max="100" value={this.compute()}/>
+          <label className="label-subtext"> {this.state.deviceText} {this.state.playing.device.name} </label>
+        </div>
+      );
+    }
+  }
+
+  // computers current song time for progress bar
   compute() {
     return (this.state.playing.progress / this.state.playing.duration * 100).toString();
   }
@@ -218,31 +235,14 @@ class NowPlaying extends React.Component {
   }
   
   render() {
+    var display = "";
+
     if(this.state.full === "true") {
       // only show controls if playing
-      var controls = !this.state.playing.is_playing ? "" :
-        (
-          <div className="div-nowplaying-controls animate-drop">
-            <div className="div-control-buttons">
-              <span className="control-btn-previous--container">
-                <button className="control-btn-previous" onClick={this.previous}> &lt; </button>
-              </span>
-              <span className="control-btn-pause--container">
-                <button className="control-btn-pause" onClick={this.pause} ref={this.pauseBtn}> {this.pauseText} </button>
-              </span>
-              <span className="control-btn-skip--container">
-                <button className="control-btn-skip" onClick={this.skip}> &gt; </button>
-              </span>
-            </div>
-            <progress className="progressbar" max="100" value={this.compute()}/>
-            <label className="label-subtext"> {this.state.deviceText} {this.state.playing.device.name} </label>
-          </div>
-        );
+      var controls = this.renderPlayerControls(this.state.playing);
 
-
-      return (
-        <div className="panel animate-drop">
-          <label className="label-subtitle"> {this.state.labelText} </label>
+      display = (
+        <React.Fragment>
           <div className="nowplaying-full">
 
             <a href={this.state.playing.url}>
@@ -256,12 +256,11 @@ class NowPlaying extends React.Component {
 
           </div>
           {controls}
-        </div>
+        </React.Fragment>
       )
     } else {
-      return (
-        <div className="panel animate-drop">
-          <label className="label-subtitle"> {this.state.labelText} </label>
+      display = (
+        <React.Fragment>
           <a href={this.state.playing.url}>
             <img className="img" src={this.state.playing.image} width="70" alt="Album art not found"/>
           </a>
@@ -270,9 +269,22 @@ class NowPlaying extends React.Component {
             <label className="label-small"> {this.artistsToString(this.state.playing.artist)} </label>
           </div>
           <span ref={this.controls}/>
-        </div>
+        </React.Fragment>
       )
     }
+    
+    var searchButton = !this.props.searchCurrent ? "" :
+      <button className="option-btn glass-btn" onClick={() => this.props.searchCurrent(this.state.playing.artist, this.state.playing.trackId)}> <img src={glassIcon} className="glass-icon" alt="glass-icon"/> </button>;
+      
+    return (
+      <div className="panel animate-drop">
+        <span className="nowplaying-search-container">
+          <label className="label-subtitle"> {this.state.labelText} </label>
+          {searchButton}
+        </span>
+        {display}
+      </div>
+    )
   }
 }
 

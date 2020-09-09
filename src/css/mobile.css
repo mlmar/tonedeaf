@@ -46,10 +46,6 @@
     padding: .5rem 1rem .5rem 1rem;
     background: #2d2d2d;
 
-    border-bottom: solid;
-    border-width: 1px;
-    border-color: #e1e1e1;
-
     overflow: hidden;
   }
 
@@ -104,8 +100,8 @@
     border-radius: .3rem;
     font-size: 1.3rem;
     font-weight: 100;
-    height: 2.3rem;
-    width: 2.3rem;
+    height: 2.1rem;
+    width: 2.1rem;
     color: #ffffff;
     background: none;
     transition: all .5s;
@@ -285,7 +281,7 @@
   }
 
   .label-title {
-    font-size: 2em;
+    font-size: 1.8em;
     font-weight: 500;
     color: #212121;
   }

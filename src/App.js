@@ -114,6 +114,7 @@ class App extends React.Component {
     /********* BINDINGS *********/
     this.navClick = this.navClick.bind(this);
     this.createOptions = this.createOptions.bind(this);
+    this.searchCurrent = this.searchCurrent.bind(this);
     this.renderControl = this.renderControl.bind(this);
   }
 
@@ -156,6 +157,10 @@ class App extends React.Component {
         key={i}
       />
     );
+  }
+
+  searchCurrent(artistArray, trackId) {
+    this.scope.current.externalSearch(artistArray,trackId);
   }
 
   /*  render components based on selectedIndex
@@ -307,6 +312,8 @@ class App extends React.Component {
               this.scope.current.createPlaylist();
             });
 
+            showNowPlaying = <NowPlaying logout={this.state.logoutUrl} full="false" searchCurrent={this.searchCurrent}/>; // in sidebar
+
           display = <Scope userid={this.userid} ref={this.scope}/>;
           break;
 
@@ -328,14 +335,15 @@ class App extends React.Component {
           nav={this.state.nav}
           returnPage={this.state.returnPage}
           loginButton={this.state.loginButton}
+          selectedIndex={this.state.selectedIndex}
         />
 
       // contruct the front page
       frontpage =
-        <React.Fragment>
+        <div className="div-content">
           <div className="div-sidebar"> {sidebar} </div>
           <div className="div-panels"> {display} </div>
-        </React.Fragment>
+        </div>
   
 
     /*  If not logged in, just show the sign in page
@@ -348,9 +356,7 @@ class App extends React.Component {
     return (
       <React.Fragment>
         {top}
-        <div className="div-content">
-          {frontpage}
-        </div>
+        {frontpage}
       </React.Fragment>
     )
   }

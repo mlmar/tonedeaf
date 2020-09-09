@@ -39,7 +39,7 @@ class Options extends React.Component {
         <div className="div-options" onClick={this.optionClick}>
           {
             this.props.options.map((option, i) => {
-              var classes = (i !== this.state.index) ? "option-btn" : "option-btn option-btn--selected";
+              var classes = (i === this.state.index) && this.props.options.length > 1 ? "option-btn option-btn--selected" : "option-btn" ;
               return (
                 <button className={classes} key={i}> {option} </button>
               )
