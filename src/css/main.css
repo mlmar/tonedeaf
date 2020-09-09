@@ -152,7 +152,7 @@ img {
   background: var(--bg-dark);
   animation: load 2s ease-in;
   animation-fill-mode: both;
-  opacity: .5;
+  opacity: .7;
 }
 
 
@@ -587,12 +587,13 @@ img {
 .nowplaying-search-container button {
   border-radius: 2rem;
   min-height: 1.5rem;
+  width: 4rem;
   margin: 0;
 }
 
 .nowplaying-search-container button img {
-  height: .9rem !important;
-  width: .9rem !important;
+  height: 1rem !important;
+  width: 1rem !important;
 }
 
 /********* TUNER *********/
@@ -700,10 +701,11 @@ img {
   border-width: .5px;
   margin: .3rem 0 .3rem 0;
   padding: .3rem;
-  height: 2vh;
+  height: 2rem;
   width: 100%;
   transition: all .5s;
   text-align: center;
+  font-size: 1.1rem;
 }
 
 .input-item:focus, .input-item:hover {
@@ -856,41 +858,4 @@ img {
   opacity: 1;
   pointer-events: all;
   transition: opacity 1s ease;
-}
-
-
-
-
-/******************** SEARCH *******************/
-
-.search-container {
-  display: flex;
-  align-items: center;
-  
-  height: 2rem;;
-  width: 100%;
-  margin: .3rem 0 .3rem 0;
-  background: white;
-
-  border: solid #b1b1b1;
-  border-radius: .5rem;
-  border-width: .5px;
-
-  transition: all .5s;
-  text-align: center;
-
-  overflow: hidden;
-}
-
-.search-container input[type="text"] {
-  height: 2.5rem;
-  font-size: 1rem;
-  margin-right: .5rem;
-  border: none;
-  margin: 0;
-}
-
-.search-container button {
-  margin: 0;
-  width: 15rem;
 }

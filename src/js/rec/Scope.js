@@ -310,10 +310,8 @@ class Scope extends React.Component {
         <div className="panel animate-drop">
           <label className="label-medium"> Get recommendations based on artists and tracks </label>
           <label className="label-subtext"> * Search and add a combination of up to 5 artists or tracks. </label>
-          <span className="flex-row search-container"> 
-            <input type="text" className="input-item input-search" onChange={(e) => this.search(e)} ref={this.searchBar} placeholder={placeholder}/>
-            <button className="option-btn" onClick={() => this.getRecs(false)}> Get Recs </button>
-          </span>
+          <input type="text" className="input-item input-search" onChange={(e) => this.search(e)} ref={this.searchBar} placeholder={placeholder}/>
+          <button className="option-btn" onClick={() => this.getRecs(false)}> Get Recs </button>
           
         </div>
         {display}
