@@ -44,23 +44,21 @@
     z-index: 99;
 
     padding: .5rem 1rem .5rem 1rem;
-    background: #2d2d2d;
 
     overflow: hidden;
   }
 
   .top-open {
-    background: #212121;
+    background: #252525;
     height: 100%;
     min-height: 0 !important;
-    transition: height .3s ease, background .6s ease !important;
+    transition: height .3s ease, background .4s ease !important;
   }
 
   .top-closed {
-    background: #2d2d2d;
     height: 3rem;
     min-height: 0 !important;
-    transition: height .3s ease, background .6s ease !important;
+    transition: height .3s ease, background .4s ease !important;
   }
 
   .top-border {
@@ -206,6 +204,11 @@
     padding: 0;
   }
 
+  .div-top-artists, .div-top-tracks, .div-recent, .div-tuner, .div-scope, .div-info {
+    padding-left: 0;
+    box-shadow: none;
+  }
+
   /*************** nowplaying ***************/
 
   .div-nowplaying--info-full {
@@ -276,20 +279,18 @@
   .label-super {
     font-size: 10em;
     font-weight: 500;
-    color: #212121;
+    color: white;
     transition: all 1s;
   }
 
   .label-title {
     font-size: 1.8em;
     font-weight: 500;
-    color: #212121;
   }
 
   .label-subtitle {
     font-size: 1.6rem;
     font-weight: bold;
-    color: #212121;
     padding-bottom: .5rem;
   }
 
@@ -297,41 +298,35 @@
   .label-large {
     font-size: 1.4em;
     font-weight: bold;
-    color: #212121;
     padding-bottom: .5rem;
   }
 
   .label-sublarge {
     font-size: .9em;
     font-weight: bold;
-    color: #212121;
     padding-bottom: .5rem;
   }
 
   .label-medium {
     font-size: .9rem;
     font-weight: bolder;
-    color: #212121;
     padding-bottom: .5rem;
   }
 
   .label-small {
     font-size: .8rem;
-    color: #212121;
     padding-bottom: .2rem;
   }
 
   .label-subtext {
     font-size: .5rem;
     font-weight: bold;
-    color: #212121;
     padding-bottom: .2rem;
   }
 
   .label-tiny {
     font-size: .6rem;
     font-weight: bold;
-    color: #212121;
     padding-bottom: .2rem;
   }
 

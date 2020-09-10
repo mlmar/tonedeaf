@@ -1,8 +1,9 @@
 /****************** ELEMENT DEFAULTS ******************/
 
 :root {
-  --bg-dark: #212121;
+  --bg-dark: #1f1f1f;
   --bg-light: #efefef;
+  --bg-outline: rgb(232 232 232 / 14%);
 }
 
 
@@ -100,20 +101,20 @@ img {
 /****************** SCROLLBAR ******************/
 
 ::-webkit-scrollbar {
-  width: .5rem;
-  height: .5rem;
+  width: .7rem;
+  height: .7rem;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f182;
+  background: #cacaca;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #a6a6a67a;
+  background: #888888;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a6a6a6a8;
+  background: #737373;
 }
 
 
@@ -149,7 +150,7 @@ img {
   height: 2rem;
   margin: 10%;
   border-radius: 100rem;
-  background: var(--bg-dark);
+  background: var(--bg-light);
   animation: load 2s ease-in;
   animation-fill-mode: both;
   opacity: .7;
@@ -227,7 +228,7 @@ img {
 .label-super {
   font-size: 10em;
   font-weight: 500;
-  color: var(--bg-dark);
+  color: var(--bg-light);
   transition: all 1s;
 }
 
@@ -318,6 +319,7 @@ img {
   display: flex;
   height: 100%;
   color: white;
+  background: #131313;
   flex-direction: column;
   overflow: hidden;
 }
@@ -337,7 +339,7 @@ img {
 }
 
 .sign {
-  color: #ffffff;
+  color: var(--bg-light);
   /*   border-bottom: solid #4493da; do not uncomment */
   transition: color 1s ease;
 }
@@ -373,8 +375,8 @@ img {
   height: 4rem;
   width: 100vw;
 
-  padding: 1rem 2em 1rem 2em;
-  background: #2d2d2d;
+  padding: 1rem 2rem 1rem 2rem;
+  background: var(--bg-dark);
 }
 
 .nav {
@@ -402,7 +404,6 @@ img {
   background: none;
 
   font-size: .9em;
-  font-weight: 100;
 
   border: none;
   border-width: .2rem !important;
@@ -435,10 +436,8 @@ img {
 .div-sidebar {
   display: flex;
   flex-direction: column;
-  width: fit-content;
   width: 40vw;
-  min-height: fit-content;
-  padding: 2rem;
+  padding: 2rem 1rem 2rem 2rem;
 }
 
 .div-profile--info {
@@ -448,8 +447,9 @@ img {
 
 .div-panels {
   display: flex;
+  height: fit-content;
   width: 100%;
-  padding: 2rem 2rem 2rem 0rem;
+  padding: 2rem 2rem 2rem 1rem;
   
   flex-direction: column;
   align-items: center;
@@ -460,7 +460,12 @@ img {
   flex-direction: column;
   width: 100%;
   position: relative;
+  padding-left: 1rem;
+
+  box-shadow: -4px 0px 1px -2px var(--bg-outline);
 }
+
+
 
 /********* TRACKS *********/
 
@@ -509,7 +514,7 @@ img {
   font-size: .8rem;
   font-weight: 400;
   font-stretch: 200%;
-  color: #21212175;
+  color: #797979 !important;
   transition: color .5s ease !important;
   background: none;
   transition: all .5s;
@@ -518,7 +523,7 @@ img {
 }
 
 .info-btn:hover {
-  color: var(--bg-dark);
+  color: var(--bg-light) !important;
   transition: color .5s ease !important;
 }
 
@@ -635,14 +640,27 @@ img {
 }
 
 
+/********* OPTIONS *********/
+
+.div-options button {
+}
+
 /********* PANEL *********/
 
 .panel, .panel-compact {
   display: flex;
   width: 100%;
   flex-direction: column;
-  box-shadow: 0 3px 4px 0 rgb(0 0 0 / 14%);
-  background: var(--bg-light);
+/*   box-shadow: 0 3px 4px 0 rgb(0 0 0 / 14%); */
+/*   background: var(--bg-light); */
+}
+
+.panel:not(:last-child), .panel-compact:not(:last-child) {
+  box-shadow: 0 4px 1px -2px var(--bg-outline);
+}
+
+.panel *, .panel-compact * {
+  color: #e6e6e6;
 }
 
 .panel {
@@ -706,6 +724,7 @@ img {
   transition: all .5s;
   text-align: center;
   font-size: 1.1rem;
+  color: black;
 }
 
 .input-item:focus, .input-item:hover {
@@ -717,15 +736,14 @@ img {
   width: 100%;
   min-height: 4vh;
   color: #ffffff;
-  background: #333333;
+  background: var(--bg-dark);
 
   margin: .3rem 0 .3rem 0;
 
   align-items: center;
   justify-content: center;
 
-  border: solid #ffffff3b;
-  border-width: 1px;
+  border: none;
   border-radius: .3rem;
 
   font-size: 1rem;
@@ -748,8 +766,7 @@ img {
   color: var(--bg-dark);
   background: var(--bg-light);
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%);
-  border: solid #ffffff3b;
-  border-width: 1px;
+  border: none;
   border-radius: .3rem;
   font-size: 1rem;
   font-weight: 100;
