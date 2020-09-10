@@ -61,16 +61,6 @@
     transition: height .3s ease, background .4s ease !important;
   }
 
-  .top-border {
-    background: none;
-    pointer-events: none;
-    border-bottom: solid #373737;
-    border-width: .1rem;
-    z-index: 100;
-    width: 100vw;
-    height: 3rem;
-  }
-
   .top-unselect {
     background: none;
     position: fixed;
@@ -148,10 +138,6 @@
 
   .nav-btn:hover {
     border-width: .1em !important;
-  }
-
-  .selected {
-    background: #2d2d2dd6;
   }
 
   .log-btn-container {

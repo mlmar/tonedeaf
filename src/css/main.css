@@ -558,13 +558,14 @@ img {
   display: flex;
   flex-direction: column;
   padding: .2rem;
+  width: 100%;
 }
 
 .div-nowplaying--info-full {
   display: flex;
   flex-direction: column;
   padding: 0 0 0 2vw;
-  max-width: 100%;
+  width: 100%;
 }
 
 .div-nowplaying-controls {

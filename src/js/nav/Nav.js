@@ -87,7 +87,6 @@ class Nav extends React.Component {
               </a>
             </div>
           </div>
-          <div className="top top-border"></div>
         </div>
       </div>
     )
