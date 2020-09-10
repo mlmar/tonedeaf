@@ -196,7 +196,7 @@ class App extends React.Component {
       var secondaryFocus; // show save option for playlists
       var tertiaryFocus;
       var display; // right side content panels
-      var showNowPlaying = portrait ? "" : <NowPlaying logout={this.state.logoutUrl} full="false"/>; // in sidebar
+      var showNowPlaying = portrait ? "" : <NowPlaying logout={this.state.logoutUrl} full="false" key="a"/>; // in sidebar
 
 
       /*************** REDNDER COMPONENTS BASED ON SELECTED INDEX ***************/
@@ -313,8 +313,8 @@ class App extends React.Component {
             });
 
           showNowPlaying = portrait ?
-            <NowPlaying logout={this.state.logoutUrl} full="true" searchCurrent={this.searchCurrent}/> :
-            <NowPlaying logout={this.state.logoutUrl} full="false" searchCurrent={this.searchCurrent}/>; // in sidebar
+            <NowPlaying logout={this.state.logoutUrl} full="true" searchCurrent={this.searchCurrent} key="b"/> :
+            <NowPlaying logout={this.state.logoutUrl} full="false" searchCurrent={this.searchCurrent} key="c"/>; // in sidebar
 
           display = <Scope userid={this.userid} ref={this.scope}/>;
           break;
