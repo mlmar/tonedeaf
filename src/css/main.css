@@ -91,6 +91,10 @@ img {
 
 /****************** ICON ******************/
 
+.glass-btn {
+  overflow: hidden;
+}
+
 .glass-btn img {
   height: 1rem;
   width: 1rem;

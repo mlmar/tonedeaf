@@ -256,6 +256,19 @@
     font-size: .9rem; 
   }
 
+  /****************** ICON ******************/
+
+  .glass-btn {
+    overflow: hidden;
+  }
+
+  .glass-btn img {
+    height: .8rem;
+    width: .8rem;
+    filter: invert(1);
+  }
+
+
   /*************** labels ***************/
 
   .title {
