@@ -655,7 +655,7 @@ img {
 /*   background: var(--bg-light); */
 }
 
-.panel:not(:last-child), .panel-compact:not(:last-child) {
+.panel:not(:last-child), .panel-compact:not(:last-child), .bottom-outline:not(:last-child) {
   box-shadow: 0 4px 1px -2px var(--bg-outline);
 }
 
@@ -719,7 +719,7 @@ img {
   border-width: .5px;
   margin: .3rem 0 .3rem 0;
   padding: .3rem;
-  height: 2rem;
+  height: 2.3rem;
   width: 100%;
   transition: all .5s;
   text-align: center;
@@ -734,7 +734,7 @@ img {
 .option-btn {
   display: flex;
   width: 100%;
-  min-height: 4vh;
+  min-height: 4.3vh;
   color: #ffffff;
   background: var(--bg-dark);
 
@@ -763,8 +763,8 @@ img {
 }
 
 .genre-btn {
-  color: var(--bg-dark);
-  background: var(--bg-light);
+  color: var(--bg-light);
+  background: var(--bg-dark);
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%);
   border: none;
   border-radius: .3rem;
@@ -776,7 +776,7 @@ img {
 }
 
 .genre-btn:hover {
-  background: #cccccc;
+  background: #585858;
 }
 
 .dark-btn {

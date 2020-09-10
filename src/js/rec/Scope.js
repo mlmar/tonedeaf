@@ -237,7 +237,7 @@ class Scope extends React.Component {
               this.state.results.map((result, i) => {
                 if(result.type === "artist" && result.images.length > 0) {
                   return (
-                    <div key={i}>
+                    <div className="bottom-outline" key={i}>
                       <button className="add-btn" id={i}> + </button>
                       <Artist
                         image={result.images[0].url}
@@ -252,7 +252,7 @@ class Scope extends React.Component {
                   )
                 } else if(result.type === "track" && result.album.images.length > 0) {
                   return (
-                    <div key={i}>
+                    <div className="bottom-outline" key={i}>
                       <button className="add-btn" id={i}> + </button>
                       <Track
                         image={result.album.images[0].url}
