@@ -192,7 +192,7 @@ class NowPlaying extends React.Component {
 
   renderPlayerControls(playing) {
     if(!playing.is_playing) {
-      return "";
+      return <React.Fragment></React.Fragment>;
     } else {
       return (
         <div className="div-nowplaying-controls animate-drop">
