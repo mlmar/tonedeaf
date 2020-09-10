@@ -2,6 +2,7 @@
 
 :root {
   --bg-dark: #1f1f1f;
+  --bg-darker: #131313;
   --bg-light: #efefef;
   --bg-outline: rgb(232 232 232 / 14%);
 }
@@ -319,7 +320,7 @@ img {
   display: flex;
   height: 100%;
   color: white;
-  background: #131313;
+  background: var(--bg-darker);
   flex-direction: column;
   overflow: hidden;
 }

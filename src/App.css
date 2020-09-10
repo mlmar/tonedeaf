@@ -5,5 +5,5 @@ html, body, #root, .App {
 
   flex-direction: column;
 
-  background: var(--bg-dark);
+  background: var(--bg-darker);
 }
