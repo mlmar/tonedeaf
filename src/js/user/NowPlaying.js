@@ -190,9 +190,7 @@ class NowPlaying extends React.Component {
   }
 
   renderPlayerControls(playing) {
-    if(!playing.is_playing) {
-      return <React.Fragment></React.Fragment>;
-    } else {
+    if(playing.is_playing) {
       return (
         <div className="controls animate-drop">
           <div className="buttons">
@@ -271,10 +269,10 @@ class NowPlaying extends React.Component {
       )
     }
     
-    var searchButton = !this.props.searchCurrent ? "" :
+    var searchButton = this.props.searchCurrent && this.state.playing.is_playing ? 
       <button className="option-btn glass-btn" onClick={() => this.props.searchCurrent(this.state.playing.artist, this.state.playing.trackId)}> 
         <img src={glassIcon} className="glass-icon" alt="glass-icon"/> 
-      </button>;
+      </button> : "";
       
     return (
       <div className="panel animate-drop">
