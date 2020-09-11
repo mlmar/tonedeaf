@@ -123,7 +123,7 @@
     margin-top: .5rem;
   }
 
-  .nav-buttons > button {
+  .nav-buttons > button, .log-btn {
     border: none;
     background: #373737;
     font-size: 1.1rem;
@@ -165,7 +165,7 @@
     padding-top: 2rem;
     margin-top: 3rem;
 
-    padding: 1rem;
+    padding: 0rem 1rem 1rem 1rem;
     width: 100%;
   }
 

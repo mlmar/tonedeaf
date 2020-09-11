@@ -217,10 +217,6 @@ img {
   transition: box-shadow .3s ease;
 }
 
-.text-white {
-  color: white !important;
-}
-
 .label-bold {
   font-weight: bold !important;
 }
@@ -399,6 +395,10 @@ img {
   background: var(--bg-dark);
 }
 
+.top label {
+  color: white;
+}
+
 .nav {
   display: flex;
   justify-content: flex-end;
@@ -451,28 +451,25 @@ img {
   overflow: overlay;
 }
 
-.div-sidebar {
-  display: flex;
-  flex-direction: column;
-  width: 40vw;
-  padding: 2rem;
-
-  overflow: overlay;
+.div-content label {
+  color: var(--bg-light);
 }
 
-.div-profile--info {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+
+.div-sidebar, .div-panels {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 2rem 2rem 2rem;
+  overflow: overlay;
+  align-items: center;
+}
+
+.div-sidebar {
+  width: 40vw;
 }
 
 .div-panels {
-  display: flex;
-  height: 100%;
   width: 100%;
-  padding: 2rem;
-  flex-direction: column;
-  align-items: center;
-  overflow: overlay;
 }
 
 .div-top-artists, .div-top-tracks, .div-recent, .div-tuner, .div-scope, .div-info {
@@ -484,6 +481,10 @@ img {
 }
 
 
+.div-profile--info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
 
 /********* TRACKS *********/
 
@@ -682,7 +683,7 @@ img {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-gap: 1rem 1rem;
-  padding: 0rem 1rem 0rem 1rem;
+  padding: 1rem;
 }
 
 
@@ -692,6 +693,10 @@ img {
   grid-gap: 1rem;
 }
 
+.tuner-btn {
+  margin: 1rem 0rem 0rem 0rem !important;
+}
+
 /********* SCOPE *********/
 
 .div-scope > .selected {
@@ -699,8 +704,16 @@ img {
   flex-direction: column;
 }
 
+.div-scope > .selected > label {
+  padding: 1rem 1rem .2rem 1rem;
+}
+
 .scope-btn {
-  margin-bottom: 1rem !important;
+  margin: -1rem 0rem 2rem 0rem !important;
+}
+
+.divider {
+  margin-bottom: .6rem;
 }
 
 /********* SCOPE BUTTONS *********/
@@ -734,8 +747,8 @@ img {
   display: flex;
   height: min-content;
   width: 100%;
-  padding: 1rem;
-  margin: 0rem 0 1.2rem 0;
+  padding: 1rem 1rem 2rem 1rem;
+  margin: .6rem 0 .6rem 0;
   
   flex-direction: column;
   text-align: left;
@@ -745,7 +758,7 @@ img {
   color: #e6e6e6;
 }
 
-.panel:not(:last-child), .bottom-outline > .panel {
+.panel:not(:last-child), .bottom-outline, .scope-wrapper:not(:last-child) > .panel {
   box-shadow: 0 4px 1px -2px var(--bg-outline);
 }
 
@@ -758,7 +771,6 @@ img {
   flex-direction: column;
   width: 100%;
 }
-
 
 /********* INPUTS *********/
 

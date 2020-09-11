@@ -27,18 +27,23 @@ class Scope extends React.Component {
     this.searchBar = React.createRef();
   
     // method bindings
+
+    this.externalSearch = this.externalSearch.bind(this);
+    this.setSearchType = this.setSearchType.bind(this);
+    this.createPlaylist = this.createPlaylist.bind(this);
+
+    this.parameters = this.parameters.bind(this);
     this.artistAdd = this.artistAdd.bind(this);
     this.artistRemove = this.artistRemove.bind(this);
-    this.getRecs = this.getRecs.bind(this);
     this.search = this.search.bind(this);
-    this.parameters = this.parameters.bind(this);
+    this.getRecs = this.getRecs.bind(this);
+
     this.artistsToString = this.artistsToString.bind(this);
-    this.createPlaylist = this.createPlaylist.bind(this);
-    this.setSearchType = this.setSearchType.bind(this);
-    this.externalSearch = this.externalSearch.bind(this);
+
 
     this.renderArtist = this.renderArtist.bind(this);
     this.renderTrack = this.renderTrack.bind(this);
+    this.renderSelected = this.renderSelected.bind(this);
   }
 
   
@@ -189,7 +194,7 @@ class Scope extends React.Component {
   renderArtist(result, i) {
     return (
       <Artist
-        image={result.images[0].url}
+        image={result.images.length ? result.images[0].url : ""}
         name={result.name}
         genre={result.genres.join(", ")}
         url={result.external_urls.spotify}
@@ -203,7 +208,7 @@ class Scope extends React.Component {
   renderTrack(result, i) {
     return (
       <Track
-        image={result.album.images[0].url}
+        image={result.album.images ? result.album.images[0].url : ""}
         title={result.name}
         artist={this.artistsToString(result.artists)}
         url={result.external_urls.spotify}
@@ -215,29 +220,26 @@ class Scope extends React.Component {
     )
   }
 
+  renderSelected() {
+    var hasSelected = this.state.selectedResults.length > 0;
 
-  
-  render() {
-    var getRecommendationsBtn = this.state.selectedResults.length ? <button className="option-btn scope-btn animate-drop" onClick={() => this.getRecs(false)}> Get Recommendations </button> : "";
-
-    var display;
-    if(this.state.selectedIndex === 0) {
-      display = (
-
+    if(hasSelected) {
+      return (
         <React.Fragment>
           <div className="selected" onClick={this.artistRemove}>
+            <label className="label-small label-bold"> Currently seleced artists and tracks: </label>
             {
               this.state.selectedResults.map((result, i) => {
                 if(result.type === "artist") {
                   return (
-                    <div className="bottom-outline" key={i} >
+                    <div className="scope-wrapper" key={i} >
                       <button className="sub-btn" id={i}> - </button>
                       {this.renderArtist(result, i)}
                     </div>
                   )
                 } else if(result.type === "track") {
                   return (
-                    <div className="bottom-outline" key={i} >
+                    <div className="scope-wrapper" key={i} >
                       <button className="sub-btn" id={i}> - </button>
                       {this.renerTrack(result, i)}
                     </div>
@@ -249,21 +251,36 @@ class Scope extends React.Component {
             }
           </div>
 
-          {getRecommendationsBtn}
+          <div className="bottom-outline divider">
+            <button className="option-btn scope-btn animate-drop" onClick={() => this.getRecs(false)}> Get Recommendations </button>
+          </div>
+        </React.Fragment>
+      )
+    }
+  }
+  
+  render() {
+
+    var display;
+    if(this.state.selectedIndex === 0) {
+      display = (
+
+        <React.Fragment>
+          {this.renderSelected()}
 
           <div onClick={this.artistAdd}>
             {
               this.state.results.map((result, i) => {
-                if(result.type === "artist" && result.images.length > 0) {
+                if(result.type === "artist") {
                   return (
-                    <div className="bottom-outline" key={i}>
+                    <div className="scope-wrapper" key={i}>
                       <button className="add-btn" id={i}> + </button>
                       {this.renderArtist(result, i)}
                     </div>
                   )
-                } else if(result.type === "track" && result.album.images.length > 0) {
+                } else if(result.type === "track") {
                   return (
-                    <div className="bottom-outline" key={i}>
+                    <div className="scope-wrapper" key={i}>
                       <button className="add-btn" id={i}> + </button>
                       {this.renderTrack(result, i)}
                     </div>
@@ -285,18 +302,7 @@ class Scope extends React.Component {
           <React.Fragment>
             {
               this.state.tracks.map((track, i) => {
-                return (
-                  <Track
-                    image={track.album.images[0].url}
-                    title={track.name}
-                    artist={this.artistsToString(track.artists)}
-                    url={track.external_urls.spotify}
-                    year={track.album.release_date.split("-")[0]}
-                    type={track.album.type}
-                    album={track.album.name}
-                    key={i}
-                  />
-                )
+                return this.renderTrack(track, i)
               })
             }
           </React.Fragment>

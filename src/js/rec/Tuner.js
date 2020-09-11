@@ -238,20 +238,45 @@ class Tuner extends React.Component {
   componentDidMount() {
     this.getGenreSeeds();
   }
+
+
+  /* Only show panel for selected genres if they have been selected */
+  renderSelected() {
+    var hasSelected = this.state.selectedGenres.length > 0;
+    if(hasSelected) {
+      return (
+        <div className="panel">
+          <label className="label-small label-bold"> Selected genres will show up here. Press to them to remove. </label>
+          <br/>
+          <div className="selected" onClick={this.genreRemove}>
+            {
+              this.state.selectedGenres.map((genre, i) => {
+                return (
+                  <Genre genre={genre} key={i} id={i} type="-"/>
+                )
+              })
+            }
+          </div>
+          <button className="option-btn glass-btn tuner-btn" onClick={() => this.getRecs(false)}> <img src={glassIcon} className="glass-icon" alt="glass-icon"/> </button>
+        </div>
+      )
+    }
+  }
   
   render() {
+
     var display;
-    var recButton = (
+    var description = (
       <div className="panel animate-drop">
-         <label className="label-medium"> Get recommendations based on song attribute and genres </label>
+         <label className="label-medium"> Get recommendations based on song attributes and genres </label>
          <label className="label-subtext"> * Select up to 5 genres </label>
          <label className="label-subtext"> * Modify your song attribute preferences </label>
-         <button className="option-btn glass-btn" onClick={() => this.getRecs(false)}> <img src={glassIcon} className="glass-icon" alt="glass-icon"/> </button>
       </div>
     )
 
-    var board;
-    if(this.state.index === 0) {
+    var board; // board of genre buttons or attribute sliders
+    
+    if(this.state.index === 0) { // genre button selection
       board = (
         <div className="genres" onClick={this.genreAdd}>
           {
@@ -266,25 +291,13 @@ class Tuner extends React.Component {
       
       display = (
         <React.Fragment>
-          {recButton}
-          <div className="panel"> 
-            <label className="label-small label-bold"> Selected genres will show up here. Press to them to remove. </label>
-            <br/>
-            <div className="selected" onClick={this.genreRemove}>
-              {
-                this.state.selectedGenres.map((genre, i) => {
-                  return (
-                    <Genre genre={genre} key={i} id={i} type="-"/>
-                  )
-                })
-              }
-            </div>
-          </div>
+          {description}
+          {this.renderSelected()}
           {board}
         </React.Fragment>
       )
 
-    } else if(this.state.index === 1) {
+    } else if(this.state.index === 1) { // attribute slider manipulation
       board = (
         <div className="div-attributes" onClick={this.attributeClick}>
           {
@@ -309,27 +322,27 @@ class Tuner extends React.Component {
 
       display = (
         <React.Fragment>
-          {recButton}
+          {description}
           {board}
         </React.Fragment>
       )
-    } else {
+      
+    } else { // show recommended tracks based on attributes and genres
       display = (
         <React.Fragment>
           {
             this.state.tracks.map((track, i) => {
               return (
-                <div className="animate-drop" key={i}>
-                  <Track
-                    image={track.album.images[0].url}
-                    title={track.name}
-                    artist={this.artistsToString(track.artists)}
-                    url={track.external_urls.spotify}
-                    year={track.album.release_date.split("-")[0]}
-                    type={track.album.type}
-                    album={track.album.name}
-                  />
-                </div>
+                <Track
+                  image={track.album.images.length ? track.album.images[0].url : ""}
+                  title={track.name}
+                  artist={this.artistsToString(track.artists)}
+                  url={track.external_urls.spotify}
+                  year={track.album.release_date.split("-")[0]}
+                  type={track.album.type}
+                  album={track.album.name}
+                  key={i}
+                />
               )
             })
           }
