@@ -36,6 +36,9 @@ class Scope extends React.Component {
     this.createPlaylist = this.createPlaylist.bind(this);
     this.setSearchType = this.setSearchType.bind(this);
     this.externalSearch = this.externalSearch.bind(this);
+
+    this.renderArtist = this.renderArtist.bind(this);
+    this.renderTrack = this.renderTrack.bind(this);
   }
 
   
@@ -182,47 +185,61 @@ class Scope extends React.Component {
     }
     return result;
   }
+
+  renderArtist(result, i) {
+    return (
+      <Artist
+        image={result.images[0].url}
+        name={result.name}
+        genre={result.genres.join(", ")}
+        url={result.external_urls.spotify}
+        popularity={result.popularity}
+        followers={result.followers.total}
+        artistid={result.id}
+      />
+    )
+  }
+
+  renderTrack(result, i) {
+    return (
+      <Track
+        image={result.album.images[0].url}
+        title={result.name}
+        artist={this.artistsToString(result.artists)}
+        url={result.external_urls.spotify}
+        year={result.album.release_date.split("-")[0]}
+        type={result.album.type}
+        album={result.album.name}
+        trackid={result.id}
+      />
+    )
+  }
+
+
   
   render() {
+    var getRecommendationsBtn = this.state.selectedResults.length ? <button className="option-btn scope-btn animate-drop" onClick={() => this.getRecs(false)}> Get Recommendations </button> : "";
+
     var display;
     if(this.state.selectedIndex === 0) {
       display = (
 
         <React.Fragment>
-          <div className="div-selected-artists" onClick={this.artistRemove}>
+          <div className="selected" onClick={this.artistRemove}>
             {
               this.state.selectedResults.map((result, i) => {
                 if(result.type === "artist") {
                   return (
-                    <div className="div-artist--compact animate-drop" key={i} >
+                    <div className="bottom-outline" key={i} >
                       <button className="sub-btn" id={i}> - </button>
-                      <Artist
-                        image={result.images[0].url}
-                        name={result.name}
-                        genre={result.genres.join(", ")}
-                        url={result.external_urls.spotify}
-                        popularity={result.popularity}
-                        followers={result.followers.total}
-                        artistid={result.id}
-                        compact="true"
-                      />
+                      {this.renderArtist(result, i)}
                     </div>
                   )
                 } else if(result.type === "track") {
                   return (
-                    <div className="div-artist--compact animate-drop" key={i} >
+                    <div className="bottom-outline" key={i} >
                       <button className="sub-btn" id={i}> - </button>
-                      <Track
-                        image={result.album.images[0].url}
-                        title={result.name}
-                        artist={this.artistsToString(result.artists)}
-                        url={result.external_urls.spotify}
-                        year={result.album.release_date.split("-")[0]}
-                        type={result.album.type}
-                        album={result.album.name}
-                        trackid={result.id}
-                        compact="true"
-                      />
+                      {this.renerTrack(result, i)}
                     </div>
                   )
                 } else {
@@ -232,6 +249,8 @@ class Scope extends React.Component {
             }
           </div>
 
+          {getRecommendationsBtn}
+
           <div onClick={this.artistAdd}>
             {
               this.state.results.map((result, i) => {
@@ -239,34 +258,18 @@ class Scope extends React.Component {
                   return (
                     <div className="bottom-outline" key={i}>
                       <button className="add-btn" id={i}> + </button>
-                      <Artist
-                        image={result.images[0].url}
-                        name={result.name}
-                        genre={result.genres.join(", ")}
-                        url={result.external_urls.spotify}
-                        popularity={result.popularity}
-                        followers={result.followers.total}
-                        artistid={result.id}
-                      />
+                      {this.renderArtist(result, i)}
                     </div>
                   )
                 } else if(result.type === "track" && result.album.images.length > 0) {
                   return (
                     <div className="bottom-outline" key={i}>
                       <button className="add-btn" id={i}> + </button>
-                      <Track
-                        image={result.album.images[0].url}
-                        title={result.name}
-                        artist={this.artistsToString(result.artists)}
-                        url={result.external_urls.spotify}
-                        year={result.album.release_date.split("-")[0]}
-                        type={result.album.type}
-                        album={result.album.name}
-                      />
+                      {this.renderTrack(result, i)}
                     </div>
                   )
                 } else {
-                  return <span key={i}/>;
+                  return "";
                 }
               })
             }
@@ -276,7 +279,7 @@ class Scope extends React.Component {
 
     } else {
       if(this.state.tracks.length === 0) {
-        display = <label className="label-medium"> No recommednations were found. Try adding more artists and tracks. </label>
+        display = <label className="label-medium"> No recommendations were found. Try adding more artists and tracks. </label>
       } else {
         display = (
           <React.Fragment>
@@ -308,8 +311,7 @@ class Scope extends React.Component {
         <div className="panel animate-drop">
           <label className="label-medium"> Get recommendations based on artists and tracks </label>
           <label className="label-subtext"> * Search and add a combination of up to 5 artists or tracks. </label>
-          <input type="text" className="input-item input-search" onChange={(e) => this.search(e)} ref={this.searchBar} placeholder={placeholder}/>
-          <button className="option-btn" onClick={() => this.getRecs(false)}> Get Recommendations </button>
+          <input type="text" className="input input-search" onChange={(e) => this.search(e)} ref={this.searchBar} placeholder={placeholder}/>
         </div>
         {display}
       </div>

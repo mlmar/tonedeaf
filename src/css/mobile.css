@@ -14,6 +14,10 @@
     display: initial;
   }
 
+  *:hover {
+    background: inherit;
+  }
+
 /*   .panel:hover, .panel:focus {
     -webkit-transform: initial;
     transform: initial;
@@ -57,6 +61,7 @@
 
   .top-closed {
     height: 3rem;
+    background: var(--bg-dark);
     min-height: 0 !important;
     transition: height .3s ease, background .4s ease !important;
   }
@@ -118,7 +123,7 @@
     margin-top: .5rem;
   }
 
-  .nav-btn {
+  .nav-buttons > button {
     border: none;
     background: #373737;
     font-size: 1.1rem;
@@ -136,8 +141,10 @@
     border-radius: .2rem;
   }
 
-  .nav-btn:hover {
-    border-width: .1em !important;
+  .nav-buttons > .selected {
+    border: none !important;
+    border-radius: .5rem;
+    background: #2e2e2e;
   }
 
   .log-btn-container {
@@ -148,12 +155,6 @@
   .log-btn {
     width: 100%;
     border: none !important;
-  }
-
-  .selected {
-    border: none !important;
-    border-radius: .5rem;
-    background: #2e2e2e;
   }
 
   /*************** page ***************/
@@ -168,31 +169,21 @@
     width: 100%;
   }
 
-  .panel {
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: .7rem;
-  }
-
   .div-sidebar {
     display: flex;
     width: 100%;
     padding: 0;
-  }
-
-  .div-secondary {
-    display: flex;
-    flex-direction: row;
+    overflow: initial;
   }
 
   .div-panels {
     margin: 0;
     padding: 0;
+    overflow: initial;
   }
 
   .div-top-artists, .div-top-tracks, .div-recent, .div-tuner, .div-scope, .div-info {
     padding-left: 0;
-    box-shadow: none;
   }
 
   /*************** nowplaying ***************/
@@ -204,41 +195,35 @@
 
   /*************** track ***************/
 
-  .div-track--features {
+  .features {
     grid-template-columns: 1fr;
   }
   
   /*************** tuner ***************/
   
-  .div-genres {
-    display: grid;
+  .div-tuner .genres {
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 1rem 1rem;
+    padding: .6rem;
   }
 
-  .div-selected-genres {
+  .div-tuner .selected {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 1rem;
     padding-bottom: 1rem;
   }
 
-  .div-item {
+  .attribute .grid-60-40 {
     display: flex;
   }
 
-  .div-item span {
+  .attribute .grid-60-40 span {
     text-align: right;
     padding-right: .2rem;
     width: 100%;
   }
 
   /*************** scope ***************/
-
-  .div-selected-artists {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
 
   .add-btn, .sub-btn {
     height: 2.2em;

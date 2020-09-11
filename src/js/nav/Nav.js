@@ -47,15 +47,15 @@ class Nav extends React.Component {
                 {
                   this.props.nav.map((item, i) => {
                       if (i === this.props.selectedIndex) {
-                          return <button className="nav-btn selected" key={i} id={i}>{item}</button>
+                          return <button className="selected" key={i} id={i}>{item}</button>
                       } else {
-                          return <button className="nav-btn" key={i} id={i}>{item}</button>
+                          return <button key={i} id={i}>{item}</button>
                       }
                   })
                 }
               </div>
               <a href={this.props.returnPage}>
-                <button className="nav-btn log-btn"> {this.props.loginButton} </button>
+                <button className="log-btn"> {this.props.loginButton} </button>
               </a>
             </div>
           </div>
@@ -76,9 +76,9 @@ class Nav extends React.Component {
                 {
                   this.props.nav.map((item, i) => {
                       if (i === this.props.selectedIndex) {
-                          return <button className="nav-btn selected" key={i} id={i}>{item}</button>
+                          return <button className="selected" key={i} id={i}>{item}</button>
                       } else {
-                          return <button className="nav-btn" key={i} id={i}>{item}</button>
+                          return <button key={i} id={i}>{item}</button>
                       }
                   })
                 }

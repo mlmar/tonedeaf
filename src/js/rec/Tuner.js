@@ -253,7 +253,7 @@ class Tuner extends React.Component {
     var board;
     if(this.state.index === 0) {
       board = (
-        <div className="div-genres" onClick={this.genreAdd}>
+        <div className="genres" onClick={this.genreAdd}>
           {
             this.state.genres.map((genre, i) => {
               return (
@@ -270,7 +270,7 @@ class Tuner extends React.Component {
           <div className="panel"> 
             <label className="label-small label-bold"> Selected genres will show up here. Press to them to remove. </label>
             <br/>
-            <div className="div-selected-genres" onClick={this.genreRemove}>
+            <div className="selected" onClick={this.genreRemove}>
               {
                 this.state.selectedGenres.map((genre, i) => {
                   return (

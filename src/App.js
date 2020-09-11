@@ -104,7 +104,6 @@ class App extends React.Component {
     this.recent = React.createRef();      // call createPlaylist()
     this.tuner = React.createRef();       // call createPlaylist(), change index
     this.scope = React.createRef();       // call createPlaylist()
-    this.options = React.createRef();     // reset options index
 
     /********* TEXTS *********/
     this.timeRanges = ["Long Term", "6 Months", "4 Weeks"]; // time ranges for options
@@ -153,12 +152,17 @@ class App extends React.Component {
         text={text}
         options={options}
         callback={callback}
-        ref={this.options}
         key={i}
       />
     );
   }
-
+  
+  /*  callback function to search for recommendations based on the current song
+   *    - called from the nowplaying component when on the Scope page
+   *    - params :
+   *        artistArray : array of artists from spotify response object
+   *        trackId     : id of currently playing track
+   */
   searchCurrent(artistArray, trackId) {
     this.scope.current.externalSearch(artistArray,trackId);
   }
@@ -178,7 +182,7 @@ class App extends React.Component {
    *        - display         : the main component area for navigaiton
    */
   renderControl() {
-    var portrait = window.matchMedia("only screen and (orientation: portrait)").matches;
+    var portrait = window.matchMedia("only screen and (max-width: 768px)").matches;
 
     var top; // only assign if logged in
     var frontpage; // shows front page if not logged in
@@ -214,7 +218,8 @@ class App extends React.Component {
             }, 1);
 
           tertiaryFocus = 
-            <List text="Genre Counts" 
+            <List 
+              text="Genre Counts" 
               items={this.state.genreCounts.names} 
               descriptions={this.state.genreCounts.values}
             />
@@ -248,7 +253,8 @@ class App extends React.Component {
             });
 
           tertiaryFocus = 
-            <List text="Attribute Averages" 
+            <List 
+              text="Attribute Averages" 
               items={this.state.averages.names} 
               descriptions={this.state.averages.values}
             />
@@ -328,7 +334,9 @@ class App extends React.Component {
       /*************** CONSTRUCT THE PAGE BASED ON PREVIOUS CONDITIONS ***************/
 
       // constructor sidebar
-      var sidebar = (<React.Fragment> {focus}{secondaryFocus}{tertiaryFocus}{showNowPlaying} </React.Fragment>);
+      var sidebar = portrait ? 
+        <React.Fragment> {showNowPlaying}{focus}{secondaryFocus}{tertiaryFocus} </React.Fragment> :
+        <React.Fragment> {focus}{secondaryFocus}{tertiaryFocus}{showNowPlaying} </React.Fragment>;
 
       // construct naavbar
       top =

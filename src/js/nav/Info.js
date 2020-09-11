@@ -11,10 +11,14 @@ class Info extends React.Component {
 
         <div className="panel animate-drop">
           <label className="label-medium">
-            Why am I seeing this page?
+            How did you get my data?
           </label>  <br/>
           <label className="label-small">  
-            If you're here and didn't click on this page, something broke. 
+            I just used the
+            <a href="https://developer.spotify.com/documentation/web-api/">
+              &nbsp;Spotify API&nbsp;
+            </a>
+            and then you gave me permission to access your account when you logged in.
           </label>
         </div>
 
@@ -37,18 +41,7 @@ class Info extends React.Component {
           </label>
         </div>
 
-        <div className="panel animate-drop">
-          <label className="label-medium">
-            How did you get my data?
-          </label>  <br/>
-          <label className="label-small">  
-            I just used the
-            <a href="https://developer.spotify.com/documentation/web-api/">
-              &nbsp;Spotify API&nbsp;
-            </a>
-            and then you gave me permission to access your account when you logged in.
-          </label>
-        </div>
+
 
         <div className="panel animate-drop">
           <label className="label-medium">

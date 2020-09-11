@@ -25,12 +25,11 @@ class NowPlaying extends React.Component {
 
       labelText : "Last Played",
       deviceText : "Current Device: ",
-      full : this.props.full
     };
 
     this.pauseBtn = React.createRef();
-    this.pauseText = "| |";
-    this.playText = "&#8883;"
+    this.pauseText = <React.Fragment> &#124; &#124; </React.Fragment>;
+    this.playText = "*"
 
     this.timer = ""; // interval clock for retrieving song every 5 seconds
 
@@ -195,16 +194,16 @@ class NowPlaying extends React.Component {
       return <React.Fragment></React.Fragment>;
     } else {
       return (
-        <div className="div-nowplaying-controls animate-drop">
-          <div className="div-control-buttons">
-            <span className="control-btn-previous--container">
-              <button className="control-btn-previous" onClick={this.previous}> &lt; </button>
+        <div className="controls animate-drop">
+          <div className="buttons">
+            <span className="previous-btn">
+              <button onClick={this.previous}> &lt; </button>
             </span>
-            <span className="control-btn-pause--container">
-              <button className="control-btn-pause" onClick={this.pause} ref={this.pauseBtn}> {this.pauseText} </button>
+            <span className="pause-btn">
+              <button onClick={this.pause} ref={this.pauseBtn}> {this.pauseText} </button>
             </span>
-            <span className="control-btn-skip--container">
-              <button className="control-btn-skip" onClick={this.skip}> &gt; </button>
+            <span className="skip-btn">
+              <button onClick={this.skip}> &gt; </button>
             </span>
           </div>
           <progress className="progressbar" max="100" value={this.compute()}/>
@@ -237,7 +236,7 @@ class NowPlaying extends React.Component {
   render() {
     var display = "";
 
-    if(this.state.full === "true") {
+    if(this.props.full === "true") {
       // only show controls if playing
       var controls = this.renderPlayerControls(this.state.playing);
 
@@ -249,11 +248,10 @@ class NowPlaying extends React.Component {
               <img className="img" src={this.state.playing.image} width="70" alt="Album art not found"/>
             </a>
 
-            <div className="div-nowplaying--info-full">
+            <div className="nowplaying-info">
               <label className="label-large song-title"> {this.state.playing.title} </label>
               <label className="label-sublarge"> {this.artistsToString(this.state.playing.artist)} </label>
             </div>
-
           </div>
           {controls}
         </React.Fragment>
@@ -264,7 +262,7 @@ class NowPlaying extends React.Component {
           <a href={this.state.playing.url}>
             <img className="img" src={this.state.playing.image} width="70" alt="Album art not found"/>
           </a>
-          <div className="div-nowplaying--info">
+          <div className="nowplaying-info">
             <label className="label-medium"> {this.state.playing.title} </label>
             <label className="label-small"> {this.artistsToString(this.state.playing.artist)} </label>
           </div>
@@ -280,7 +278,7 @@ class NowPlaying extends React.Component {
       
     return (
       <div className="panel animate-drop">
-        <span className="nowplaying-search-container">
+        <span className="nowplaying-search">
           <label className="label-subtitle"> {this.state.labelText} </label>
           {searchButton}
         </span>

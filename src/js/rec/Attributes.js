@@ -11,9 +11,8 @@ class Attributes extends React.Component {
   }
 
   render() {
-    var classes = "panel animate-drop panel-attribute";
     return (
-      <div className={classes}>
+      <div className="panel attribute animate-drop">
         <a href="https://developer.spotify.com/documentation/web-api/reference/browse/get-recommendations/" className="cursor-help">
           <label className="label-medium label-bold label-nopadding noclick"> 
             {this.props.attribute} ({this.props.min} to {this.props.max})
@@ -21,9 +20,9 @@ class Attributes extends React.Component {
         </a>
         <label className="label-small label-bold"> {this.props.desc} </label>
         
-        <div className="panel-attribute--slider">
-          <div className="side-label">
-            <label className="label-small div-item"> minimum <span className="label-bold"> {this.props.defaultMin} </span> </label>
+        <div>
+          <div className="label side">
+            <label className="label-small grid-60-40"> minimum <span className="label-bold"> {this.props.defaultMin} </span> </label>
             <input className="input-item min" 
               type="range" 
               name={this.props.attribute} 
@@ -35,8 +34,8 @@ class Attributes extends React.Component {
             />
           </div>
           
-          <div className="side-label">
-            <label className="label-small div-item"> maximum <span className="label-bold"> {this.props.defaultMax} </span> </label>
+          <div className="label side">
+            <label className="label-small grid-60-40"> maximum <span className="label-bold"> {this.props.defaultMax} </span> </label>
             <input className="input-item max" 
               type="range" 
               name={this.props.attribute} 
