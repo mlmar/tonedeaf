@@ -14,15 +14,6 @@
     display: initial;
   }
 
-  *:hover {
-    background: inherit;
-  }
-
-/*   .panel:hover, .panel:focus {
-    -webkit-transform: initial;
-    transform: initial;
-    background: none;
-  } */
 
   .img--medium {
     width: 6em;
@@ -174,12 +165,14 @@
     width: 100%;
     padding: 0;
     overflow: initial;
+    flex: 1 1;
   }
 
   .div-panels {
     margin: 0;
     padding: 0;
     overflow: initial;
+    flex: 1 1;
   }
 
   .div-top-artists, .div-top-tracks, .div-recent, .div-tuner, .div-scope, .div-info {
