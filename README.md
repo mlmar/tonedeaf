@@ -1,7 +1,6 @@
 # tonedeaf
 
-<img src="https://user-images.githubusercontent.com/63682846/92837765-d3a80480-f392-11ea-9a0f-40b566310716.png" width=600/>
-<img src="https://user-images.githubusercontent.com/63682846/92837997-19fd6380-f393-11ea-80b8-5bc16386814f.png" width=134/>
+<img src="https://user-images.githubusercontent.com/63682846/92837765-d3a80480-f392-11ea-9a0f-40b566310716.png" width=600/> <img src="https://user-images.githubusercontent.com/63682846/92837997-19fd6380-f393-11ea-80b8-5bc16386814f.png" width=134/>
 
 ## Framework
 - Requires a Spotify account to log in
