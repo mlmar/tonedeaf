@@ -462,6 +462,7 @@ img {
   padding: 1rem 2rem 2rem 2rem;
   overflow: overlay;
   align-items: center;
+  background: var(--bg-darker);
 }
 
 .div-sidebar {
