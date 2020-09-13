@@ -241,7 +241,7 @@ class Scope extends React.Component {
                   return (
                     <div className="scope-wrapper" key={i} >
                       <button className="sub-btn" id={i}> - </button>
-                      {this.renerTrack(result, i)}
+                      {this.renderTrack(result, i)}
                     </div>
                   )
                 } else {

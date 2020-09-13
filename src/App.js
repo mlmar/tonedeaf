@@ -48,7 +48,7 @@ class App extends React.Component {
     const show_site = local ? local_site : deployed_site;
     const show_logout = "https://accounts.spotify.com/logout";
     
-    const params = this.getHashParams(); // use hahing function to get tokens
+    const params = this.getHashParams(); // use hashing function to get tokens
     const token = params.access_token; // set token in js api wrapper
     if(token) {
       spotifyWebApi.setAccessToken(token);
