@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { session } from '../util/Session.js';
+
 import Options from '../helper/Options.js';
 import UserSearch from './UserSearch.js';
 import ArtistList from '../artist/components/ArtistList.js';
