@@ -30,6 +30,7 @@ class UserSearchPage extends React.Component {
 
     this.tonedeafService = new TonedeafService();
 
+    this.createPlaylist = this.createPlaylist.bind(this);
     this.setCategory = this.setCategory.bind(this);
     this.setTimeRange = this.setTimeRange.bind(this);
     this.search = this.search.bind(this);

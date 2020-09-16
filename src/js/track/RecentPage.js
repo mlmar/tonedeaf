@@ -16,11 +16,9 @@ class RecentPage extends React.Component {
     super(props);
 
     this.state = {
-      selectedRange : "long_term",
       tracks : null
     }
 
-    this.ranges = ["long_term", "medium_term", "short_term"];
 
     this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
     
@@ -54,16 +52,16 @@ class RecentPage extends React.Component {
 
   /*  Retrieves recent tracks based on selectedIndex of range
     */
-  getRecentTracks(range, callback) {
+  getRecentTracks(callback) {
     var params = { limit : 50 };
     var tracks = JSON.parse(JSON.stringify(this.state.tracks)); // make a deep copy of the state
 
     spotifyWebApi.getMyRecentlyPlayedTracks(params)
       .then((response) => {
-        tracks[range] = response.items;
+        tracks = response.items;
         this.setState({ tracks : tracks });
 
-        if(callback) callback(range, response.items);
+        if(callback) callback(response.items);
         console.log("API SUCCESS: retrieved recent tracks")
         console.log(response.items);
       })
@@ -74,7 +72,7 @@ class RecentPage extends React.Component {
   }
 
   componentDidMount() {
-    this.getRecentTracks("long_term");
+    this.getRecentTracks();
   }
 
   render() {
@@ -93,7 +91,7 @@ class RecentPage extends React.Component {
 
         <div className="div-panels"> 
           <TrackList 
-            data={this.state.tracks[this.state.selectedRange]}
+            data={this.state.tracks}
             recent="true"
           />
         </div>
