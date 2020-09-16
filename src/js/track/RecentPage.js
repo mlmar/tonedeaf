@@ -17,7 +17,7 @@ class RecentPage extends React.Component {
 
     this.state = {
       selectedRange : "long_term",
-      tracks : { long_term : null, medium_term : null, short_term : null }
+      tracks : null
     }
 
     this.ranges = ["long_term", "medium_term", "short_term"];
@@ -31,8 +31,8 @@ class RecentPage extends React.Component {
 
   // use PlaylistCreator to create playlist from current selected tracklist
   createPlaylist() {
-    if(this.state.tracks[this.state.selectedRange]) {
-      this.playlistCreator.setTracks(this.state.tracks[this.state.selectedRange], true);
+    if(this.state.tracks) {
+      this.playlistCreator.setTracks(this.state.tracks, true);
       this.playlistCreator.createPlaylist("tonedeaf recent tracks");
     }
   }

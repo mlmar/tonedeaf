@@ -7,6 +7,8 @@ import TrackList from '../track/components/TrackList.js';
 
 import TonedeafService from '../util/TonedeafService.js';
 
+import PlaylistCreator from '../util/PlaylistCreator.js'
+
 class UserSearchPage extends React.Component {
   constructor(props) {
     super(props);
@@ -17,6 +19,9 @@ class UserSearchPage extends React.Component {
       searchResults : null,
       user : null
     }
+
+    
+    this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
 
     this.category = "artists"
     this.timeRange = "long_term";
@@ -30,6 +35,15 @@ class UserSearchPage extends React.Component {
     this.renderUserFilter = this.renderUserFilter.bind(this);
     this.renderData = this.renderData.bind(this);
   }
+
+  // use PlaylistCreator to create playlist from current selected tracklist
+  createPlaylist() {
+    if(this.state.data && this.category === "tracks") {
+      this.playlistCreator.setTracks(this.state.data);
+      this.playlistCreator.createPlaylist("tonedeaf recent tracks");
+    }
+  }
+    
 
   setCategory(index) {
     var categories = ["artists", "tracks"];
@@ -113,7 +127,7 @@ class UserSearchPage extends React.Component {
             <Options
               text="Like these tracks?"
               options={["Create Spotify Playlist"]}
-              callback={() => {}}
+              callback={this.createPlaylist}
             />
           }
 
