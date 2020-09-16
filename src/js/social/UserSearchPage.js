@@ -105,16 +105,16 @@ class UserSearchPage extends React.Component {
       <>
         <div className="div-sidebar">
 
+          { this.state.user &&
+            this.renderUserFilter()
+          }
+
           { this.state.data &&
             <Options
               text="Like these tracks?"
               options={["Create Spotify Playlist"]}
               callback={() => {}}
             />
-          }
-
-          { this.state.user &&
-            this.renderUserFilter()
           }
 
           {this.props.children}
