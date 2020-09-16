@@ -10,7 +10,7 @@ class Genre extends React.Component {
   }
   
   render() {
-    var classes = "genre-btn animate-drop label-bold";
+    var classes = "genre-btn animate-fade label-bold";
     classes += this.props.type === "-" ? " dark-btn" : "";
 
     return (

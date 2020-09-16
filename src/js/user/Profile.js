@@ -38,7 +38,7 @@ class Profile extends React.Component {
         });
 
         // sendd id back to parent for use in other components
-        this.props.callback(response.id);
+        this.props.callback(response.id, response.display_name);
         console.log("Retrieved profile information @");
         console.log(response);
       })
@@ -56,7 +56,7 @@ class Profile extends React.Component {
   
   render() {    
     return (
-      <div className="panel div-profile animate-drop">
+      <div className="panel div-profile animate-fade">
         <label className="label-subtitle"> {this.state.display_name} </label>
         <a href={this.state.uri} className="link-center">
           <img className="img" src={this.state.image} width="70" alt="Profile not found"/>

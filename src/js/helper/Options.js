@@ -1,6 +1,10 @@
 import React from 'react';
 
 /*  provides a simple options panel with buttons that return an index in a callback
+ *    {this.props.text} : title text
+ *    {this.props.description} : description text
+ *    {this.props.options} : array of option text for buttons
+ *    {this.props.callback} : onClick with button id as an arg
  *
  */
 class Options extends React.Component {
@@ -27,16 +31,21 @@ class Options extends React.Component {
       }
       
       this.setState({index : tempIndex})
-      console.log("callback with " + tempIndex + " from " + this.props.text)
-      this.props.callback(tempIndex);
+      if(this.props.callback) this.props.callback(tempIndex);
     }
   }
   
   render() {
+    var horizontal = this.props.horizontal ? "horizontal" : null;
+    var classes = this.props.nopanel ? "" : "panel";
+
     return (
-      <div className="panel animate-drop">
-        <label className="label-subtitle"> {this.props.text} </label>
-        <div className="div-options" onClick={this.optionClick}>
+      <div className={classes}>
+        { this.props.text &&
+          <label className="label-subtitle"> {this.props.text} </label>
+        }
+        {this.props.children}
+        <div className={"div-options " + horizontal} onClick={this.optionClick}>
           {
             this.props.options.map((option, i) => {
               var classes = (i === this.state.index) && this.props.options.length > 1 ? "option-btn option-btn--selected" : "option-btn" ;

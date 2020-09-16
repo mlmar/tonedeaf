@@ -7,3 +7,9 @@ html, body, #root, .App {
 
   background: var(--bg-darker);
 }
+
+@media (min-width: 1500px) {
+  html {
+    font-size: 115%;
+  }
+}

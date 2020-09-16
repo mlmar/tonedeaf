@@ -3,7 +3,7 @@ import React from 'react';
 /*  navbar component
  *  changes depending on portrait mode
  *  required props:
- *    {this.props.callback} : function to call when nav button is clicked
+ *    {this.props.onClick} : function to call when nav button is clicked
  *    {returnPage}          : page to return to when log out is clicked
  *    {loginButton}         : login/logout button text
  *    {selectedIndex}       : currently selected nav index
@@ -32,7 +32,7 @@ class Nav extends React.Component {
 
     // since onClick is called from, confirm a button was clicked
     if(event.target.tagName === "BUTTON") {
-      this.props.callback(parseFloat(event.target.id));
+      this.props.onClick(parseFloat(event.target.id));
     }
   }
 
@@ -54,9 +54,7 @@ class Nav extends React.Component {
                   })
                 }
               </div>
-              <a href={this.props.returnPage}>
-                <button className="log-btn"> {this.props.loginButton} </button>
-              </a>
+              <button className="log-btn" onClick={this.props.logout}> Logout </button>
             </div>
           </div>
         </div>
@@ -82,9 +80,7 @@ class Nav extends React.Component {
                       }
                   })
                 }
-              <a href={this.props.returnPage} className="log-btn-container">
-                <button className="nav-btn log-btn"> {this.props.loginButton} </button>
-              </a>
+              <button className="nav-btn log-btn" onClick={this.props.logout}> Logout </button>
             </div>
           </div>
         </div>

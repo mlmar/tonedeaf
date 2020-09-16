@@ -22,7 +22,7 @@ class Artist extends React.Component {
     var rank = this.props.rank ? this.props.rank + ". " : ""
     
     return (
-      <div className="panel animate-drop">
+      <div className="panel animate-fade">
         <div className="div-track">
           <a href={this.props.url} className="link-center">
             <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>

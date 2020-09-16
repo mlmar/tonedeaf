@@ -1,18 +1,12 @@
 import React from 'react';
-import SpotifyWebApi from 'spotify-web-api-js';
 
 /*  ATTRIBUTE COMPONENT
  *  just displays min/max sliders for a specific song attribute
  */
 class Attributes extends React.Component {
-  constructor(props) {
-    super(props);
-    this.spotifyWebApi = new SpotifyWebApi();
-  }
-
   render() {
     return (
-      <div className="panel attribute animate-drop">
+      <div className="panel attribute animate-fade">
         <a href="https://developer.spotify.com/documentation/web-api/reference/browse/get-recommendations/" className="cursor-help">
           <label className="label-medium label-bold label-nopadding noclick"> 
             {this.props.attribute} ({this.props.min} to {this.props.max})

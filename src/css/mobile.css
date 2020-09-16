@@ -136,6 +136,7 @@
     border: none !important;
     border-radius: .5rem;
     background: #2e2e2e;
+    box-shadow: none;
   }
 
   .log-btn-container {
@@ -179,6 +180,10 @@
     padding-left: 0;
   }
 
+  .div-sidebar .panel{
+    box-shadow: 0 4px 1px -2px var(--bg-outline);
+  }
+
   /*************** nowplaying ***************/
 
   .div-nowplaying--info-full {
@@ -194,12 +199,12 @@
   
   /*************** tuner ***************/
   
-  .div-tuner .genres {
+  .div-genre-select .genres {
     grid-template-columns: repeat(3, 1fr);
     padding: .6rem;
   }
 
-  .div-tuner .selected {
+  .div-genre-select .selected {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 1rem;

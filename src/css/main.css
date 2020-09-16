@@ -5,6 +5,9 @@
   --bg-darker: #131313;
   --bg-light: #efefef;
   --bg-outline: rgb(232 232 232 / 14%);
+
+  --btn: #238ec3; 
+  --btn-alt: #299fd9;
 }
 
 
@@ -135,17 +138,29 @@ img {
 @keyframes drop {
   from {
     margin-top: -2rem;
-    opacity: 0;
   }
   to {
     margin-top: 0rem;
-    opacity: 1;
   }
 }
 
 .animate-drop { 
   animation-name: drop;
   animation-duration: .3s;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade {
+  animation-name: fade;
+  animation-duration: 1s;
 }
 
 @keyframes load {
@@ -159,11 +174,11 @@ img {
 
 .animate-load {
   width: 2rem;
-  height: 2rem;
-  margin: 10%;
+  height: .5rem;
+  align-self: center;
   border-radius: 100rem;
   background: var(--bg-light);
-  animation: load 2s ease-in;
+  animation: load 2s infinite;
   animation-fill-mode: both;
   opacity: .7;
 }
@@ -241,7 +256,7 @@ img {
 }
 
 .label-title {
-  font-size: 2em;
+  font-size: 1.8em;
   font-weight: 500;
 }
 
@@ -262,12 +277,12 @@ img {
 }
 
 .label-medium {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: bolder;
 }
 
 .label-small {
-  font-size: .9rem;
+  font-size: .8rem;
 }
 
 .label-subtext {
@@ -380,14 +395,15 @@ img {
 .top {
   display: flex;
   text-align: left;
-  height: 4rem;
+  height: 3rem;
   width: 100vw;
 
-  padding: 1rem 2rem 1rem 2rem;
+  padding: 0rem 2rem 0rem 2rem;
   background: var(--bg-dark);
 }
 
 .top label {
+  align-self: center;
   color: white;
 }
 
@@ -415,19 +431,16 @@ img {
   color: #ffffff;
   background: none;
 
-  font-size: .9em;
+  font-size: .85em;
 
   border: none;
   border-width: .2rem !important;
 
-  transition: all .1s;
+  transition: all .2s;
 }
 
 .nav-buttons > .selected {
-  border-bottom: solid #ffffff !important;
-  margin-bottom: -1px !important;
-  transition: border-bottom .1s linear;
-  border-width: .2em !important;
+  box-shadow: 0 3px 1px -2px white;
 }
 
 /********* DIVS *********/
@@ -465,7 +478,7 @@ img {
   width: 100%;
 }
 
-.div-top-artists, .div-top-tracks, .div-recent, .div-tuner, .div-scope, .div-info {
+.div-top-artists, .div-top-tracks, .div-recent, .div-tuner, .div-scope, .div-user-search, .div-info {
   display: flex;
   flex-direction: column;
   flex: 1 1;
@@ -531,6 +544,7 @@ img {
   transition: color .5s ease !important;
   background: none;
   transition: all .5s;
+  padding-top: .2rem;
   width: 100%;
   text-align: center;
 }
@@ -672,18 +686,29 @@ img {
 /********* TUNER *********/
 
 
-.div-tuner .genres {
+.div-genre-select {
+  width: 100%;
+}
+
+.div-genre-select .genres {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-gap: 1rem 1rem;
   padding: 1rem;
 }
 
 
-.div-tuner .selected {
+.div-genre-select .selected {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 1rem;
+  width: 100%;
+}
+
+.div-attributes-select {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .tuner-btn {
@@ -728,10 +753,72 @@ img {
   z-index: 99;
 }
 
+/********* USER SEARCH *********/
+
+.div-user-search > .results {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1;
+  padding: 1rem;
+}
+
+.div-user-search > .results button {
+  border-radius: .3rem;
+  height: 2rem;
+  background: none;
+  border: none;
+  color: var(--bg-light);
+  font-size: 1rem;
+}
+
+.div-user-search > .results button:hover {
+  background: var(--bg-dark);
+}
+
+.nolist {
+  height: 100%;
+}
 
 /********* OPTIONS *********/
 
-.div-options button {
+.div-options.horizontal {
+  display: flex;
+  flex-direction: row;
+}
+
+.div-options.horizontal button:not(:last-child) {
+  margin-right: .5rem;
+}
+
+.option-btn {
+  display: flex;
+  width: 100%;
+  min-height: 2.2rem;
+  color: #ffffff;
+  background: var(--bg-dark);
+
+  margin: .3rem 0 .3rem 0;
+
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: .3rem;
+
+  font-size: .9rem;
+  font-weight: 100;
+
+  transition: all .3s;
+}
+
+.option-btn:hover, .add-btn:hover {
+  background: var(--btn);
+  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+  color: #ffffff;
+}
+
+.option-btn:focus, .option-btn--selected, .add-btn:hover, .sub-btn:hover {
+  background: var(--btn-alt);
 }
 
 /********* PANEL *********/
@@ -765,6 +852,10 @@ img {
   width: 100%;
 }
 
+.panel.horizontal {
+  flex-direction: row;
+}
+
 /********* INPUTS *********/
 
 .input {
@@ -786,41 +877,9 @@ img {
   background: white;
 }
 
-.option-btn {
-  display: flex;
-  width: 100%;
-  min-height: 4.3vh;
-  color: #ffffff;
-  background: var(--bg-dark);
-
-  margin: .3rem 0 .3rem 0;
-
-  align-items: center;
-  justify-content: center;
-
-  border: none;
-  border-radius: .3rem;
-
-  font-size: 1rem;
-  font-weight: 100;
-
-  transition: all .3s;
-}
-
-.option-btn:hover, .add-btn:hover {
-  background: #238ec3;
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
-  color: #ffffff;
-}
-
-.option-btn:focus, .option-btn--selected, .add-btn:hover, .sub-btn:hover {
-  background: #299fd9;
-}
-
 .genre-btn {
   color: var(--bg-light);
   background: var(--bg-dark);
-  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 14%);
   border: none;
   border-radius: .3rem;
   font-size: 1rem;

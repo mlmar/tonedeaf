@@ -20,7 +20,7 @@ class NowPlaying extends React.Component {
         progress : "",
         is_playing : false,
         device : [],
-        trackId : ""
+        item : null
       },
 
       labelText : "Last Played",
@@ -31,7 +31,9 @@ class NowPlaying extends React.Component {
     this.pauseText = <React.Fragment> &#124; &#124; </React.Fragment>;
     this.playText = "*"
 
-    this.timer = ""; // interval clock for retrieving song every 5 seconds
+    this.progress = React.createRef();
+    this.timer = null; // interval clock for retrieving song every 10 seconds
+    this.artificialTimer = null; // increment song every 1 second
 
     this.spotifyWebApi = new SpotifyWebApi();
     this.getLastPlayed = this.getLastPlayed.bind(this);
@@ -40,7 +42,8 @@ class NowPlaying extends React.Component {
     this.pause = this.pause.bind(this);
     this.play = this.play.bind(this);
     this.skip = this.skip.bind(this);
-    this.compute = this.compute.bind(this);
+
+    this.setUpArtificialTimer = this.setUpArtificialTimer.bind(this);
   }
 
   // if no track is currently playing, show the lat played track
@@ -59,7 +62,7 @@ class NowPlaying extends React.Component {
             progress : track.progress_ms,
             is_playing : false,
             device : "",
-            trackId: track.id
+            item: null
           },
 
           labelText : "Last Played",
@@ -67,12 +70,12 @@ class NowPlaying extends React.Component {
         });
         
         if(!interval) {
-          console.log("Succesfully retrieved last played track @");
+          console.log("API SUCCESS: retrieved last played track");
           console.log(track);
         }
       })
       .catch((error) => {
-        console.error("Could not retrieve recently played tracks @")
+        console.error("API ERROR: Could not retrieve last played track")
         console.error(error)
       });
   }
@@ -85,7 +88,7 @@ class NowPlaying extends React.Component {
           this.getLastPlayed(true); // get last played song if no song currently playing
 
           if(!interval) { // only show responses if not called from an interval
-            console.log("Retrieved last played intead @");
+            console.log("No track currently playing, retrieving last played.");
             console.log(response);
           }
         } else {
@@ -96,25 +99,25 @@ class NowPlaying extends React.Component {
               title: response.item.name,
               image: response.item.album.images[0].url,
               url: response.item.external_urls.spotify,
-              duration: response.item.duration_ms,
-              progress : response.progress_ms,
+              duration: response.item.duration_ms / 1000, // convert to seconds
+              progress : response.progress_ms / 1000,
               is_playing : response.is_playing,
               device : response.device,
-              trackId : response.item.id
+              item : response.item
             },
 
             labelText : "Now Playing",
             deviceText : "Current Device: "
-          });
+          }, this.setUpArtificialTimer );
 
           if(!interval) { // only show responses if not called from an interval
-            console.log("Succesfully retrieved now playing info @");
+            console.log("API SUCCESS: retrieved now playing info");
             console.log(response);
           }
         }
       })
       .catch((error) => {
-        console.error("Could not retrieve artist info @");
+        console.error("API ERROR: could not retrieve nowplaying info");
         console.error(error.message);
 
         /*** not really a good solutions but will workout later ***/
@@ -122,7 +125,7 @@ class NowPlaying extends React.Component {
         // if rate limiting has been applied log user out
         if(error.status === 429) { 
           //window.location.replace(this.props.logout);
-          console.warn("Rate limiting has been applied");
+          console.error("Rate limiting has been applied");
         }
       });
   }
@@ -189,31 +192,47 @@ class NowPlaying extends React.Component {
       });
   }
 
-  renderPlayerControls(playing) {
-    if(playing.is_playing) {
+  renderPlayerControls() {
+    if(this.state.playing.is_playing)
       return (
         <div className="controls animate-drop">
-          <div className="buttons">
-            <span className="previous-btn">
-              <button onClick={this.previous}> &lt; </button>
-            </span>
-            <span className="pause-btn">
-              <button onClick={this.pause} ref={this.pauseBtn}> {this.pauseText} </button>
-            </span>
-            <span className="skip-btn">
-              <button onClick={this.skip}> &gt; </button>
-            </span>
-          </div>
-          <progress className="progressbar" max="100" value={this.compute()}/>
-          <label className="label-subtext"> {this.state.deviceText} {this.state.playing.device.name} </label>
+          <progress className="progressbar" max={this.state.playing.duration} value={this.state.playing.progress} ref={this.progress}/>
         </div>
-      );
-    }
+      )
+
+    // if(playing.is_playing) {
+    //   return (
+    //     <div className="controls animate-drop">
+    //       <div className="buttons">
+    //         <span className="previous-btn">
+    //           <button onClick={this.previous}> &lt; </button>
+    //         </span>
+    //         <span className="pause-btn">
+    //           <button onClick={this.pause} ref={this.pauseBtn}> {this.pauseText} </button>
+    //         </span>
+    //         <span className="skip-btn">
+    //           <button onClick={this.skip}> &gt; </button>
+    //         </span>
+    //       </div>
+    //       <progress className="progressbar" max="100" value={this.compute()}/>
+    //       <label className="label-subtext"> {this.state.deviceText} {this.state.playing.device.name} </label>
+    //     </div>
+    //   );
+    // }
   }
 
-  // computers current song time for progress bar
-  compute() {
-    return (this.state.playing.progress / this.state.playing.duration * 100).toString();
+  // increments the progress bar every second to reduce api calls
+  setUpArtificialTimer() {
+    // only increment if progress bar even exists and no timer has been set up yet
+    if(this.props.full && !this.artificialTimer) {
+      this.artificialTimer = setInterval(() => {
+        if(this.progress.current) {
+          this.progress.current.value++;
+        } else {
+          clearInterval(this.artificialTimer);
+        }
+      }, 1000);
+    }
   }
 
   componentDidMount() {
@@ -222,21 +241,22 @@ class NowPlaying extends React.Component {
     // update now playing every 10 seconds
     this.timer = setInterval(() => {
       this.getNowPlaying(true);
-    }, 5000)
+    }, 10000)
     console.log("Mounting now playing @ " + this.timer);
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+    if(this.timer) clearInterval(this.timer);
+    if(this.artificialTimer) clearInterval(this.artificialTimer);
     console.log("Umounting now playing @ " + this.timer);
   }
   
   render() {
     var display = "";
 
-    if(this.props.full === "true") {
+    if(this.props.full) {
       // only show controls if playing
-      var controls = this.renderPlayerControls(this.state.playing);
+      var controls = this.renderPlayerControls();
 
       display = (
         <React.Fragment>
@@ -270,12 +290,12 @@ class NowPlaying extends React.Component {
     }
     
     var searchButton = this.props.searchCurrent && this.state.playing.is_playing ? 
-      <button className="option-btn glass-btn" onClick={() => this.props.searchCurrent(this.state.playing.artist, this.state.playing.trackId)}> 
+      <button className="option-btn glass-btn" onClick={() => this.props.searchCurrent(this.state.playing.item)}> 
         <img src={glassIcon} className="glass-icon" alt="glass-icon"/> 
       </button> : "";
       
     return (
-      <div className="panel animate-drop">
+      <div className="panel animate-fade">
         <span className="nowplaying-search">
           <label className="label-subtitle"> {this.state.labelText} </label>
           {searchButton}
