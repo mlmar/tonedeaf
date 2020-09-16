@@ -105,7 +105,7 @@ class UserSearchPage extends React.Component {
       <>
         <div className="div-sidebar">
 
-          { this.state.tracks &&
+          { this.state.data &&
             <Options
               text="Like these tracks?"
               options={["Create Spotify Playlist"]}

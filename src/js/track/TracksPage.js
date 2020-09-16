@@ -27,7 +27,7 @@ class TracksPage extends React.Component {
 
     this.ranges = ["long_term", "medium_term", "short_term"];
 
-    this.playlistCreator = new PlaylistCreator(session.getCache("user")._id);
+    this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
     
     this.createPlaylist = this.createPlaylist.bind(this);
     this.setSelectedRange = this.setSelectedRange.bind(this);

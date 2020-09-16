@@ -23,7 +23,7 @@ class ScopePage extends React.Component {
 
     this.searchType = [["artist"],["track"]];
 
-    this.playlistCreator = new PlaylistCreator(session.getCache("user")._id);
+    this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
 
     this.createPlaylist = this.createPlaylist.bind(this);
     this.setIndex = this.setIndex.bind(this);

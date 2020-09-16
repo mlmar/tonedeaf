@@ -43,7 +43,7 @@ class TunerPage extends React.Component {
     }
       
   
-    this.playlistCreator = new PlaylistCreator(session.getCache("user")._id);
+    this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
     
     this.createPlaylist = this.createPlaylist.bind(this);
     this.setIndex = this.setIndex.bind(this);
