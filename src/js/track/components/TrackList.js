@@ -41,7 +41,7 @@ class TrackList extends React.Component {
                   year={track.album.release_date.split("-")[0]}
                   type={track.album.type}
                   album={track.album.name}
-                  rank={i+1}
+                  rank={this.props.ranked && i+1}
                   popularity={track.popularity}
                   features={this.props.features ? this.props.features[i] : null}
                   key={i + track.name + track.album.release_date.split("-")[0]}

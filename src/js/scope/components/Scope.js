@@ -140,6 +140,8 @@ class Scope extends React.Component {
                     {this.renderTrack(result, i)}
                   </div>
                 )
+              } else {
+                return null;
               }
             })
           }

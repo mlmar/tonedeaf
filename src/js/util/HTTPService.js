@@ -40,6 +40,25 @@ class HTTPService {
     });        
   }
 
+  getWithQuery(url, callbackFunc, query) {
+    fetch(url + "?" +
+      new URLSearchParams(query), {
+      method: 'get',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      }
+    })
+    .then(data => {
+      if(callbackFunc) callbackFunc(data);
+    })
+    .catch(error => {
+      if(callbackFunc) callbackFunc(error);
+    }); 
+  }
+
 }
 
 export default HTTPService;

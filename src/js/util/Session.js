@@ -44,8 +44,11 @@ class Session {
     this._cache[cache][key] = value
     console.log("SESSION: setting " + cache + "[" + key + "]");
 
-    if(cache === "artists" || cache === "tracks")
-      this.tonedeafService.save(this.setupData());
+    if(cache === "artists") {
+      this.tonedeafService.addArtist(value[0]);
+    } else if(cache === "tracks") {
+      this.tonedeafService.addTrack(value[0]);
+    }
   };
 
   // get a cache
@@ -54,13 +57,11 @@ class Session {
   getCache = (cache) => {
     if(cache) {
       var c = this._cache[cache] ? this._cache[cache] : {};
-      console.log("SESSION: getting " + cache);
       return c;
     } else {
       return this._cache;      
     }
   }
-
 
   /*  Returns the obj passed to the db
    */

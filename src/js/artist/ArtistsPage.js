@@ -126,7 +126,7 @@ class ArtistsPage extends React.Component {
         </div>
 
         <div className="div-panels"> 
-          <ArtistList data={this.state.artists[this.state.selectedRange]} loadText="Getting your top artists from Spotify..."/>
+          <ArtistList ranked data={this.state.artists[this.state.selectedRange]} loadText="Getting your top artists from Spotify..."/>
         </div>
       </>
 

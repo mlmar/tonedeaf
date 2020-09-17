@@ -248,6 +248,7 @@ class TracksPage extends React.Component {
 
         <div className="div-panels"> 
           <TrackList
+            ranked
             data={this.state.tracks[this.state.selectedRange]}
             features={this.state.features[this.state.selectedRange]}
             loadText="Getting your top tracks from Spotify..."

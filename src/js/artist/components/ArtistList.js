@@ -25,7 +25,7 @@ class ArtistList extends React.Component {
                   genre={artist.genres.join(", ")}
                   popularity={artist.popularity}
                   followers={artist.followers.total}
-                  rank={i+1}
+                  rank={this.props.ranked && i+1}
                   key={i+artist.name + artist.popularity}
                 />
               )

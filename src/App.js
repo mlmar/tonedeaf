@@ -50,7 +50,7 @@ class App extends React.Component {
                         "Recent",
                         "Tuner",
                         "Scope",
-                        // "Users"
+                        "Users"
                       ],
 
       selectedIndex : 0, // selected nav element
@@ -61,12 +61,39 @@ class App extends React.Component {
     
     /********* BINDINGS *********/
     this.navClick = this.navClick.bind(this);
+    this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.saveUser = this.saveUser.bind(this);
     this.renderControl = this.renderControl.bind(this);
   }
 
   componentDidMount() {
+    this.login();
+  }
+  
+  /*  Called as callback from the Nav component
+   *    - assign selectedIndex
+   */
+  navClick(index) {
+    this.setState({selectedIndex : index});
+  }
+
+  /*  From Spotify's index.html in their authentication examples
+   *    - used to get access token to send api requests
+   */
+  getHashParams() {
+    var hashParams = {};
+    var e, r = /([^&;=]+)=?([^&;]*)/g,
+        q = window.location.hash.substring(1);
+    while ( e = r.exec(q)) {
+       hashParams[e[1]] = decodeURIComponent(e[2]);
+    }
+    return hashParams;
+  }
+
+  /*  Sets up access token for api access and refresh interval every 50 minutes
+   */
+  login() {
     var params = this.getHashParams(); // use hashing function to get tokens
     var token = params.access_token; // set token in js api wrapper
     spotifyWebApi.setAccessToken(token);
@@ -91,26 +118,8 @@ class App extends React.Component {
     }, 3e+6) // refresh every fifty minutes
   }
 
-  /*  From Spotify's index.html in their authentication examples
-   *    - used to get access token to send api requests
+  /* remove access token from api and change to sign in screen
    */
-  getHashParams() {
-    var hashParams = {};
-    var e, r = /([^&;=]+)=?([^&;]*)/g,
-        q = window.location.hash.substring(1);
-    while ( e = r.exec(q)) {
-       hashParams[e[1]] = decodeURIComponent(e[2]);
-    }
-    return hashParams;
-  }
-  
-  /*  Called as callback from the Nav component
-   *    - assign selectedIndex
-   */
-  navClick(index) {
-    this.setState({selectedIndex : index});
-  }
-
   logout() {
     spotifyWebApi.setAccessToken(null);
     this.setState({ loggedIn : false });

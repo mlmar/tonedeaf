@@ -58,9 +58,11 @@ class Profile extends React.Component {
     return (
       <div className="panel div-profile animate-fade">
         <label className="label-subtitle"> {this.state.display_name} </label>
-        <a href={this.state.uri} className="link-center">
-          <img className="img" src={this.state.image} width="70" alt="Profile not found"/>
-        </a>
+        { this.state.image &&
+          <a href={this.state.uri} className="link-center">
+            <img className="img" src={this.state.image} width="70" alt="Profile not found"/>
+          </a>
+        }
         <div className="div-profile--info">
           <label className="label-small label-bold"> 
             {this.state.product.toUpperCase()} {this.state.type.toUpperCase()} 
