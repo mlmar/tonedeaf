@@ -121,8 +121,6 @@ class App extends React.Component {
   /* remove access token from api and change to sign in screen
    */
   logout() {
-    spotifyWebApi.setAccessToken(null);
-    this.setState({ loggedIn : false });
     window.location.replace(SYSTEM.HOME);
   }
 

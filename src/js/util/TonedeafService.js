@@ -23,6 +23,11 @@ class TonedeafService extends HTTPService {
     this.post('getAllTracks', callback, body);
   }
 
+  getAll(callback) {
+    var body = { token : session.token }
+    this.post('getAll', callback, body);
+  }
+
   refresh(callback) {
     var url = "https://tonedeaf-auth.vercel.app/refresh_token";
     var query = { refresh_token : session.getCache("token")["refreshToken"] };

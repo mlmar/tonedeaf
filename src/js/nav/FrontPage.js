@@ -35,9 +35,8 @@ class FrontPage extends React.Component {
           <label className="sign label-large cursor-pointer"> sign in with Spotify </label>
         </a>
         <div className="bottom label-center">
-          <label className="label-tiny"> Spotify&copy; is a trademark of Spotify AB </label>
-          <br/>
-          <label className="label-tiny"> 2020 </label>
+          <label className="label-tiny"> This application is not developed by or affiliated with Spotify AB. </label>
+          <label className="label-tiny">  Developed using Spotify Web API.  </label>
         </div>
       </div>
     )

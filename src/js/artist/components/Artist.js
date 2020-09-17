@@ -21,6 +21,16 @@ class Artist extends React.Component {
     // if rank is provided, prepend it to the name
     var rank = this.props.rank ? this.props.rank + ". " : ""
     
+    if(this.props.compact) {
+      return (
+        <div className="panel animate-fade noshadow compact">
+          <a href={this.props.url} className="link-center">
+            <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>
+          </a>
+        </div>
+      )
+    }
+
     return (
       <div className="panel animate-fade">
         <div className="div-track">

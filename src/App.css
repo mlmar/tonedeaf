@@ -10,6 +10,6 @@ html, body, #root, .App {
 
 @media (min-width: 1500px) {
   html {
-    font-size: 115%;
+    font-size: 100%;
   }
 }

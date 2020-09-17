@@ -23,6 +23,16 @@ class Track extends React.Component {
   }
   
   render() {
+    if(this.props.compact) {
+      return (
+        <div className="panel animate-fade noshadow compact">
+          <a href={this.props.url} className="link-center">
+            <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>
+          </a>
+        </div>
+      )
+    }
+
     // if rank is provided, prepend it the title
     var rank = this.props.rank ? this.props.rank + ". " : "";
     

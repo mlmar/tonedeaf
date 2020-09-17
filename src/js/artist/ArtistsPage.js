@@ -17,12 +17,14 @@ class ArtistsPage extends React.Component {
     this.state = {
       selectedRange : "long_term",
       artists : { long_term : null, medium_term : null, short_term : null },
-      genreCounts : { long_term : null, medium_term : null, short_term : null }
+      genreCounts : { long_term : null, medium_term : null, short_term : null },
+      compact : true
     }
 
     this.ranges = ["long_term", "medium_term", "short_term"];
 
     this.setSelectedRange = this.setSelectedRange.bind(this);
+    this.setView = this.setView.bind(this);
     this.getTopArtists = this.getTopArtists.bind(this);
     this.countGenres = this.countGenres.bind(this);
   }
@@ -40,6 +42,14 @@ class ArtistsPage extends React.Component {
     }
 
     this.setState({ selectedRange : range });
+  }
+
+  setView(index) {
+    if(index === 0) {
+      this.setState({ compact : true })
+    } else {
+      this.setState({ compact : null })
+    }
   }
 
   /*  Retrieves top artists based on selectedIndex of range
@@ -115,7 +125,14 @@ class ArtistsPage extends React.Component {
             text="Your Top Artists"
             options={["Long Term", "6 Months", "4 Weeks"]}
             callback={this.setSelectedRange}
-          />
+          >
+            <Options
+              nopanel
+              horizontal
+              options={["Compact", "Details"]}
+              callback={this.setView}
+            />
+          </Options>
 
           <List 
             text="Genre Counts" 
@@ -126,7 +143,7 @@ class ArtistsPage extends React.Component {
         </div>
 
         <div className="div-panels"> 
-          <ArtistList ranked data={this.state.artists[this.state.selectedRange]} loadText="Getting your top artists from Spotify..."/>
+          <ArtistList compact={this.state.compact} ranked data={this.state.artists[this.state.selectedRange]} loadText="Getting your top artists from Spotify..."/>
         </div>
       </>
 

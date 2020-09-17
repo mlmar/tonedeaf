@@ -6,8 +6,8 @@
   --bg-light: #efefef;
   --bg-outline: rgb(232 232 232 / 14%);
 
-  --btn: #238ec3; 
-  --btn-alt: #299fd9;
+  --btn: #9d9d9d; 
+  --btn-alt: #5f5f5f;
 }
 
 
@@ -266,7 +266,7 @@ label {
 
 
 .label-title {
-  font-size: 1.8em;
+  font-size: 1.4em;
   font-weight: 500;
 }
 
@@ -292,7 +292,7 @@ label {
 }
 
 .label-small {
-  font-size: .8rem;
+  font-size: .9rem;
 }
 
 .label-subtext {
@@ -369,12 +369,10 @@ label {
 
 .sign {
   color: var(--bg-light);
-  /*   border-bottom: solid #4493da; do not uncomment */
   transition: color 1s ease;
 }
 
 .sign:hover {
-  /*   border-bottom: solid #4493da !important;  do not uncomment */
   color: #6fb0ec;
   transition: all 1s ease;
 }
@@ -389,6 +387,8 @@ label {
 }
 
 .bottom {
+  display: flex;
+  flex-direction: column;
   position: fixed;
   bottom: 1.5rem;
 }
@@ -414,10 +414,9 @@ label {
 
 .nav {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
   width: 100%;
-  margin: 0 0 0 6vw;
+  margin: 0 0 0 5vw;
   height: 100%;
   width: 100vw;
 }
@@ -471,6 +470,7 @@ label {
   flex-direction: column;
   padding: 1rem 2rem 2rem 2rem;
   overflow: overlay;
+  overflow-x: hidden;
   align-items: center;
   background: var(--bg-darker);
 }
@@ -489,6 +489,11 @@ label {
   flex: 1 1;
   width: 100%;
   position: relative;
+}
+
+.div-top-artists.compact, .div-top-tracks.compact {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
 }
 
 
@@ -743,19 +748,27 @@ label {
 
 .add-btn, .sub-btn {
   position: absolute;
-  border: solid #ffffff3b;
+  border: none;
   border-width: 1px;
   border-radius: 1rem;
   font-size: .7rem;
   font-weight: 100;
-  color: #ffffff;
+  color: var(--bg-light);
   background: var(--bg-dark);
   transition: all .5s;
-  margin: .1rem 0 .1rem 0;
   width: 2.5em;
   height: 2.5em;
   right: 0;
   z-index: 99;
+}
+
+.add-btn:hover {
+  background: var(--btn);
+  color: #ffffff;
+}
+
+.add-btn:hover, .sub-btn:hover {
+  background: var(--btn-alt);
 }
 
 /********* USER SEARCH *********/
@@ -803,10 +816,10 @@ label {
 .option-btn {
   display: flex;
   width: 100%;
-  min-height: 2.2rem;
-  color: #ffffff;
+  color: var(--bg-light);
   background: var(--bg-dark);
 
+  padding: .4rem 0 .4rem 0;
   margin: .3rem 0 .3rem 0;
 
   align-items: center;
@@ -821,15 +834,16 @@ label {
   transition: all .3s;
 }
 
-.option-btn:hover, .add-btn:hover {
+.option-btn:hover {
   background: var(--btn);
-  text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
   color: #ffffff;
 }
 
-.option-btn:focus, .option-btn--selected, .add-btn:hover, .sub-btn:hover {
+.option-btn:focus, .option-btn--selected {
   background: var(--btn-alt);
 }
+
+
 
 /********* PANEL *********/
 
@@ -864,6 +878,38 @@ label {
 
 .panel.horizontal {
   flex-direction: row;
+}
+
+.panel.compact {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  padding: 1vmax;
+  margin: 0;
+  overflow: hidden;
+}
+
+.panel.compact > a {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+.panel.compact a::before {
+  display: in-lineblock;
+  content: "";
+  padding-bottom: 100%;
+  vertical-align: top;
+}
+
+.panel.compact img {
+  position: absolute;
+  height: 100%;
+  width: auto;
+}
+
+.noshadow {
+  box-shadow: none !important
 }
 
 /********* INPUTS *********/

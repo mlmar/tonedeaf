@@ -48,12 +48,13 @@ class UserSearchPage extends React.Component {
   }
 
   componentDidMount() {
-    this.tonedeafService.getAllArtists((response) => {
-      this.setState({ artists : this.shuffleArray(response.data), fetching : false })
-    })
-
-    this.tonedeafService.getAllTracks((response) => {
-      this.setState({ tracks : this.shuffleArray(response.data), feching : false })
+    this.tonedeafService.getAll((response) => {
+      if(response.data) {
+        console.log(response.data);
+        var shuffledArtists = response.data.artists ? this.shuffleArray(response.data.artists) : null;
+        var shuffledTracks = response.data.tracks ? this.shuffleArray(response.data.tracks) : null;
+        this.setState({ artists : shuffledArtists , tracks : shuffledTracks, fetching : false })
+      }
     })
   }
 
@@ -62,9 +63,9 @@ class UserSearchPage extends React.Component {
   renderControl() {
     switch(this.state.index) {
       case 0:
-        return <ArtistList data={this.state.artists} loadingText="Getting artists..."/>
+        return <ArtistList data={this.state.artists} loadText="Getting artists..."/>
       case 1:
-        return <TrackList data={this.state.tracks} loadingText="Getting tracks..."/>
+        return <TrackList data={this.state.tracks} loadText="Getting tracks..."/>
       default:
         return <Load text="Why are you here?"/>
     }
@@ -82,9 +83,9 @@ class UserSearchPage extends React.Component {
           >
             <label className="label-small"> View number one artists and tracks from other tonedeaf users. </label>
             <br/>
-            <label className="label-small label-italic"> Only artist and track information is saved &mdash; all user data is excluded. </label>
+            <label className="label-small label-italic"> Only artist and track information is saved &mdash; all user data is excluded and remains solely with Spotify. </label>
           </Options>
-          { this.state.index === 1 &&
+          { this.state.index === 1 && this.state.tracks &&
             <Options
               text="Like these tracks?"
               options={["Create Spotify Playlist"]}

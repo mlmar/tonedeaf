@@ -25,15 +25,17 @@ class TrackList extends React.Component {
   }
   
   render() {
+    var compact = this.props.compact ? "compact" : null;
     
     if(this.props.data) {
       return (
-        <div className="div-top-tracks">
+        <div className={"div-top-tracks " + compact}>
           {
             this.props.data.map((t, i) => {
               var track = this.props.recent ? t.track : t; // recent tracks are stored in another json object
               return (
                 <Track
+                  compact={this.props.compact}
                   image={track.album.images && track.album.images.length && track.album.images[0].url}
                   title={track.name}
                   artist={this.artistsToString(track.artists)}

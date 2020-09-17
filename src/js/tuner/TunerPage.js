@@ -285,7 +285,7 @@ class TunerPage extends React.Component {
             >
               {description}
               <br/>
-              <label className="label-small label-bold"> Panel: </label>
+              <label className="label-small label-bold"> Select: </label>
             </Options>
           }
 

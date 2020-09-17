@@ -22,7 +22,8 @@ class TracksPage extends React.Component {
       selectedRange : "long_term",
       tracks : { long_term : null, medium_term : null, short_term : null },
       features : { long_term : null, medium_term : null, short_term : null },
-      averageFeatures : { long_term : null, medium_term : null, short_term : null }
+      averageFeatures : { long_term : null, medium_term : null, short_term : null },
+      compact : true
     }
 
     this.ranges = ["long_term", "medium_term", "short_term"];
@@ -31,6 +32,7 @@ class TracksPage extends React.Component {
     
     this.createPlaylist = this.createPlaylist.bind(this);
     this.setSelectedRange = this.setSelectedRange.bind(this);
+    this.setView = this.setView.bind(this);
     this.getTopTracks = this.getTopTracks.bind(this);
     this.getFeatures = this.getFeatures.bind(this);
     this.getIds = this.getIds.bind(this);
@@ -44,18 +46,26 @@ class TracksPage extends React.Component {
       this.playlistCreator.createPlaylist("tonedeaf top tracks");
     }
   }
-  /*  Set the selected time range for top artists list
+  /*  Set the selected time range for top tracks list
    *    {index} : retrieves range through this.ranges[index]
    */
   setSelectedRange(index) {
     var range = this.ranges[index];
-    if(!this.state.tracks[range]) { // if the artists have already been loaded, don't call API
+    if(!this.state.tracks[range]) { // if the tracks have already been loaded, don't call API
       this.getTopTracks(range, this.getFeatures);
     } else {
-      console.log("CACHE: Retrieved artists from previous state");
+      console.log("CACHE: Retrieved tracks from previous state");
     }
 
     this.setState({ selectedRange : range });
+  }
+
+  setView(index) {
+    if(index === 0) {
+      this.setState({ compact : true })
+    } else {
+      this.setState({ compact : null })
+    }
   }
  
   /*  Retrieves top tracks based on selectedIndex of range
@@ -217,7 +227,7 @@ class TracksPage extends React.Component {
     if(!session || !(tracksCache["long_term"] && featuresCache["long_term"] && averageFeaturesCache["long_term"])) {
       this.getTopTracks("long_term", this.getFeatures);
     } else {
-      console.log("CACHE: Retrieved artists from previous state");
+      console.log("CACHE: Retrieved tracks from previous state");
     }
   }
 
@@ -230,7 +240,14 @@ class TracksPage extends React.Component {
             text="Your Top Tracks"
             options={["Long Term", "6 Months", "4 Weeks"]}
             callback={this.setSelectedRange}
-          />
+          >
+            <Options
+              nopanel
+              horizontal
+              options={["Compact", "Details"]}
+              callback={this.setView}
+            />
+          </Options>
 
           <Options
             text="Like these tracks?"
@@ -248,6 +265,7 @@ class TracksPage extends React.Component {
 
         <div className="div-panels"> 
           <TrackList
+            compact={this.state.compact}
             ranked
             data={this.state.tracks[this.state.selectedRange]}
             features={this.state.features[this.state.selectedRange]}

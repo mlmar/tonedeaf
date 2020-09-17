@@ -11,14 +11,16 @@ class ArtistList extends React.Component {
    *  Pass each artist's attributes to an Artist component
    */
   render() {
+    var compact = this.props.compact ? "compact" : null;
 
     if(this.props.data) {
       return (
-        <div className="div-top-artists">
+        <div className={"div-top-artists " + compact}>
           {
             this.props.data.map((artist, i) => {
               return (
                 <Artist
+                  compact={this.props.compact}
                   image={artist.images && artist.images.length && artist.images[0].url}
                   name={artist.name}
                   url={artist.external_urls.spotify}

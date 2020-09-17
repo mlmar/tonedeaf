@@ -8,7 +8,6 @@ import NowPlaying from '../user/NowPlaying.js';
 import PlaylistCreator from '../util/PlaylistCreator.js'
 import SpotifyWebApi from 'spotify-web-api-js';
 import Options from '../helper/Options.js';
-import Load from '../helper/Load.js';
 import TrackList from '../track/components/TrackList.js';
 const spotifyWebApi = new SpotifyWebApi();
 
@@ -24,7 +23,7 @@ class ScopePage extends React.Component {
       fetching: false
     }
 
-    this.description = <label className="label-small"> Search for recommendations based on 3-5 artists and tracks. </label>
+    this.description = <label className="label-small"> Get recommendations based on 3-5 selected artists and tracks. </label>
 
     this.searchType = [["artist"],["track"]];
 
@@ -209,7 +208,7 @@ class ScopePage extends React.Component {
         </div>
 
         <div className="div-panels">
-          { !this.state.tracks &&
+          { !this.state.tracks && !this.state.fetching &&
             <Scope 
               results={this.state.results}
               selectedResults={this.state.selectedResults}
@@ -220,8 +219,7 @@ class ScopePage extends React.Component {
               remove={this.remove}
             />
           }
-          {this.state.fetching && <Load text="Getting recommendations from Spotify..."/>}
-          {this.state.tracks && <TrackList data={this.state.tracks}/>}
+          {(this.state.fetching || this.state.tracks) && <TrackList data={this.state.tracks} loadText={"Getting recommendations from Spotify..."}/>}
         </div>
       </>
     )

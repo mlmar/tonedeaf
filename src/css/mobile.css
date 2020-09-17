@@ -322,25 +322,4 @@
     align-items: center;
     font-size: 2vw;
   }
-
-  .sign {
-    color: #ffffff;
-    /*   border-bottom: solid #4493da; do not uncomment */
-    transition: color 1s ease;
-  }
-
-  .sign:hover {
-    /*   border-bottom: solid #4493da !important;  do not uncomment */
-    color: #60a3e0;
-    transition: color 1s ease;
-  }
-
-  .sign-background {
-    background: #212121;
-    border: solid #212121;
-    border-width: .5rem;
-    padding: 0 1rem 0 1rem;
-    border-radius: 2rem;
-    text-align: center;
-  }
 }
