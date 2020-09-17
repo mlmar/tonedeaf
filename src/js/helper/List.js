@@ -28,9 +28,8 @@ class List extends React.Component {
         </div>
       )
     } else {
-      return <div className="animate-load"> </div>
+      return null;
     }
-
   }
 }
 

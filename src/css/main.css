@@ -174,12 +174,13 @@ img {
 
 .animate-load {
   width: 2rem;
-  height: .5rem;
+  height: .4rem;
   align-self: center;
   border-radius: 100rem;
   background: var(--bg-light);
-  animation: load 2s infinite;
+  animation: load 1s infinite;
   animation-fill-mode: both;
+  animation-direction: alternate;
   opacity: .7;
 }
 
@@ -248,12 +249,21 @@ img {
 
 /********* LABELS *********/
 
+label {
+  color: var(--bg-light);
+}
+
 .label-super {
   font-size: 10em;
   font-weight: 500;
-  color: var(--bg-light);
   transition: all 1s;
 }
+
+.label-tiny {
+  font-size: .7em;
+  font-weight: bold;
+}
+
 
 .label-title {
   font-size: 1.8em;
@@ -290,10 +300,7 @@ img {
   font-weight: bold;
 }
 
-.label-tiny {
-  font-size: .6em;
-  font-weight: bold;
-}
+
 
 .label.side {
   display: grid;
@@ -341,7 +348,6 @@ img {
 .page {
   display: flex;
   height: 100%;
-  color: white;
   background: var(--bg-darker);
   flex-direction: column;
   overflow: hidden;
@@ -404,7 +410,6 @@ img {
 
 .top label {
   align-self: center;
-  color: white;
 }
 
 .nav {
@@ -471,11 +476,11 @@ img {
 }
 
 .div-sidebar {
-  width: 40vw;
+  width: 29vw;
 }
 
 .div-panels {
-  width: 100%;
+  flex: 1 1;
 }
 
 .div-top-artists, .div-top-tracks, .div-recent, .div-tuner, .div-scope, .div-user-search, .div-info {
@@ -763,21 +768,26 @@ img {
 }
 
 .div-user-search > .results button {
-  border-radius: .3rem;
   height: 2rem;
-  background: none;
-  border: none;
-  color: var(--bg-light);
-  font-size: 1rem;
-}
-
-.div-user-search > .results button:hover {
-  background: var(--bg-dark);
+  margin-bottom: 1rem;
 }
 
 .nolist {
   height: 100%;
 }
+
+/********* LOAD *********/
+
+.div-load {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  flex: 1 1;
+}
+
 
 /********* OPTIONS *********/
 
@@ -877,7 +887,7 @@ img {
   background: white;
 }
 
-.genre-btn {
+.gray-btn {
   color: var(--bg-light);
   background: var(--bg-dark);
   border: none;
@@ -889,11 +899,11 @@ img {
   width: 100%;
 }
 
-.genre-btn:hover {
+.gray-btn:hover {
   background: #585858;
 }
 
 .dark-btn {
-  color: white;
+  color: var(--bg-light);
   background: var(--bg-dark);
 }

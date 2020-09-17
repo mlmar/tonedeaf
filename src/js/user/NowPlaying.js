@@ -242,13 +242,11 @@ class NowPlaying extends React.Component {
     this.timer = setInterval(() => {
       this.getNowPlaying(true);
     }, 10000)
-    console.log("Mounting now playing @ " + this.timer);
   }
 
   componentWillUnmount() {
     if(this.timer) clearInterval(this.timer);
     if(this.artificialTimer) clearInterval(this.artificialTimer);
-    console.log("Umounting now playing @ " + this.timer);
   }
   
   render() {

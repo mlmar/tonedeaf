@@ -8,6 +8,8 @@ import NowPlaying from '../user/NowPlaying.js';
 import PlaylistCreator from '../util/PlaylistCreator.js'
 import SpotifyWebApi from 'spotify-web-api-js';
 import Options from '../helper/Options.js';
+import Load from '../helper/Load.js';
+import TrackList from '../track/components/TrackList.js';
 const spotifyWebApi = new SpotifyWebApi();
 
 class ScopePage extends React.Component {
@@ -19,7 +21,10 @@ class ScopePage extends React.Component {
       tracks : null, // recommendations
       results : null, // search reults
       selectedResults : [], // user selected searches
+      fetching: false
     }
+
+    this.description = <label className="label-small"> Search for recommendations based on 3-5 artists and tracks. </label>
 
     this.searchType = [["artist"],["track"]];
 
@@ -33,6 +38,7 @@ class ScopePage extends React.Component {
     this.search = this.search.bind(this);
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
+    this.renderOptions = this.renderOptions.bind(this);
   }
 
   // use PlaylistCreator to create playlist from current selected tracklist
@@ -70,20 +76,21 @@ class ScopePage extends React.Component {
 
     // only search if there are selected artists or an external query is being used
     if(this.state.selectedResults.length > 0 || ids) {
+      
+      this.setState({ fetching : true });
+
       var params = ids ? { seed_artists : ids, limit : 50 } : this.getRecParams();
 
       spotifyWebApi.getRecommendations(params)
         .then((response) => {
-          this.setState({ tracks : response.tracks, results : null })
+          this.setState({ tracks : response.tracks, results : null, fetching: false })
           console.log("API SUCCESS: retrieved scope recommendations");
           console.log(response);
         })
         .catch((error) => {
           console.error("API ERROR: could not retrieve scope recommendations");
           console.error(error)
-          if(error.status === 429) {
-            alert("TOO MANY REQUESTS");
-          }
+          this.setState({ fetching : false });
         });
 
     } else {
@@ -129,11 +136,16 @@ class ScopePage extends React.Component {
    *    callback from Scope component
    */
   add(event) {
-    if(this.state.selectedResults.length < 5) {
+    if(event.target.tagName === "BUTTON" && this.state.selectedResults.length < 5) {
+      var index = event.target.id;
       var tempArray = this.state.selectedResults;
-      var duplicate = tempArray.includes(this.state.results[event.target.id]);
-      if(event.target.tagName === "BUTTON" && !duplicate) {
-        tempArray.push(this.state.results[event.target.id]);
+      var duplicate = false;
+      for(var i = 0; i < tempArray.length; i++) {
+        duplicate = tempArray[i].id === this.state.results[index].id;
+        if(duplicate) break; // if the array contains an artist with the same id, break
+      }
+      if(!duplicate) {
+        tempArray.push(this.state.results[index]);
         this.setState({ selectedResults : tempArray});
       }
     }
@@ -154,54 +166,62 @@ class ScopePage extends React.Component {
     }
   }
 
+  renderOptions() {
+    return (
+      <>
+        <Options horizontal text="Scope" options={["Edit Preferences"]}
+          callback={() => { this.setState({ index: 0, tracks : null })}} > 
+          {this.description}
+          <br/>
+        </Options>
+
+        <Options
+          text="Like these tracks?"
+          options={["Create Spotify Playlist"]}
+          callback={this.createPlaylist}
+        />
+      </>
+    )
+  }
+
   render() {
     var portrait = window.matchMedia("only screen and (max-width: 768px)").matches;
 
     return (
       <>
         <div className="div-sidebar">
-
-          { portrait &&
-            <NowPlaying searchCurrent={this.searchCurrent} full/>
+          {portrait && <NowPlaying searchCurrent={this.searchCurrent} full/>}
+          { !this.state.tracks &&
+            <Options 
+              horizontal
+              text="Scope"
+              options={["Artists","Tracks"]}
+              callback={this.setIndex}
+            >
+              {this.description}
+              <br/>
+              <label className="label-small label-bold"> Search Type: </label>
+            </Options>
           }
-
-          <Options 
-            horizontal
-            text="Scope"
-            options={["Artists","Tracks"]}
-            callback={this.setIndex}
-          >
-            <label className="label-small"> Search for recommendations based on 3-5 artists and tracks. </label>
-            <br/>
-            <label className="label-small label-bold"> Search Type: </label>
-          </Options>
-          
-          { this.state.tracks &&
-            <Options
-              text="Like these tracks?"
-              options={["Create Spotify Playlist"]}
-              callback={this.createPlaylist}
-            />
-          }
-
-          { !portrait &&
-            <NowPlaying searchCurrent={this.searchCurrent}/>
-          }
-
+          {this.state.tracks && this.renderOptions()}
+          {!portrait && <NowPlaying searchCurrent={this.searchCurrent}/>}
           {this.props.children}
         </div>
 
         <div className="div-panels">
-          <Scope 
-            tracks={this.state.tracks} 
-            results={this.state.results}
-            selectedResults={this.state.selectedResults}
-            searchType={this.searchType[this.state.index][0]}
-            get={this.getRecommendations}
-            search={this.search}
-            add={this.add}
-            remove={this.remove}
-          />
+          { !this.state.tracks &&
+            <Scope 
+              results={this.state.results}
+              selectedResults={this.state.selectedResults}
+              searchType={this.searchType[this.state.index][0]}
+              get={this.getRecommendations}
+              search={this.search}
+              add={this.add}
+              remove={this.remove}
+            />
+          }
+          {this.state.fetching && <Load text="Getting recommendations from Spotify..."/>}
+          {this.state.tracks && <TrackList data={this.state.tracks}/>}
         </div>
       </>
     )

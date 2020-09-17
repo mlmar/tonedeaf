@@ -1,5 +1,7 @@
 import React from 'react';
 import Track from './Track.js';
+import Load from '../../helper/Load.js';
+
 
 /*  TRACK LIST COMPONENT
  *    implements Track component to display individual artists
@@ -32,7 +34,7 @@ class TrackList extends React.Component {
               var track = this.props.recent ? t.track : t; // recent tracks are stored in another json object
               return (
                 <Track
-                  image={track.album.images[0].url}
+                  image={track.album.images && track.album.images.length && track.album.images[0].url}
                   title={track.name}
                   artist={this.artistsToString(track.artists)}
                   url={track.external_urls.spotify}
@@ -50,7 +52,7 @@ class TrackList extends React.Component {
         </div>
       )
     }
-    return <div className="animate-load"> </div>;
+    return <Load text={this.props.loadText}/>
   }
 }
 

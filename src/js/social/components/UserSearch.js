@@ -20,7 +20,7 @@ class UserSearch extends React.Component {
 
   renderUser(user, i) {
     return (
-      <button className="animate-fade" id={user.id} key={i} onClick={this.props.userSelect}>
+      <button className="animate-fade gray-btn" id={user.id} key={i} onClick={this.props.userSelect}>
         {user.display_name}
       </button>
     )
@@ -38,13 +38,12 @@ class UserSearch extends React.Component {
           }
         </div>
       )
-
     }
 
     return (
       <div className="div-user-search">
         <div className="panel animate-fade">
-          <input type="text" className="input input-search" onChange={this.search} placeholder="Search for a user"/>
+          <input type="text" className="input input-search" onChange={this.search} placeholder="Search for another tonedeaf user"/>
         </div>
         {display}
       </div>

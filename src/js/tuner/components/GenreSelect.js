@@ -1,6 +1,4 @@
 import React from 'react';
-import Genre from './sub/Genre.js';
-
 const glassIcon = require("../../../icon/glass.svg");
 
 /*  Genre selection panel
@@ -11,6 +9,11 @@ class GenreSelect extends React.Component {
     super(props);
 
     this.renderSelected = this.renderSelected.bind(this);
+    this.renderGenre = this.renderGenre.bind(this);
+  }
+
+  renderGenre(genre, i) {
+    return <button className="gray-btn animate-fade label-bold" id={i} key={i}> {genre} </button>
   }
 
   /* Only show panel for selected genres if they have been selected */
@@ -23,9 +26,7 @@ class GenreSelect extends React.Component {
           <div className="selected" onClick={this.props.remove}>
             {
               this.props.selected.map((genre, i) => {
-                return (
-                  <Genre genre={genre} key={i} id={i} type="-"/>
-                )
+                return this.renderGenre(genre, i);
               })
             }
           </div>
@@ -44,9 +45,7 @@ class GenreSelect extends React.Component {
           <div className="genres" onClick={this.props.add}>
             {
               this.props.data.map((genre, i) => {
-                return (
-                  <Genre genre={genre} key={i} id={i} type="+"/>
-                )
+                return this.renderGenre(genre, i);
               })
             }
           </div>

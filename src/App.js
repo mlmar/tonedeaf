@@ -20,6 +20,8 @@ import TunerPage from './js/tuner/TunerPage.js';
 import ScopePage from './js/scope/ScopePage.js';
 import UserSearchPage from './js/social/UserSearchPage.js';
 
+import TonedeafService from './js/util/TonedeafService.js';
+
 // Spotify Web API JS by Jose Perez on github
 // https://github.com/JMPerez/spotify-web-api-js
 import SpotifyWebApi from 'spotify-web-api-js';
@@ -37,16 +39,9 @@ class App extends React.Component {
   constructor() {
     super();
 
-    const params = this.getHashParams(); // use hashing function to get tokens
-    const token = params.access_token; // set token in js api wrapper
-    if(token) {
-      spotifyWebApi.setAccessToken(token);
-      session.token = token;
-    }
-
     /********* COMPONENT STATES *********/
     this.state = {
-      loggedIn      : token ? true : false, // true if a token is retrieved
+      loggedIn      : false, // true if a token is retrieved
 
       nav           : [ // nav elements
                         "Now Playing", 
@@ -55,12 +50,13 @@ class App extends React.Component {
                         "Recent",
                         "Tuner",
                         "Scope",
-                        "Users"
+                        // "Users"
                       ],
 
       selectedIndex : 0, // selected nav element
     }
 
+    this.tonedeafService = new TonedeafService();
     this.userID = 0; // passed to components that use PlaylistCreator
     
     /********* BINDINGS *********/
@@ -68,6 +64,31 @@ class App extends React.Component {
     this.logout = this.logout.bind(this);
     this.saveUser = this.saveUser.bind(this);
     this.renderControl = this.renderControl.bind(this);
+  }
+
+  componentDidMount() {
+    var params = this.getHashParams(); // use hashing function to get tokens
+    var token = params.access_token; // set token in js api wrapper
+    spotifyWebApi.setAccessToken(token);
+    session.token = token;
+    session.setCache("token", "refreshToken", params.refresh_token);
+    
+    if(token) {
+      this.setState({ loggedIn : true });
+    }
+
+    setInterval(() => {
+      // if a refresh token is exists, refresh
+      if(session.getCache("token")["refreshToken"]) {
+        console.warn("Refreshing")
+        this.tonedeafService.refresh(tkn => {
+          session.setCache("token", "refreshToken", null)
+          spotifyWebApi.setAccessToken(tkn.access_token);
+        });
+      } else {
+        this.logout();
+      }
+    }, 3e+6) // refresh every fifty minutes
   }
 
   /*  From Spotify's index.html in their authentication examples

@@ -1,5 +1,6 @@
 import React from 'react';
 import Artist from './Artist.js'
+import Load from '../../helper/Load.js';
 
 
 /*  TOP ARTISTS COMPONENT
@@ -18,7 +19,7 @@ class ArtistList extends React.Component {
             this.props.data.map((artist, i) => {
               return (
                 <Artist
-                  image={artist.images[0].url}
+                  image={artist.images && artist.images.length && artist.images[0].url}
                   name={artist.name}
                   url={artist.external_urls.spotify}
                   genre={artist.genres.join(", ")}
@@ -34,7 +35,7 @@ class ArtistList extends React.Component {
       )
     }
 
-    return <div className="animate-load"> </div>;
+    return <Load text={this.props.loadText}/>
   }
 }
 

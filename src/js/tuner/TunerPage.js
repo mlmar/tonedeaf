@@ -3,6 +3,7 @@ import React from 'react';
 import { session } from '../util/Session.js';
 
 import Options from '../helper/Options.js';
+import Load from '../helper/Load.js';
 import GenreSelect from './components/GenreSelect.js';
 import AttributeSelect from './components/AttributeSelect.js';
 import TrackList from '../track/components/TrackList.js';
@@ -22,6 +23,7 @@ class TunerPage extends React.Component {
       selectedGenres : [],
       genres : [],
       tracks : null,
+      fetching : false,
 
       // attribute, min, max, step, defaultMin, defaultMax
       // only defaults will be changed by the user
@@ -117,7 +119,6 @@ class TunerPage extends React.Component {
         }
       }
       this.setState({ selectedGenres : tempArray });
-      console.log(tempArray);
     }
   }
 
@@ -149,13 +150,15 @@ class TunerPage extends React.Component {
   //  called from GenreSelect component
   getRecommendations() {
     if(this.state.selectedGenres.length > 0) {
+      this.setState({ fetching : true });
       spotifyWebApi.getRecommendations(this.getRecParams())
         .then((response) => {
-          this.setState({tracks: response.tracks, index: 2 })
+          this.setState({tracks: response.tracks, index: 2, fetching : false })
           console.log("Succesfully retrieved recommendations  @");
           console.log(response);
         })
         .catch((error) => {
+          this.setState({ fetching : false });
           console.error("Could not retrieve recommendations @");
           console.error(error)
         });
@@ -229,6 +232,10 @@ class TunerPage extends React.Component {
   }
 
   renderControl() {
+    if(this.state.fetching) {
+      return <Load text="Getting recommendations from Spotify..."/>
+    }
+
     switch(this.state.index) {
       case 0:
       case 1:
@@ -264,27 +271,37 @@ class TunerPage extends React.Component {
   }
 
   render() {
+    var description = <label className="label-small"> Get recommendations based on preferred song attributes and up to 5 genres. </label>
     return (
       <>
         <div className="div-sidebar"> 
-
-          <Options
-            horizontal
-            text="Tuner"
-            options={["Genres", "Attributes"]}
-            callback={this.setIndex}
-          >
-            <label className="label-small"> Get recommendations based on preferred song attributes and up to 5 genres. </label>
-            <br/>
-            <label className="label-small label-bold"> Panel: </label>
-          </Options>
+          
+          { !this.state.tracks &&
+            <Options
+              horizontal
+              text="Tuner"
+              options={["Genres", "Attributes"]}
+              callback={this.setIndex}
+            >
+              {description}
+              <br/>
+              <label className="label-small label-bold"> Panel: </label>
+            </Options>
+          }
 
           { this.state.tracks &&
-            <Options
-              text="Like these tracks?"
-              options={["Create Spotify Playlist"]}
-              callback={this.createPlaylist}
-            />
+            <>
+              <Options horizontal text="Tuner" options={["Edit Preferences"]}
+                callback={() => { this.setState({ index: 0, tracks : null, selectedGenres : [] })}} > 
+                {description}
+                <br/>
+                </Options>
+              <Options
+                text="Like these tracks?"
+                options={["Create Spotify Playlist"]}
+                callback={this.createPlaylist}
+              />
+            </>
           }
 
           {this.props.children}

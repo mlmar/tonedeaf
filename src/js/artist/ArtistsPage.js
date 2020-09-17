@@ -87,8 +87,6 @@ class ArtistsPage extends React.Component {
 
     this.setState({ genreCounts : genreCounts });
     if(session) session.setCache("genreCounts", range, counts);
-
-    console.log("calculated genre counts");
     console.log(counts);
   }
 
@@ -128,7 +126,7 @@ class ArtistsPage extends React.Component {
         </div>
 
         <div className="div-panels"> 
-          <ArtistList data={this.state.artists[this.state.selectedRange]}/>
+          <ArtistList data={this.state.artists[this.state.selectedRange]} loadText="Getting your top artists from Spotify..."/>
         </div>
       </>
 

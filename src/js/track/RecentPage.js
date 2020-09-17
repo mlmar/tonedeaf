@@ -93,6 +93,7 @@ class RecentPage extends React.Component {
           <TrackList 
             data={this.state.tracks}
             recent="true"
+            loadText="Getting your most recent tracks from Spotify..."
           />
         </div>
       </>

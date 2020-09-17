@@ -2,7 +2,6 @@ import HTTPService from './HTTPService.js';
 import { session } from './Session.js';
 
 class TonedeafService extends HTTPService {
-  
   save(data) { 
     var body = {
       token : session.token,
@@ -25,6 +24,25 @@ class TonedeafService extends HTTPService {
       query : query
     }
     this.post('search', callback, body);
+  }
+
+  refresh(callbackFunc) {
+    fetch("https://tonedeaf-auth.vercel.app/refresh_token?" +
+      new URLSearchParams({ refresh_token : session.getCache("token")["refreshToken"] }), {
+      method: 'get',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      }
+    })
+    .then(data => {
+      if(callbackFunc) callbackFunc(data);
+    })
+    .catch(error => {
+      if(callbackFunc) callbackFunc(error);
+    }); 
   }
 
 }

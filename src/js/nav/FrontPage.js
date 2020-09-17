@@ -19,8 +19,10 @@ class FrontPage extends React.Component {
   // after half a second, fade in the text
   componentDidMount() {
     setTimeout(() => {
-      this.front.current.classList.toggle("show");
-      this.front.current.classList.toggle("shadow-on")
+      if(this.front.current) {
+        this.front.current.classList.toggle("show");
+        this.front.current.classList.toggle("shadow-on")
+      }
     }, 300)
   }
   
@@ -32,13 +34,11 @@ class FrontPage extends React.Component {
         <a href={this.props.return} className="sign-background">
           <label className="sign label-large cursor-pointer"> sign in with Spotify </label>
         </a>
-        {/*<div className="bottom label-center">
-          <label className="label-tiny"> Marcus Martinez </label>
-          <br/>
+        <div className="bottom label-center">
           <label className="label-tiny"> Spotify&copy; is a trademark of Spotify AB </label>
           <br/>
           <label className="label-tiny"> 2020 </label>
-        </div> */}
+        </div>
       </div>
     )
   }

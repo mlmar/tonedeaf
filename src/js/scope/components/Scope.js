@@ -123,48 +123,29 @@ class Scope extends React.Component {
     var display;
     if(this.props.results) {
       display = (
-        <>
-          {this.props.selectedResults && this.props.selectedResults.length > 0 && 
-            this.renderSelected()
-          }
-
-          <div onClick={this.props.add}>
-            { this.props.results.length > 0 &&
-              this.props.results.map((result, i) => {
-                if(result.type === "artist") {
-                  return (
-                    <div className="scope-wrapper" key={i}>
-                      <button className="add-btn" id={i}> + </button>
-                      {this.renderArtist(result, i)}
-                    </div>
-                  )
-                } else if(result.type === "track") {
-                  return (
-                    <div className="scope-wrapper" key={i}>
-                      <button className="add-btn" id={i}> + </button>
-                      {this.renderTrack(result, i)}
-                    </div>
-                  )
-                } else {
-                  return "";
-                }
-              })
-            }
-          </div>
-        </>
-      )
-
-    } else {
-      display = (
-        <>
-          { this.props.tracks && this.props.tracks.length > 0 &&
-            this.props.tracks.map((track, i) => {
-              return this.renderTrack(track, i)
+        <div onClick={this.props.add}>
+          { this.props.results.length > 0 &&
+            this.props.results.map((result, i) => {
+              if(result.type === "artist") {
+                return (
+                  <div className="scope-wrapper" key={i}>
+                    <button className="add-btn" id={i}> + </button>
+                    {this.renderArtist(result, i)}
+                  </div>
+                )
+              } else if(result.type === "track") {
+                return (
+                  <div className="scope-wrapper" key={i}>
+                    <button className="add-btn" id={i}> + </button>
+                    {this.renderTrack(result, i)}
+                  </div>
+                )
+              }
             })
           }
-        </>
+        </div>
       )
-    }
+    } 
     
     var placeholder = "Search for " + this.props.searchType + "s";
 
@@ -173,12 +154,10 @@ class Scope extends React.Component {
         <div className="panel animate-fade">
           <input type="text" className="input input-search" onChange={this.search} placeholder={placeholder} ref={this.searchBar}/>
         </div>
+        {this.props.selectedResults.length > 0 && this.renderSelected()}
         {display}
       </div>
     )
-
-
-
   }
 
 }

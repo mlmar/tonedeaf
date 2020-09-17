@@ -3,7 +3,9 @@ import React from 'react';
 import { session } from '../util/Session.js';
 
 import Options from '../helper/Options.js';
-import UserSearch from './UserSearch.js';
+import Load from '../helper/Load.js';
+
+import UserSearch from './components/UserSearch.js';
 import ArtistList from '../artist/components/ArtistList.js';
 import TrackList from '../track/components/TrackList.js';
 
@@ -19,10 +21,11 @@ class UserSearchPage extends React.Component {
       data : null,
       allResults : null,
       searchResults : null,
-      user : null
+      user : null,
+      fetching : false
     }
 
-    
+    this.currentUser = session.getCache("user").display_name;
     this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
 
     this.category = "artists"
@@ -66,10 +69,10 @@ class UserSearchPage extends React.Component {
   //    filters through loaded data
   search(query) {
     if(query.length) {
-      var cleanQuery = query.replace(".","").replace("_","").replace("-","");
+      var cleanQuery = this.clean(query);
       var filtered = [];
       this.state.allResults.forEach((r) => {
-        var cleanResult = r.display_name.replace(".","").replace("_","").replace("-","")
+        var cleanResult = this.clean(r.display_name);
         if(cleanResult.includes(cleanQuery)) {
           filtered.push(r);
         }
@@ -80,29 +83,49 @@ class UserSearchPage extends React.Component {
     }
   }
 
+  // removes some punctation and lowers the text for filtering
+  clean(text) {
+    return text.replace(".","").replace("_","").replace("-","").toLowerCase();
+  }
+
+  /*  Search for selected user based on selected user's id
+   */
   userSelect(e) {
+    this.setState({ fetching : true });
     this.tonedeafService.load((response) => {
-      this.setState({ user : response.data, searchResults : null }, () => this.setCategory(0));
+      this.setState({ user : response.data, searchResults : null, fetching : false }, () => this.setCategory(0));
     }, e.target.id)
+
+    this.tonedeafService.refresh(console.log);
   }
 
   componentDidMount() {
     this.tonedeafService.search((response) => { // load all data on mount
-      this.setState({ allResults : response.data, searchResults : response.data });
+      var removeCurrentUser = response.data.filter(data => data.display_name !== this.currentUser)
+      this.setState({ allResults : removeCurrentUser, searchResults : removeCurrentUser });
     }, "");
   }
 
+  /*  Artist/Top Track buttons
+   */
   renderUserFilter() {
+    var categories = ["Artists", "Tracks"], ranges = ["Long Term", "6 Months", "4 Weeks"];
     return (
       <div className="panel">
         <label className="label-subtitle"> Viewing {this.state.user.display_name}'s top listens </label>
 
-        <Options horizontal nopanel text="" options={["Artists", "Tracks"]} callback={this.setCategory} key={this.state.user.id}> </Options>
-        <Options horizontal nopanel text="" options={["Long Term", "6 Months", "4 Weeks"]} callback={this.setTimeRange} key={this.state.user.id + "1"}> </Options>
+        <Options horizontal nopanel text="" options={categories} callback={this.setCategory} key={this.state.user.id}> </Options>
+        <Options horizontal nopanel text="" options={ranges} callback={this.setTimeRange} key={this.state.user.id + "1"}> </Options>
+        <br/>
+        <Options horizontal nopanel text="" options={["Reset"]} key={this.state.user.id + "2"} 
+          callback={() => { this.setState({ user : null, searchResults : this.state.allResults, data : null })}} > </Options>
       </div>
     )
   }
 
+  /*  Render selected user's data
+   *
+   */
   renderData() {
     if(this.state.user) {
       if(this.state.data) {
@@ -112,7 +135,7 @@ class UserSearchPage extends React.Component {
           return <TrackList data={this.state.data}/>
         }
       } else if(!this.state.searchResults) {
-        return <label className="label-medium label-bold animate-fade nolist"> This user hasn't loaded in this list yet. </label>
+        return <label className="label-medium label-bold animate-fade nolist"> This user hasn't loaded this list yet. Try a different one. </label>
       }
     } 
   }
@@ -121,11 +144,17 @@ class UserSearchPage extends React.Component {
     return (
       <>
         <div className="div-sidebar">
-
-          { this.state.user &&
-            this.renderUserFilter()
+          { !this.state.user &&
+            <div className="panel"> 
+              <label className="label-subtitle"> tonedeaf users </label>
+              <label className="label-small"> Users that have viewed their lists through this site will show up here. </label>
+              <label className="label-small"> Select any name to view their top listens. </label>
+              <br/>
+              <label className="label-small label-italic"> If a user has not viewed their list, it will not be shown. </label>
+              <label className="label-small label-italic"> This feature may be removed in the future. </label>
+            </div>
           }
-
+          { this.state.user && this.renderUserFilter() }
           { this.state.data &&
             <Options
               text="Like these tracks?"
@@ -133,25 +162,19 @@ class UserSearchPage extends React.Component {
               callback={this.createPlaylist}
             />
           }
-
           {this.props.children}
         </div>
 
         <div className="div-panels">
-          { this.state.allResults &&
+          { !this.state.data && this.state.allResults && !this.state.fetching &&
             <UserSearch
               results={this.state.searchResults}
               search={this.search}
               userSelect={this.userSelect}
             />
           }
-          { !this.state.allResults &&
-            <>
-              <br/>
-              <label className="label-medium label-bold animate-fade"> Connecting... </label>
-              <div className="animate-load"></div>
-            </>
-          }
+          { !this.state.allResults && <Load text="Connecting..."/> }
+          { this.state.fetching && <Load text="Loading..."/> }
           {this.renderData()}
         </div>
         
