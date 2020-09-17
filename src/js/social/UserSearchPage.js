@@ -76,11 +76,11 @@ class UserSearchPage extends React.Component {
         <div className="div-sidebar">
           <Options
             horizontal
-            text="tonedeaf listens"
+            text="User Favorties"
             options={["Artists","Tracks"]}
             callback={i => this.setState({ index : i})}
           >
-            <label className="label-small"> View number one artists and tracks from other users who have logged into tonedeaf before. </label>
+            <label className="label-small"> View number one artists and tracks from other tonedeaf users. </label>
             <br/>
             <label className="label-small label-italic"> Only artist and track information is saved &mdash; all user data is excluded. </label>
           </Options>
