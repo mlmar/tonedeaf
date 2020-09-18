@@ -11,7 +11,7 @@ class List extends React.Component {
     super(props);
 
     this.state = {
-      cutoff : null,
+      cutoff : false,
       cutoffButton : "More",
       selected : "all"
     }

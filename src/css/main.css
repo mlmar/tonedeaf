@@ -425,7 +425,7 @@ label {
 
 .nav-buttons > button, .log-btn {
   min-height: 1.5em;
-  min-width: min-content;
+  width: 100%;
   padding: .2rem;
   margin: .3rem .5vw .3rem .5vw;
   color: gray;
@@ -493,8 +493,8 @@ label {
 .div-top-artists.compact, .div-top-tracks.compact {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  flex: none;
 }
-
 
 .div-profile--info {
   display: grid;
@@ -807,17 +807,22 @@ label {
 .div-list {
   display: flex;
   flex-direction: column;
-  flex: 1 1;
 }
 
 .cutoff {
-  max-height: 13rem;
+  min-height: 13rem !important;
   overflow: hidden;
-  transition: max-height .3s !important;
+  
+}
+
+.cutoff.false {
+  height: 13rem;
+  transition: height .3s ease !important;
 }
 
 .cutoff.true {
-  max-height: 100rem;
+  height: 100%;
+  transition: height .8s ease !important;
 }
 
 .cutoff .div-list {
