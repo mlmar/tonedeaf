@@ -24,8 +24,8 @@ class Artist extends React.Component {
     if(this.props.compact) {
       return (
         <div className="panel animate-fade noshadow compact">
-          <a href={this.props.url} className="link-center" title={this.props.name}>
-            <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>
+          <a href={this.props.url} className="link-center" title={rank + this.props.name}>
+            <img className="img--medium" src={this.props.image} alt="track art"/>
           </a>
         </div>
       )
@@ -35,20 +35,20 @@ class Artist extends React.Component {
       <div className="panel animate-fade">
         <div className="div-track">
           <a href={this.props.url} className="link-center">
-            <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>
+            <img className="img--medium" src={this.props.image} alt="track art"/>
           </a>
           <div className="info noclick">
             <label className="label-medium label-bold"> {rank} {this.props.name} </label>
             <div className="item">
-              <label className="label-small label-bold"> genres </label>
+              <label className="label-small"> Genres </label>
               <label className="label-small"> {this.props.genre} </label>
             </div>
             <div className="item">
-              <label className="label-small label-bold"> popularity index </label>
+              <label className="label-small"> Popularity </label>
               <label className="label-small"> {this.props.popularity} </label>
             </div>
             <div className="item">
-              <label className="label-small label-bold"> followers </label>
+              <label className="label-small"> Followers </label>
               <label className="label-small"> {this.props.followers} </label>
             </div>
           </div>

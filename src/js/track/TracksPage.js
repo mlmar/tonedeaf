@@ -4,11 +4,10 @@ import { session } from '../util/Session.js';
 
 import Options from '../helper/Options.js';
 import List from '../helper/List.js';
+import Create from '../helper/Create.js';
 import TrackList from './components/TrackList.js';
 
-
 import SpotifyWebApi from 'spotify-web-api-js';
-import PlaylistCreator from '../util/PlaylistCreator.js';
 
 
 const spotifyWebApi = new SpotifyWebApi();
@@ -28,9 +27,6 @@ class TracksPage extends React.Component {
 
     this.ranges = ["long_term", "medium_term", "short_term"];
 
-    this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
-    
-    this.createPlaylist = this.createPlaylist.bind(this);
     this.setSelectedRange = this.setSelectedRange.bind(this);
     this.setView = this.setView.bind(this);
     this.getTopTracks = this.getTopTracks.bind(this);
@@ -39,13 +35,6 @@ class TracksPage extends React.Component {
     this.averageFeatures = this.averageFeatures.bind(this);
   }
 
-  // use PlaylistCreator to create playlist from current selected tracklist
-  createPlaylist() {
-    if(this.state.tracks[this.state.selectedRange]) {
-      this.playlistCreator.setTracks(this.state.tracks[this.state.selectedRange]);
-      this.playlistCreator.createPlaylist("tonedeaf top tracks");
-    }
-  }
   /*  Set the selected time range for top tracks list
    *    {index} : retrieves range through this.ranges[index]
    */
@@ -189,15 +178,15 @@ class TracksPage extends React.Component {
 
     averages[5] = this.getKey(Math.round(averages[5]));
 
-    var averagesJSON = {};
+    var averagesArray = [];
     for(var k = 0; k < averages.length; k++) {
-      var objKey = items[k], value = averages[k];
-      averagesJSON[objKey] = value;
+      var body = { name : items[k], value : averages[k]};
+      averagesArray.push(body);
     }
 
     var averageFeatures = JSON.parse(JSON.stringify(this.state.averageFeatures)); // make a deep copy of the state
-    averageFeatures[range] = averagesJSON;
-    if(session) session.setCache("averageFeatures", range, averagesJSON);
+    averageFeatures[range] = averagesArray;
+    if(session) session.setCache("averageFeatures", range, averagesArray);
     
     this.setState({ averageFeatures : averageFeatures });
   }
@@ -240,11 +229,7 @@ class TracksPage extends React.Component {
             subcallback={this.setView}
           />
 
-          <Options
-            text="Like these tracks?"
-            suboptions={["Create Spotify Playlist"]}
-            subcallback={this.createPlaylist}
-          />
+          <Create text="tonedeaf top tracks" tracks={this.state.tracks[this.state.selectedRange]}/>
           
           <List 
             text="Attribute Averages" 

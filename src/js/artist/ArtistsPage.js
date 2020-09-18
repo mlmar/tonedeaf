@@ -18,7 +18,8 @@ class ArtistsPage extends React.Component {
       selectedRange : "long_term",
       artists : { long_term : null, medium_term : null, short_term : null },
       genreCounts : { long_term : null, medium_term : null, short_term : null },
-      compact : true
+      compact : true,
+      selected : null
     }
 
     this.ranges = ["long_term", "medium_term", "short_term"];
@@ -27,6 +28,7 @@ class ArtistsPage extends React.Component {
     this.setView = this.setView.bind(this);
     this.getTopArtists = this.getTopArtists.bind(this);
     this.countGenres = this.countGenres.bind(this);
+    this.filterByGenre = this.filterByGenre.bind(this);
   }
 
   
@@ -41,7 +43,7 @@ class ArtistsPage extends React.Component {
       console.log("SUCCESS: Retrieved artists from previous state");
     }
 
-    this.setState({ selectedRange : range });
+    this.setState({ selectedRange : range, selected : this.state.artists[range] });
   }
 
   setView(index) {
@@ -59,7 +61,7 @@ class ArtistsPage extends React.Component {
     spotifyWebApi.getMyTopArtists(params)
       .then((response) => {
         artists[range] = response.items;
-        this.setState({ artists : artists });
+        this.setState({ artists : artists, selected : artists[this.state.selectedRange] });
         if(session) session.setCache("artists", range, response.items);
 
         if(callback) callback(range, response.items);
@@ -78,22 +80,53 @@ class ArtistsPage extends React.Component {
   countGenres(range, artists) {
     var counts = {};
 
-    var tempGenres = []
+    var tempGenres = [] // get al lgenres
     for(var i = 0; i < artists.length; i++) {
       tempGenres = tempGenres.concat(artists[i].genres);
     }
     
+    // get genre count
     tempGenres.forEach(function(x) { 
       counts[x] = (counts[x] || 0) + 1; 
     });
 
+    // convert json object to individual json objects for each genre count
+    var countsArray = [];
+    var names = Object.keys(counts);
+    var values = Object.values(counts);
+
+    // make first entry the sum of different genres
+    var sum = values.reduce((a,b) => a + b);
+    countsArray.push({ name : "all", value : sum })
+
+    for(var j = 0; j < names.length; j++) {
+      var body = { name : names[j], value : values[j] }
+      countsArray.push(body)
+    }
     
+    // sort from greatest to least
+    countsArray.sort((a,b) => b.value - a.value);
+    
+    // cache and set state
     var genreCounts = JSON.parse(JSON.stringify(this.state.genreCounts)); // make a deep copy of the state
-    genreCounts[range] = counts;
+    genreCounts[range] = countsArray;
 
     this.setState({ genreCounts : genreCounts });
-    if(session) session.setCache("genreCounts", range, counts);
-    console.log(counts);
+    if(session) session.setCache("genreCounts", range, countsArray);
+    console.log(countsArray);
+  }
+
+  /*  Call back from clickable list component
+   *    {genre} : genre name
+   */
+  filterByGenre(genre) {
+    if(genre === "all") {
+      this.setState({ selected : this.state.artists[this.state.selectedRange] })
+    } else {
+      var filtered = [...this.state.artists[this.state.selectedRange]].filter((i) => i.genres.includes(genre));
+      this.setState({ selected : filtered });
+      console.log(filtered);
+    }
   }
 
   componentDidMount() {
@@ -101,7 +134,7 @@ class ArtistsPage extends React.Component {
     if(session) {
       artistsCache = session.getCache("artists");
       genreCountsCache = session.getCache("genreCounts");
-      this.setState({ artists : artistsCache, genreCounts : genreCountsCache });
+      this.setState({ artists : artistsCache, genreCounts : genreCountsCache, selected : artistsCache[this.state.selectedRange] });
     }
 
     // check if long_term key already exists in the cache since it should be the first thing the user sees
@@ -126,15 +159,19 @@ class ArtistsPage extends React.Component {
           />
 
           <List 
+            compact
+            onClick={this.filterByGenre}
             text="Genre Counts" 
             items={this.state.genreCounts[this.state.selectedRange]}
-          />
+          >
+            <label className="label-small"> Select to filter artist by genre. </label> 
+          </List>
 
           {this.props.children}
         </div>
 
         <div className="div-panels"> 
-          <ArtistList compact={this.state.compact} ranked data={this.state.artists[this.state.selectedRange]} loadText="Getting your top artists from Spotify..."/>
+          <ArtistList compact={this.state.compact} ranked data={this.state.selected} loadText="Getting your top artists from Spotify..."/>
         </div>
       </>
 

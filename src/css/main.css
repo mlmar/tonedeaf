@@ -230,8 +230,8 @@ img {
 
 /********* COLOR AND STYLE *********/
 
-.hover-shadow, .img:hover, .img--small:hover, .img--medium:hover {
-  box-shadow: 0 0 .8rem .1rem rgb(0 0 0 / 27%);
+.hover-shadow, img:hover, .img--small:hover, .img--medium:hover, .compact a:hover {
+  box-shadow: 0 0 .6rem .2rem rgb(0 0 0 / 50%);
   transition: box-shadow .3s ease;
 }
 
@@ -363,6 +363,7 @@ label {
 }
 
 .sign {
+  font-weight: bolder;
   color: var(--light);
   transition: color 1s ease;
 }
@@ -462,11 +463,6 @@ label {
 
   overflow: overlay;
 }
-
-.div-content label {
-  color: var(--light);
-}
-
 
 .div-sidebar, .div-panels {
   display: flex;
@@ -806,10 +802,32 @@ label {
   flex: 1 1;
 }
 
+/********* LIST *********/
+
+.div-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1;
+}
+
+.cutoff {
+  max-height: 13rem;
+  overflow: hidden;
+  transition: max-height .3s !important;
+}
+
+.cutoff.true {
+  max-height: 100rem;
+}
+
+.cutoff .div-list {
+  overflow: hidden;
+}
+
 
 /********* OPTIONS *********/
 
-.options-bar {
+.options-bar, .list-bar {
   display: flex;
 }
 
@@ -824,7 +842,8 @@ label {
   justify-content: space-between;
 }
 
-.main-options > button, .sub-options > button {
+.main-options > button, 
+.sub-options > button {
   display: flex;
   height: 100%;
   width: min-content;
@@ -847,11 +866,22 @@ label {
   white-space: nowrap;
 }
 
-.main-options > button:hover {
-  color: var(--light);
+.hoverable > * {
+  color: gray;
 }
 
-.main-options > button:focus, .main-options > button.selected {
+.main-options > button:hover,
+.sub-options > button:hover,
+.hoverable:hover > * {
+  color: var(--light);
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.main-options > button:focus, 
+.main-options > button.selected,
+.sub-options > button.selected,
+.hoverable.selected * {
   color: var(--light);
 }
 
@@ -866,13 +896,7 @@ label {
   margin-left: 1rem;
 }
 
-.sub-options > button:hover {
-  color: var(--light);
-}
-
-.sub-options > button.selected {
-  color: var(--light);
-}
+/* special button */
 
 .compact-btn, .list-btn {
   margin-left: .1rem !important;
@@ -903,10 +927,6 @@ label {
   
   flex-direction: column;
   text-align: left;
-}
-
-.panel * {
-  color: #e6e6e6;
 }
 
 .panel:not(:last-child), .bottom-outline, .scope-wrapper:not(:last-child) > .panel {
@@ -994,9 +1014,4 @@ label {
 
 .gray-btn:hover {
   background: #585858;
-}
-
-.dark-btn {
-  color: var(--light);
-  background: var(--dark);
 }

@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { session } from '../util/Session.js';
+import Create from '../helper/Create.js';
 
 import Scope from './components/Scope.js';
 import NowPlaying from '../user/NowPlaying.js';
 
-import PlaylistCreator from '../util/PlaylistCreator.js'
 import SpotifyWebApi from 'spotify-web-api-js';
 import Options from '../helper/Options.js';
 import TrackList from '../track/components/TrackList.js';
@@ -27,9 +26,6 @@ class ScopePage extends React.Component {
 
     this.searchType = [["artist"],["track"]];
 
-    this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
-
-    this.createPlaylist = this.createPlaylist.bind(this);
     this.setIndex = this.setIndex.bind(this);
     this.searchCurrent = this.searchCurrent.bind(this);
     this.getRecommendations = this.getRecommendations.bind(this);
@@ -38,14 +34,6 @@ class ScopePage extends React.Component {
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
     this.renderOptions = this.renderOptions.bind(this);
-  }
-
-  // use PlaylistCreator to create playlist from current selected tracklist
-  createPlaylist() {
-    if(this.state.tracks) {
-      this.playlistCreator.setTracks(this.state.tracks);
-      this.playlistCreator.createPlaylist("tonedeaf scope tracks");
-    }
   }
 
   /*  Set the selected search type for scope
@@ -176,11 +164,7 @@ class ScopePage extends React.Component {
           <br/>
         </Options>
 
-        <Options
-          text="Like these tracks?"
-          suboptions={["Create Spotify Playlist"]}
-          subcallback={this.createPlaylist}
-        />
+        <Create text="tonedeaf scope tracks" tracks={this.state.tracks}/>
       </>
     )
   }

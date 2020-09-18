@@ -115,7 +115,7 @@ class App extends React.Component {
       } else {
         this.logout();
       }
-    }, 3e+6) // refresh every fifty minutes
+    }, 2.4e+6) // refresh every fifty minutes
   }
 
   /* remove access token from api and change to sign in screen
@@ -153,6 +153,7 @@ class App extends React.Component {
    */
   renderControl() {
     var portrait = window.matchMedia("only screen and (max-width: 768px)").matches;
+    var showNowPlaying = portrait ? "" : <NowPlaying logout={this.logout}/>; // in sidebar
 
     var top; // only assign if logged in
     var frontpage; // shows front page if not logged in
@@ -161,7 +162,7 @@ class App extends React.Component {
 
       var content; // right side content panels
       var profile = <Profile callback={this.saveUser}/>
-      var showNowPlaying = portrait ? "" : <NowPlaying logout={this.logout}/>; // in sidebar
+      
 
       /*************** REDNDER COMPONENTS BASED ON SELECTED INDEX ***************/
       switch(this.state.selectedIndex) {

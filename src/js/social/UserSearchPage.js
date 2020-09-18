@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { session } from '../util/Session.js';
+import Create from '../helper/Create.js';
+
 
 import Options from '../helper/Options.js';
 import Load from '../helper/Load.js';
@@ -9,7 +10,6 @@ import ArtistList from '../artist/components/ArtistList.js';
 import TrackList from '../track/components/TrackList.js';
 
 import TonedeafService from '../util/TonedeafService.js';
-import PlaylistCreator from '../util/PlaylistCreator.js'
 
 class UserSearchPage extends React.Component {
   constructor(props) {
@@ -23,18 +23,9 @@ class UserSearchPage extends React.Component {
       fetching : true
     }
 
-    this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
-
     this.tonedeafService = new TonedeafService();
 
-    this.createPlaylist = this.createPlaylist.bind(this);
     this.renderControl = this.renderControl.bind(this);
-  }
-
-  // use PlaylistCreator to create playlist if tracks are visible
-  createPlaylist() {
-    this.playlistCreator.setTracks(this.state.tracks);
-    this.playlistCreator.createPlaylist("tonedeaf popular tracks");
   }
 
   // https://stackoverflow.com/a/12646864
@@ -86,11 +77,7 @@ class UserSearchPage extends React.Component {
             <label className="label-small label-italic"> Only artist and track information is saved &mdash; all user data is excluded and remains solely with Spotify. </label>
           </Options>
           { this.state.index === 1 && this.state.tracks &&
-            <Options
-              text="Like these tracks?"
-              suboptions={["Create Spotify Playlist"]}
-              subcallback={this.createPlaylist}
-            />
+            <Create text="tonedeaf favorite tracks" tracks={this.state.tracks}/>
           }
           {this.props.children}
         </div>

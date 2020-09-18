@@ -1,12 +1,10 @@
 import React from 'react';
 
-import { session } from '../util/Session.js';
+import Create from '../helper/Create.js';
 
-import Options from '../helper/Options.js';
 import TrackList from './components/TrackList.js';
 
 import SpotifyWebApi from 'spotify-web-api-js';
-import PlaylistCreator from '../util/PlaylistCreator.js';
 
 const spotifyWebApi = new SpotifyWebApi();
 
@@ -19,22 +17,9 @@ class RecentPage extends React.Component {
       tracks : null
     }
 
-
-    this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
-    
-    this.createPlaylist = this.createPlaylist.bind(this);
     this.setSelectedRange = this.setSelectedRange.bind(this);
     this.getRecentTracks = this.getRecentTracks.bind(this);
   }
-
-  // use PlaylistCreator to create playlist from current selected tracklist
-  createPlaylist() {
-    if(this.state.tracks) {
-      this.playlistCreator.setTracks(this.state.tracks, true);
-      this.playlistCreator.createPlaylist("tonedeaf recent tracks");
-    }
-  }
-  
 
   /*  Set the selected time range for recent artists list
     *    {index} : retrieves range through this.ranges[index]
@@ -80,11 +65,7 @@ class RecentPage extends React.Component {
       <>
         <div className="div-sidebar"> 
 
-          <Options
-            text="Like these tracks?"
-            suboptions={["Create Spotify Playlist"]}
-            subcallback={this.createPlaylist}
-          />
+          <Create text="tonedeaf recent tracks" tracks={this.state.tracks}/>
 
           {this.props.children}
         </div>

@@ -23,18 +23,18 @@ class Track extends React.Component {
   }
   
   render() {
+    // if rank is provided, prepend it the title
+    var rank = this.props.rank ? this.props.rank + ". " : "";
+
     if(this.props.compact) {
       return (
         <div className="panel animate-fade noshadow compact">
           <a href={this.props.url} className="link-center">
-            <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>
+            <img className="img--medium" src={this.props.image} alt="track art" title={rank + this.props.title}/>
           </a>
         </div>
       )
     }
-
-    // if rank is provided, prepend it the title
-    var rank = this.props.rank ? this.props.rank + ". " : "";
     
     var button = "";
     var features = "";
@@ -77,7 +77,7 @@ class Track extends React.Component {
       <div className="panel animate-fade">
         <div className="div-track">
           <a href={this.props.url} className="link-center">
-            <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>
+            <img className="img--medium" src={this.props.image} alt="track art"/>
           </a>
           <div className="info">
             <label className="label-medium label-bold"> {rank} {this.props.title} </label>

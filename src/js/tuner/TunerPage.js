@@ -4,12 +4,13 @@ import { session } from '../util/Session.js';
 
 import Options from '../helper/Options.js';
 import Load from '../helper/Load.js';
+import Create from '../helper/Create.js';
+
 import GenreSelect from './components/GenreSelect.js';
 import AttributeSelect from './components/AttributeSelect.js';
 import TrackList from '../track/components/TrackList.js';
 
 import SpotifyWebApi from 'spotify-web-api-js';
-import PlaylistCreator from '../util/PlaylistCreator.js';
 
 const spotifyWebApi = new SpotifyWebApi();
   
@@ -46,9 +47,6 @@ class TunerPage extends React.Component {
     
     this.description = <label className="label-small"> Get recommendations based on 3-5 generes and any preferred attributes. </label>
   
-    this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
-    
-    this.createPlaylist = this.createPlaylist.bind(this);
     this.setIndex = this.setIndex.bind(this);
     this.getGenreSeeds = this.getGenreSeeds.bind(this);
     this.genreAdd = this.genreAdd.bind(this);
@@ -56,14 +54,6 @@ class TunerPage extends React.Component {
     this.attributeClick = this.attributeClick.bind(this);
     this.getRecommendations = this.getRecommendations.bind(this);
     this.getRecParams = this.getRecParams.bind(this);
-  }
-  
-  // use PlaylistCreator to create playlist from current selected tracklist
-  createPlaylist() {
-    if(this.state.tracks) {
-      this.playlistCreator.setTracks(this.state.tracks);
-      this.playlistCreator.createPlaylist("tonedeaf tuner tracks");
-    }
   }
   
 
@@ -241,11 +231,8 @@ class TunerPage extends React.Component {
           subcallback={() => { this.setState({ index: 0, tracks : null, selectedGenres : [] })}} > 
           {this.description}
         </Options>
-        <Options
-          text="Like these tracks?"
-          suboptions={["Create Spotify Playlist"]}
-          subcallback={this.createPlaylist}
-        />
+        <Create text="tonedeaf tuner tracks" tracks={this.state.tracks}/>
+
       </>
     )
   }
