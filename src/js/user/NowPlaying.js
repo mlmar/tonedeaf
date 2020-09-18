@@ -44,6 +44,7 @@ class NowPlaying extends React.Component {
     this.skip = this.skip.bind(this);
 
     this.setUpArtificialTimer = this.setUpArtificialTimer.bind(this);
+    this.renderDisplay = this.renderDisplay.bind(this);
   }
 
   // if no track is currently playing, show the lat played track
@@ -123,9 +124,8 @@ class NowPlaying extends React.Component {
         /*** not really a good solutions but will workout later ***/
         // if access token is no longer valid log the user out
         // if rate limiting has been applied log user out
-        if(error.status === 429) { 
-          //window.location.replace(this.props.logout);
-          console.error("Rate limiting has been applied");
+        if(error.status === 429 && this.props.logout) { 
+          this.props.logout();
         }
       });
   }
@@ -248,8 +248,8 @@ class NowPlaying extends React.Component {
     if(this.timer) clearInterval(this.timer);
     if(this.artificialTimer) clearInterval(this.artificialTimer);
   }
-  
-  render() {
+
+  renderDisplay() {
     var display = "";
 
     if(this.props.full) {
@@ -265,8 +265,8 @@ class NowPlaying extends React.Component {
             </a>
 
             <div className="nowplaying-info">
-              <label className="label-large song-title"> {this.state.playing.title} </label>
-              <label className="label-sublarge"> {this.artistsToString(this.state.playing.artist)} </label>
+              <label className="label-large song-title label-bold"> {this.state.playing.title} </label>
+              <label className="label-sublarge label-bold"> {this.artistsToString(this.state.playing.artist)} </label>
             </div>
           </div>
           {controls}
@@ -279,26 +279,33 @@ class NowPlaying extends React.Component {
             <img className="img" src={this.state.playing.image} width="70" alt="Album art not found"/>
           </a>
           <div className="nowplaying-info">
-            <label className="label-medium"> {this.state.playing.title} </label>
+            <label className="label-medium label-bold"> {this.state.playing.title} </label>
             <label className="label-small"> {this.artistsToString(this.state.playing.artist)} </label>
           </div>
           <span ref={this.controls}/>
         </React.Fragment>
       )
     }
+
+    return display;
+  }
+  
+  render() {
     
     var searchButton = this.props.searchCurrent && this.state.playing.is_playing ? 
-      <button className="option-btn glass-btn" onClick={() => this.props.searchCurrent(this.state.playing.item)}> 
+      <button className="gray-btn glass-btn" title="Scope current artist and track" onClick={() => this.props.searchCurrent(this.state.playing.item)}> 
         <img src={glassIcon} className="glass-icon" alt="glass-icon"/> 
-      </button> : "";
+      </button> : null;
       
+    var fade = this.props.full ? "animate-fade" : null;
+
     return (
-      <div className="panel animate-fade">
-        <span className="nowplaying-search">
-          <label className="label-subtitle"> {this.state.labelText} </label>
+      <div className={"panel " + fade}>
+        <span className={"nowplaying-search"}>
+          <label className="label-subtitle label-bold"> {this.state.labelText} </label>
           {searchButton}
         </span>
-        {display}
+        {this.renderDisplay()}
       </div>
     )
   }

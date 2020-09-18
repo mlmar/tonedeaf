@@ -78,8 +78,8 @@ class UserSearchPage extends React.Component {
           <Options
             horizontal
             text="User Favorties"
-            options={["Artists","Tracks"]}
-            callback={i => this.setState({ index : i})}
+            suboptions={["Artists","Tracks"]}
+            subcallback={i => this.setState({ index : i})}
           >
             <label className="label-small"> View number one artists and tracks from other tonedeaf users. </label>
             <br/>
@@ -88,8 +88,8 @@ class UserSearchPage extends React.Component {
           { this.state.index === 1 && this.state.tracks &&
             <Options
               text="Like these tracks?"
-              options={["Create Spotify Playlist"]}
-              callback={this.createPlaylist}
+              suboptions={["Create Spotify Playlist"]}
+              subcallback={this.createPlaylist}
             />
           }
           {this.props.children}

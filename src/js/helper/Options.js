@@ -5,56 +5,69 @@ import React from 'react';
  *    {this.props.description} : description text
  *    {this.props.options} : array of option text for buttons
  *    {this.props.callback} : onClick with button id as an arg
+ *    {this.props.callback} : onClick with subbutton id as an arg
  *
  */
 class Options extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      index : 0
+      index : 0,
+      subindex : 0
     };
 
     this.optionClick = this.optionClick.bind(this);
+    this.subOptionClick = this.subOptionClick.bind(this);
   }
 
   // detect which button was clicked and pass index to callback prop function
   optionClick(event) {
-    var tempIndex;
-    if(event.target.tagName === "BUTTON") {
-      for (var i = 0; i < event.currentTarget.childNodes.length; i++) {
-        var li = event.currentTarget.childNodes[i];
+    var id = parseFloat(event.target.id);
+    this.setState({ index : id })
+    if(this.props.callback) this.props.callback(id);
+  }
 
-        // select the child that matches the button that was pressed
-        if (event.target === li) {
-          tempIndex = i;
-        }
-      }
-      
-      this.setState({index : tempIndex})
-      if(this.props.callback) this.props.callback(tempIndex);
-    }
+  subOptionClick(event) {
+    var id = parseFloat(event.target.id);
+    this.setState({ subindex : id })
+    if(this.props.subcallback) this.props.subcallback(id);
   }
   
   render() {
     var horizontal = this.props.horizontal ? "horizontal" : null;
-    var classes = this.props.nopanel ? "" : "panel";
+    var classes = this.props.nopanel ? null : "panel";
 
     return (
       <div className={classes}>
-        { this.props.text &&
-          <label className="label-subtitle"> {this.props.text} </label>
-        }
-        {this.props.children}
-        <div className={"div-options " + horizontal} onClick={this.optionClick}>
-          {
+
+        <span className="options-bar">
+          <label className="label-medium label-bold"> 
+            {this.props.text} 
+          </label>
+          { this.props.suboptions &&
+            <span className="sub-options">
+              { 
+                this.props.suboptions.map((option, j) => {
+                  var subclasses = (j === this.state.subindex) && this.props.suboptions.length > 1 ? "selected" : null;
+                  var compact = (option === "compact") ? "compact-btn" : null;
+                  var list = (option === "list") ? "list-btn" : null;
+                  var text = !(option === "list" || option === "compact") ? option : null;
+                  return <button className={subclasses + " " + compact + " " + list} id={j} key={j} onClick={this.subOptionClick}> {text} </button>
+                })
+              }
+            </span>
+          }
+        </span>
+        <div className={"main-options " + horizontal}>
+          { this.props.options &&
             this.props.options.map((option, i) => {
-              var classes = (i === this.state.index) && this.props.options.length > 1 ? "option-btn option-btn--selected" : "option-btn" ;
-              return (
-                <button className={classes} key={i}> {option} </button>
-              )
+              var classes = (i === this.state.index) && this.props.options.length > 1 ? "selected" : null;
+              return <button className={classes} id={i} key={i} onClick={this.optionClick}> {option} </button>
             })
           }
         </div>
+        {this.props.children && <br/>}
+        {this.props.children}
       </div>
     )
   }

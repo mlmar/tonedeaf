@@ -112,7 +112,7 @@ class Scope extends React.Component {
         </div>
 
         <div className="bottom-outline divider">
-          <button className="option-btn scope-btn animate-drop" onClick={() => this.get()}> Get Recommendations </button>
+          <button className="gray-btn scope-btn animate-drop" onClick={() => this.get()}> Get Recommendations </button>
         </div>
       </>
     )

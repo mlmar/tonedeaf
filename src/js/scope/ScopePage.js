@@ -168,16 +168,18 @@ class ScopePage extends React.Component {
   renderOptions() {
     return (
       <>
-        <Options horizontal text="Scope" options={["Edit Preferences"]}
-          callback={() => { this.setState({ index: 0, tracks : null })}} > 
+        <Options
+          text="Scope"
+          suboptions={["Edit Search"]}
+          subcallback={() => { this.setState({ index: 0, tracks : null })}} > 
           {this.description}
           <br/>
         </Options>
 
         <Options
           text="Like these tracks?"
-          options={["Create Spotify Playlist"]}
-          callback={this.createPlaylist}
+          suboptions={["Create Spotify Playlist"]}
+          subcallback={this.createPlaylist}
         />
       </>
     )
@@ -194,12 +196,10 @@ class ScopePage extends React.Component {
             <Options 
               horizontal
               text="Scope"
-              options={["Artists","Tracks"]}
-              callback={this.setIndex}
+              suboptions={["Artists","Tracks"]}
+              subcallback={this.setIndex}
             >
               {this.description}
-              <br/>
-              <label className="label-small label-bold"> Search Type: </label>
             </Options>
           }
           {this.state.tracks && this.renderOptions()}

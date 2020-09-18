@@ -50,7 +50,7 @@ class App extends React.Component {
                         "Recent",
                         "Tuner",
                         "Scope",
-                        "Users"
+                        "User Favorites"
                       ],
 
       selectedIndex : 0, // selected nav element
@@ -161,7 +161,7 @@ class App extends React.Component {
 
       var content; // right side content panels
       var profile = <Profile callback={this.saveUser}/>
-      var showNowPlaying = portrait ? "" : <NowPlaying/>; // in sidebar
+      var showNowPlaying = portrait ? "" : <NowPlaying logout={this.logout}/>; // in sidebar
 
       /*************** REDNDER COMPONENTS BASED ON SELECTED INDEX ***************/
       switch(this.state.selectedIndex) {
@@ -171,7 +171,7 @@ class App extends React.Component {
             <>
               <div className="div-sidebar"> {profile} </div>
               <div className="div-panels">
-                <NowPlaying full/>
+                <NowPlaying full logout={this.logout}/>
               </div>
             </>
           break;

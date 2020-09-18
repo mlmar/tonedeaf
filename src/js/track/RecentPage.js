@@ -82,8 +82,8 @@ class RecentPage extends React.Component {
 
           <Options
             text="Like these tracks?"
-            options={["Create Spotify Playlist"]}
-            callback={this.createPlaylist}
+            suboptions={["Create Spotify Playlist"]}
+            subcallback={this.createPlaylist}
           />
 
           {this.props.children}

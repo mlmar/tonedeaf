@@ -57,17 +57,17 @@ class Profile extends React.Component {
   render() {    
     return (
       <div className="panel div-profile animate-fade">
-        <label className="label-subtitle"> {this.state.display_name} </label>
+        <label className="label-subtitle label-bold"> {this.state.display_name} </label>
         { this.state.image &&
           <a href={this.state.uri} className="link-center">
             <img className="img" src={this.state.image} width="70" alt="Profile not found"/>
           </a>
         }
         <div className="div-profile--info">
-          <label className="label-small label-bold"> 
+          <label className="label-small"> 
             {this.state.product.toUpperCase()} {this.state.type.toUpperCase()} 
           </label>
-          <label className="label-small label-bold label-right"> {this.state.followers} followers </label>
+          <label className="label-small label-right"> {this.state.followers} followers </label>
         </div>
       </div>
     )

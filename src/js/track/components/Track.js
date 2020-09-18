@@ -80,7 +80,7 @@ class Track extends React.Component {
             <img className="img--medium" src={this.props.image} width="100" height="100" alt="track art"/>
           </a>
           <div className="info">
-            <label className="label-medium"> {rank} {this.props.title} </label>
+            <label className="label-medium label-bold"> {rank} {this.props.title} </label>
             <label className="label-small"> {this.props.artist} </label>
             <br/>
             <label className="label-small"> {this.props.album} &#124; {this.props.year} </label>

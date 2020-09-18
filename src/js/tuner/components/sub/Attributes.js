@@ -12,8 +12,8 @@ class Attributes extends React.Component {
             {this.props.attribute} ({this.props.min} to {this.props.max})
           </label>
         </a>
-        <label className="label-small label-bold"> {this.props.desc} </label>
-        
+        <label className="label-small"> {this.props.desc} </label>
+        <br/>
         <div>
           <div className="label side">
             <label className="label-small grid-60-40"> minimum <span className="label-bold"> {this.props.defaultMin} </span> </label>

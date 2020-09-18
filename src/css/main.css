@@ -1,10 +1,10 @@
 /****************** ELEMENT DEFAULTS ******************/
 
 :root {
-  --bg-dark: #212121;
-  --bg-darker: #131313;
-  --bg-light: #efefef;
-  --bg-outline: rgb(232 232 232 / 14%);
+  --dark: #212121;
+  --darker: #131313;
+  --light: #efefef;
+  --outline: rgb(232 232 232 / 14%);
 
   --btn: #9d9d9d; 
   --btn-alt: #5f5f5f;
@@ -102,7 +102,9 @@ img {
 /****************** ICON ******************/
 
 .glass-btn {
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .glass-btn img {
@@ -177,7 +179,7 @@ img {
   height: .4rem;
   align-self: center;
   border-radius: 100rem;
-  background: var(--bg-light);
+  background: var(--light);
   animation: load 1s infinite;
   animation-fill-mode: both;
   animation-direction: alternate;
@@ -250,7 +252,7 @@ img {
 /********* LABELS *********/
 
 label {
-  color: var(--bg-light);
+  color: var(--light);
 }
 
 .label-super {
@@ -261,34 +263,28 @@ label {
 
 .label-tiny {
   font-size: .7em;
-  font-weight: bold;
 }
 
 
 .label-title {
   font-size: 1.4em;
-  font-weight: 500;
 }
 
 .label-subtitle {
   font-size: 1.4rem;
-  font-weight: bold;
 }
 
 
 .label-large {
   font-size: 2.4em;
-  font-weight: bold;
 }
 
 .label-sublarge {
   font-size: 1.7em;
-  font-weight: bold;
 }
 
 .label-medium {
   font-size: 1.2rem;
-  font-weight: bolder;
 }
 
 .label-small {
@@ -297,7 +293,6 @@ label {
 
 .label-subtext {
   font-size: 1em;
-  font-weight: bold;
 }
 
 
@@ -348,7 +343,7 @@ label {
 .page {
   display: flex;
   height: 100%;
-  background: var(--bg-darker);
+  background: var(--darker);
   flex-direction: column;
   overflow: hidden;
 }
@@ -368,7 +363,7 @@ label {
 }
 
 .sign {
-  color: var(--bg-light);
+  color: var(--light);
   transition: color 1s ease;
 }
 
@@ -378,8 +373,8 @@ label {
 }
 
 .sign-background {
-  background: var(--bg-dark);
-  border: solid var(--bg-dark);
+  background: var(--dark);
+  border: solid var(--dark);
   border-width: .5rem;
   padding: 0 1rem 0 1rem;
   border-radius: 2rem;
@@ -405,8 +400,8 @@ label {
   height: 3rem;
   width: 100vw;
 
-  padding: 0rem 2rem 0rem 2rem;
-  background: var(--bg-dark);
+  padding: 0 3rem 0 3rem;
+  background: var(--darker);
 }
 
 .top label {
@@ -416,24 +411,23 @@ label {
 .nav {
   display: flex;
   align-items: center;
-  width: 100%;
-  margin: 0 0 0 5vw;
   height: 100%;
-  width: 100vw;
+  width: 100%;
 }
 
 .nav-buttons {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+  padding: 0 7vw 0 7vw;
   width: 100%;
 }
 
 .nav-buttons > button, .log-btn {
   min-height: 1.5em;
-  min-width: 7vw;
+  min-width: min-content;
   padding: .2rem;
   margin: .3rem .5vw .3rem .5vw;
-  color: #ffffff;
+  color: gray;
   background: none;
 
   font-size: .85em;
@@ -441,11 +435,19 @@ label {
   border: none;
   border-width: .2rem !important;
 
-  transition: all .2s;
+  transition: all .3s;
 }
 
 .nav-buttons > .selected {
-  box-shadow: 0 3px 1px -2px white;
+  color: var(--light);
+}
+
+.nav-buttons > button:hover, .log-btn:hover {
+  color: var(--light);
+}
+
+.log-btn {
+  width: min-content
 }
 
 /********* DIVS *********/
@@ -454,7 +456,7 @@ label {
   display: flex;
   height: 100%;
   width: 100%;
-  background: var(--bg-darker);
+  background: var(--darker);
 
   flex: 1 1;
 
@@ -462,7 +464,7 @@ label {
 }
 
 .div-content label {
-  color: var(--bg-light);
+  color: var(--light);
 }
 
 
@@ -473,7 +475,7 @@ label {
   overflow: overlay;
   overflow-x: hidden;
   align-items: center;
-  background: var(--bg-darker);
+  background: var(--darker);
 }
 
 .div-sidebar {
@@ -561,7 +563,7 @@ label {
 }
 
 .info-btn:hover {
-  color: var(--bg-light) !important;
+  color: var(--light) !important;
   transition: color .5s ease !important;
 }
 
@@ -622,7 +624,7 @@ label {
 
 .nowplaying-search button {
   border-radius: 2rem;
-  min-height: 1.5rem;
+  height: 1.5rem;
   width: 4rem;
   margin: 0;
 }
@@ -681,7 +683,7 @@ label {
   font-size: .7rem;
   font-weight: 900;
   color: #ffffff;
-  background: var(--bg-dark);
+  background: var(--dark);
   transition: all .5s;
   margin: .1rem 0 .1rem 0;
 }
@@ -723,6 +725,7 @@ label {
 }
 
 .tuner-btn {
+  height: 1.8rem !important;
   margin: 1rem 0rem 0rem 0rem !important;
 }
 
@@ -738,6 +741,7 @@ label {
 }
 
 .scope-btn {
+  height: 2rem !important;
   margin: -1rem 0rem 2rem 0rem !important;
 }
 
@@ -754,8 +758,8 @@ label {
   border-radius: 1rem;
   font-size: .7rem;
   font-weight: 100;
-  color: var(--bg-light);
-  background: var(--bg-dark);
+  color: var(--light);
+  background: var(--dark);
   transition: all .5s;
   width: 2.5em;
   height: 2.5em;
@@ -805,26 +809,33 @@ label {
 
 /********* OPTIONS *********/
 
-.div-options.horizontal {
+.options-bar {
+  display: flex;
+}
+
+.main-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-options.horizontal {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
 
-.div-options.horizontal button:not(:last-child) {
-  margin-right: .5rem;
-}
-
-.option-btn {
+.main-options > button, .sub-options > button {
   display: flex;
-  width: 100%;
-  color: var(--bg-light);
-  background: var(--bg-dark);
+  height: 100%;
+  width: min-content;
+  color: var(--light);
+  background: none;
+  color: gray;
 
-  padding: .4rem 0 .4rem 0;
   margin: .3rem 0 .3rem 0;
 
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 
   border: none;
   border-radius: .3rem;
@@ -833,17 +844,52 @@ label {
   font-weight: 100;
 
   transition: all .3s;
+  white-space: nowrap;
 }
 
-.option-btn:hover {
-  background: var(--btn);
-  color: #ffffff;
+.main-options > button:hover {
+  color: var(--light);
 }
 
-.option-btn:focus, .option-btn--selected {
-  background: var(--btn-alt);
+.main-options > button:focus, .main-options > button.selected {
+  color: var(--light);
 }
 
+.sub-options {
+  display: flex;
+  flex: 1 1;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.sub-options > button:not(:first-child) {
+  margin-left: 1rem;
+}
+
+.sub-options > button:hover {
+  color: var(--light);
+}
+
+.sub-options > button.selected {
+  color: var(--light);
+}
+
+.compact-btn, .list-btn {
+  margin-left: .1rem !important;
+}
+
+.compact-btn::before, .list-btn::before {
+  margin-top: -.5rem;
+  font-size: 1.2rem;
+}
+
+.compact-btn::before {
+  content: "\229E";
+}
+
+.list-btn::before {
+  content: "\229F";
+}
 
 
 /********* PANEL *********/
@@ -864,7 +910,7 @@ label {
 }
 
 .panel:not(:last-child), .bottom-outline, .scope-wrapper:not(:last-child) > .panel {
-  box-shadow: 0 4px 1px -2px var(--bg-outline);
+  box-shadow: 0 4px 1px -2px var(--outline);
 }
 
 .panel.attribute {
@@ -935,8 +981,8 @@ label {
 }
 
 .gray-btn {
-  color: var(--bg-light);
-  background: var(--bg-dark);
+  color: var(--light);
+  background: var(--dark);
   border: none;
   border-radius: .3rem;
   font-size: .9rem;
@@ -951,6 +997,6 @@ label {
 }
 
 .dark-btn {
-  color: var(--bg-light);
-  background: var(--bg-dark);
+  color: var(--light);
+  background: var(--dark);
 }

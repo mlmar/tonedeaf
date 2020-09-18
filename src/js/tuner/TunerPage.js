@@ -43,7 +43,8 @@ class TunerPage extends React.Component {
         ["valence",           0, 1, .1,   0,  1]
       ]
     }
-      
+    
+    this.description = <label className="label-small"> Get recommendations based on 3-5 generes and any preferred attributes. </label>
   
     this.playlistCreator = new PlaylistCreator(session.getCache("user").id);
     
@@ -230,6 +231,24 @@ class TunerPage extends React.Component {
       console.log("CACHE: Retrieved genres from previous state");
     }
   }
+  
+  renderOptions() {
+    return (
+      <>
+        <Options
+          text="Tuner" 
+          suboptions={["Edit Preferences"]}
+          subcallback={() => { this.setState({ index: 0, tracks : null, selectedGenres : [] })}} > 
+          {this.description}
+        </Options>
+        <Options
+          text="Like these tracks?"
+          suboptions={["Create Spotify Playlist"]}
+          subcallback={this.createPlaylist}
+        />
+      </>
+    )
+  }
 
   renderControl() {
     if(this.state.fetching) {
@@ -267,11 +286,9 @@ class TunerPage extends React.Component {
       default:
         break;
     }
-
   }
 
   render() {
-    var description = <label className="label-small"> Get recommendations based on preferred song attributes and up to 5 genres. </label>
     return (
       <>
         <div className="div-sidebar"> 
@@ -280,30 +297,14 @@ class TunerPage extends React.Component {
             <Options
               horizontal
               text="Tuner"
-              options={["Genres", "Attributes"]}
-              callback={this.setIndex}
+              suboptions={["Genres", "Attributes"]}
+              subcallback={this.setIndex}
             >
-              {description}
-              <br/>
-              <label className="label-small label-bold"> Select: </label>
+              {this.description}
             </Options>
           }
 
-          { this.state.tracks &&
-            <>
-              <Options horizontal text="Tuner" options={["Edit Preferences"]}
-                callback={() => { this.setState({ index: 0, tracks : null, selectedGenres : [] })}} > 
-                {description}
-                <br/>
-                </Options>
-              <Options
-                text="Like these tracks?"
-                options={["Create Spotify Playlist"]}
-                callback={this.createPlaylist}
-              />
-            </>
-          }
-
+          { this.state.tracks && this.renderOptions()}
           {this.props.children}
         </div>
 

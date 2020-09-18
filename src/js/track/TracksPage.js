@@ -61,11 +61,7 @@ class TracksPage extends React.Component {
   }
 
   setView(index) {
-    if(index === 0) {
-      this.setState({ compact : true })
-    } else {
-      this.setState({ compact : null })
-    }
+    this.setState({ compact : index === 0 })
   }
  
   /*  Retrieves top tracks based on selectedIndex of range
@@ -240,19 +236,14 @@ class TracksPage extends React.Component {
             text="Your Top Tracks"
             options={["Long Term", "6 Months", "4 Weeks"]}
             callback={this.setSelectedRange}
-          >
-            <Options
-              nopanel
-              horizontal
-              options={["Compact", "Details"]}
-              callback={this.setView}
-            />
-          </Options>
+            suboptions={["compact","list"]}
+            subcallback={this.setView}
+          />
 
           <Options
             text="Like these tracks?"
-            options={["Create Spotify Playlist"]}
-            callback={this.createPlaylist}
+            suboptions={["Create Spotify Playlist"]}
+            subcallback={this.createPlaylist}
           />
           
           <List 

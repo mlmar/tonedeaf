@@ -19,10 +19,10 @@ class List extends React.Component {
     if(this.props.items) {
       return (
         <div className="panel">
-          <label className="label-medium"> {this.props.text} </label>
+          <label className="label-medium label-bold"> {this.props.text} </label>
           {
             keys.map((item, i) => {
-              return <label className="label-small grid-60-40" key={i}> <span className="label-bold"> {keys[i]} </span> {values[i]} </label>
+              return <label className="label-small grid-60-40" key={i}> <span> {keys[i]} </span> {values[i]} </label>
             })
           }
         </div>

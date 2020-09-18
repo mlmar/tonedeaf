@@ -45,11 +45,7 @@ class ArtistsPage extends React.Component {
   }
 
   setView(index) {
-    if(index === 0) {
-      this.setState({ compact : true })
-    } else {
-      this.setState({ compact : null })
-    }
+    this.setState({ compact : index === 0});
   }
 
   /*  Retrieves top artists based on selectedIndex of range
@@ -125,14 +121,9 @@ class ArtistsPage extends React.Component {
             text="Your Top Artists"
             options={["Long Term", "6 Months", "4 Weeks"]}
             callback={this.setSelectedRange}
-          >
-            <Options
-              nopanel
-              horizontal
-              options={["Compact", "Details"]}
-              callback={this.setView}
-            />
-          </Options>
+            suboptions={["compact", "list"]}
+            subcallback={this.setView}
+          />
 
           <List 
             text="Genre Counts" 

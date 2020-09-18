@@ -30,7 +30,7 @@ class GenreSelect extends React.Component {
               })
             }
           </div>
-          <button className="option-btn glass-btn tuner-btn" onClick={this.props.get}> <img src={glassIcon} className="glass-icon" alt="glass-icon"/> </button>
+          <button className="gray-btn glass-btn tuner-btn" onClick={this.props.get}> <img src={glassIcon} className="glass-icon" alt="glass-icon"/> </button>
         </div>
       )
     }
