@@ -244,7 +244,6 @@ class TracksPage extends React.Component {
             buttons={["compact","list"]}
             callback={this.setView}
           />
-          />
           <TrackList
             compact={this.state.compact}
             ranked
