@@ -241,7 +241,7 @@ class TracksPage extends React.Component {
         <div className="div-panels"> 
           <ButtonBar
             highlight
-            buttons={["compact","list"]}
+            buttons={["Compact","List"]}
             callback={this.setView}
           />
           <TrackList

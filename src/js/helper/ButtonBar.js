@@ -23,10 +23,11 @@ class ButtonBar extends React.Component {
       <div className={`${panelClass} button-bar`}>
         {
           this.props.buttons?.map((button, i) => {
+            var b = button.toLowerCase();
             var selectedClass = (i === this.state.index) && this.props.highlight ? "selected" : null;
-            var compact = (button === "compact") ? "compact-btn" : null;
-            var list = (button === "list") ? "list-btn" : null;
-            var text = !(button === "list" || button === "compact") ? button : null;
+            var compact = (b === "compact") ? "compact-btn" : null;
+            var list = (b === "list") ? "list-btn" : null;
+            var text = !(b === "list" || b === "compact") ? button : null;
             return <button className={`${selectedClass} ${compact} ${list}`} id={i} key={i} onClick={this.handleClick} title={button}> {text} </button>
           })
         }

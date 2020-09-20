@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Create from '../helper/Create.js';
-
+import ButtonBar from '../helper/ButtonBar.js';
 import TrackList from './components/TrackList.js';
 
 import SpotifyWebApi from 'spotify-web-api-js';
@@ -14,10 +14,12 @@ class RecentPage extends React.Component {
     super(props);
 
     this.state = {
-      tracks : null
+      tracks : null,
+      compact : true
     }
 
     this.setSelectedRange = this.setSelectedRange.bind(this);
+    this.setView = this.setView.bind(this);
     this.getRecentTracks = this.getRecentTracks.bind(this);
   }
 
@@ -33,6 +35,11 @@ class RecentPage extends React.Component {
     }
 
     this.setState({ selectedRange : range });
+  }
+
+  
+  setView(index) {
+    this.setState({ compact : index === 0 })
   }
 
   /*  Retrieves recent tracks based on selectedIndex of range
@@ -64,14 +71,18 @@ class RecentPage extends React.Component {
     return (
       <>
         <div className="div-sidebar"> 
-
           <Create text="tonedeaf recent tracks" tracks={this.state.tracks}/>
-
           {this.props.children}
         </div>
 
         <div className="div-panels"> 
+          <ButtonBar
+            highlight
+            buttons={["Compact","List"]}
+            callback={this.setView}
+          />
           <TrackList 
+            compact={this.state.compact}
             data={this.state.tracks}
             recent="true"
             loadText="Getting your most recent tracks from Spotify..."

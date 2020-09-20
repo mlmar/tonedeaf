@@ -48,7 +48,7 @@ class Options extends React.Component {
             <span className="sub-options">
               { 
                 this.props.suboptions?.map((option, j) => {
-                  var subclasses = (j === this.state.subindex) ? "selected" : null;
+                  var subclasses = (j === this.state.subindex) && (this.props.suboptions.length > 1) ? "selected" : null;
                   return <button className={subclasses} id={j} key={j} onClick={this.subOptionClick}> {option} </button>
                 })
               }
@@ -56,9 +56,9 @@ class Options extends React.Component {
           }
         </span>
         <div className={"main-options " + horizontal}>
-          { this.props.options &&
-            this.props.options.map((option, i) => {
-              var classes = (i === this.state.index) && this.props.options.length > 1 ? "selected" : null;
+          {
+            this.props.options?.map((option, i) => {
+              var classes = (i === this.state.index) && (this.props.options.length > 1) ? "selected" : null;
               return <button className={classes} id={i} key={i} onClick={this.optionClick}> {option} </button>
             })
           }
