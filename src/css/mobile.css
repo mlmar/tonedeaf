@@ -217,6 +217,10 @@
     font-size: .9rem; 
   }
 
+  .compact-btn::before, .list-btn::before {
+    font-size: 1.6rem;
+  }
+
   /****************** ICON ******************/
 
   .glass-btn img {
