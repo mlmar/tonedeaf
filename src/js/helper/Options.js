@@ -47,12 +47,9 @@ class Options extends React.Component {
           { this.props.suboptions &&
             <span className="sub-options">
               { 
-                this.props.suboptions.map((option, j) => {
-                  var subclasses = (j === this.state.subindex) && this.props.suboptions.length > 1 ? "selected" : null;
-                  var compact = (option === "compact") ? "compact-btn" : null;
-                  var list = (option === "list") ? "list-btn" : null;
-                  var text = !(option === "list" || option === "compact") ? option : null;
-                  return <button className={subclasses + " " + compact + " " + list} id={j} key={j} onClick={this.subOptionClick}> {text} </button>
+                this.props.suboptions?.map((option, j) => {
+                  var subclasses = (j === this.state.subindex) ? "selected" : null;
+                  return <button className={subclasses} id={j} key={j} onClick={this.subOptionClick}> {option} </button>
                 })
               }
             </span>

@@ -3,6 +3,7 @@ import React from 'react';
 import { session } from '../util/Session.js';
 
 import Options from '../helper/Options.js';
+import ButtonBar from '../helper/ButtonBar.js';
 import List from '../helper/List.js';
 import ArtistList from './components/ArtistList.js';
 
@@ -154,8 +155,6 @@ class ArtistsPage extends React.Component {
             text="Your Top Artists"
             options={["Long Term", "6 Months", "4 Weeks"]}
             callback={this.setSelectedRange}
-            suboptions={["compact", "list"]}
-            subcallback={this.setView}
           />
 
           <List 
@@ -164,13 +163,18 @@ class ArtistsPage extends React.Component {
             text="Genre Counts" 
             items={this.state.genreCounts[this.state.selectedRange]}
           >
-            <label className="label-small"> Select to filter artist by genre. </label> 
+            <label className="label-small"> Select to filter artists by genre. </label> 
           </List>
 
           {this.props.children}
         </div>
 
         <div className="div-panels"> 
+            <ButtonBar
+              highlight
+              buttons={["compact", "list"]}
+              callback={this.setView}
+            />
           <ArtistList compact={this.state.compact} ranked data={this.state.selected} loadText="Getting your top artists from Spotify..."/>
         </div>
       </>

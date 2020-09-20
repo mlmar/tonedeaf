@@ -836,6 +836,12 @@ label {
   display: flex;
 }
 
+.options-bar > label {
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
 .main-options {
   display: flex;
   flex-direction: column;
@@ -848,7 +854,8 @@ label {
 }
 
 .main-options > button, 
-.sub-options > button {
+.sub-options > button,
+.button-bar > button {
   display: flex;
   height: 100%;
   width: min-content;
@@ -869,6 +876,7 @@ label {
 
   transition: all .3s;
   white-space: nowrap;
+  text-decoration: underline;
 }
 
 .hoverable > * {
@@ -877,15 +885,16 @@ label {
 
 .main-options > button:hover,
 .sub-options > button:hover,
+.button-bar > button:hover,
 .hoverable:hover > * {
   color: var(--light);
   cursor: pointer;
   transition: all .3s;
 }
 
-.main-options > button:focus, 
 .main-options > button.selected,
 .sub-options > button.selected,
+.button-bar > button.selected,
 .hoverable.selected * {
   color: var(--light);
 }
@@ -901,24 +910,33 @@ label {
   margin-left: 1rem;
 }
 
+.button-bar {
+  flex-direction: row !important;
+  padding-bottom: 1rem !important;
+}
+
+.button-bar > * {
+  margin-right: 2rem;
+}
+
 /* special button */
 
 .compact-btn, .list-btn {
-  margin-left: .1rem !important;
+  color: transparent;
+  height: min-content !important;
 }
 
 .compact-btn::before, .list-btn::before {
-  margin-top: -.5rem;
-  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  overflow: hidden;
+  width: 90%;
 }
 
-.compact-btn::before {
-  content: "\229E";
-}
-
-.list-btn::before {
-  content: "\229F";
-}
+.compact-btn::before { content: "\229E"; }
+.list-btn::before { content: "\229F"; }
 
 
 /********* PANEL *********/

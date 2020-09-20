@@ -4,6 +4,7 @@ import Create from '../helper/Create.js';
 
 
 import Options from '../helper/Options.js';
+import ButtonBar from '../helper/ButtonBar.js';
 import Load from '../helper/Load.js';
 
 import ArtistList from '../artist/components/ArtistList.js';
@@ -20,12 +21,18 @@ class UserSearchPage extends React.Component {
       artists : null,
       tracks : null,
       user : null,
-      fetching : true
+      fetching : true,
+      compact : true
     }
 
     this.tonedeafService = new TonedeafService();
-
+    this.setView = this.setView.bind(this);
     this.renderControl = this.renderControl.bind(this);
+  }
+
+  
+  setView(index) {
+    this.setState({ compact : index === 0 })
   }
 
   // https://stackoverflow.com/a/12646864
@@ -54,9 +61,9 @@ class UserSearchPage extends React.Component {
   renderControl() {
     switch(this.state.index) {
       case 0:
-        return <ArtistList data={this.state.artists} loadText="Getting artists..."/>
+        return <ArtistList compact={this.state.compact} data={this.state.artists} loadText="Getting artists..."/>
       case 1:
-        return <TrackList data={this.state.tracks} loadText="Getting tracks..."/>
+        return <TrackList compact={this.state.compact} data={this.state.tracks} loadText="Getting tracks..."/>
       default:
         return <Load text="Why are you here?"/>
     }
@@ -68,11 +75,11 @@ class UserSearchPage extends React.Component {
         <div className="div-sidebar">
           <Options
             horizontal
-            text="User Favorties"
+            text="Number Ones"
             suboptions={["Artists","Tracks"]}
             subcallback={i => this.setState({ index : i})}
           >
-            <label className="label-small"> View number one artists and tracks from other tonedeaf users. </label>
+            <label className="label-small"> Whenever someone uses Tonedeaf, their number one artists and tracks are added to this collection. </label>
             <br/>
             <label className="label-small label-italic"> Only artist and track information is saved &mdash; all user data is excluded and remains solely with Spotify. </label>
           </Options>
@@ -83,6 +90,11 @@ class UserSearchPage extends React.Component {
         </div>
 
         <div className="div-panels">
+          <ButtonBar
+            highlight
+            buttons={["compact","list"]}
+            callback={this.setView}
+          />
           {this.renderControl()}
         </div>
         

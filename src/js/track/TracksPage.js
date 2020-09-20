@@ -3,6 +3,7 @@ import React from 'react';
 import { session } from '../util/Session.js';
 
 import Options from '../helper/Options.js';
+import ButtonBar from '../helper/ButtonBar.js';
 import List from '../helper/List.js';
 import Create from '../helper/Create.js';
 import TrackList from './components/TrackList.js';
@@ -225,8 +226,6 @@ class TracksPage extends React.Component {
             text="Your Top Tracks"
             options={["Long Term", "6 Months", "4 Weeks"]}
             callback={this.setSelectedRange}
-            suboptions={["compact","list"]}
-            subcallback={this.setView}
           />
 
           <Create text="tonedeaf top tracks" tracks={this.state.tracks[this.state.selectedRange]}/>
@@ -240,6 +239,12 @@ class TracksPage extends React.Component {
         </div>
 
         <div className="div-panels"> 
+          <ButtonBar
+            highlight
+            buttons={["compact","list"]}
+            callback={this.setView}
+          />
+          />
           <TrackList
             compact={this.state.compact}
             ranked
