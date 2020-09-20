@@ -932,7 +932,7 @@ label {
   justify-content: center;
   font-size: 1.3rem;
   overflow: hidden;
-  width: 90%;
+  text-decoration: none !important;
 }
 
 .compact-btn::before { content: "\229E"; }
