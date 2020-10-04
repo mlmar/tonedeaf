@@ -27,8 +27,9 @@ class ButtonBar extends React.Component {
             var selectedClass = (i === this.state.index) && this.props.highlight ? "selected" : null;
             var compact = (b === "compact") ? "compact-btn" : null;
             var list = (b === "list") ? "list-btn" : null;
-            var text = !(b === "list" || b === "compact") ? button : null;
-            return <button className={`${selectedClass} ${compact} ${list}`} id={i} key={i} onClick={this.handleClick} title={button}> {text} </button>
+            b = (b === "compact") ? "Grid" : b;
+            b = (b === "list") ? "Details" : b;
+            return <button className={`${selectedClass} ${compact} ${list}`} id={i} key={i} onClick={this.handleClick} title={button}> {b} </button>
           })
         }
       </div>

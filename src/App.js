@@ -186,7 +186,7 @@ class App extends React.Component {
           break;
 
         case 3: /*** Recent Tracks, time ranges, playlist creator ***/
-          content =  <RecentPage> {showNowPlaying} </RecentPage>;
+          content =  <RecentPage> {showNowPlaying} </RecentPage>
           break;
         
         case 4: /*** Tuner, Genres/Attributes options, playlist creator ***/
