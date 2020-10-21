@@ -207,6 +207,7 @@ class TunerPage extends React.Component {
 
       min_valence           : this.state.attributes[12][4],
       max_valence           : this.state.attributes[12][5]
+      
     }
     return(params);
   }
@@ -265,6 +266,10 @@ class TunerPage extends React.Component {
           </>
         )
       case 2:
+        if(this.state.tracks.length === 0) {
+          return <Load text="If this doesn't work, the Spotify servers might not be working correctly right now."/>
+        }
+
         return (
           <TrackList
             data={this.state.tracks}
