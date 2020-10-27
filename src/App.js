@@ -50,7 +50,7 @@ class App extends React.Component {
                         "Recent",
                         "Tuner",
                         "Scope",
-                        "Number Ones"
+                        // "Number Ones"
                       ],
 
       selectedIndex : 0, // selected nav element
