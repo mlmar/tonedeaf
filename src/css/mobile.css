@@ -38,7 +38,7 @@
     left: 0;
     z-index: 99;
 
-    padding: .5rem 1rem .5rem 1rem;
+    padding: .5rem 2rem .5rem 2rem;
     min-height: 0 !important;
 
     overflow: hidden;
@@ -242,7 +242,7 @@
   }
 
   .label-title {
-    font-size: 1.8em;
+    font-size: 1.5em;
     font-weight: 500;
   }
 
