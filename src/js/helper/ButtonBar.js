@@ -29,7 +29,7 @@ class ButtonBar extends React.Component {
             var list = (b === "list") ? "list-btn" : null;
             b = (b === "compact") ? "Grid" : b;
             b = (b === "list") ? "Details" : b;
-            return <button className={`${selectedClass} ${compact} ${list}`} id={i} key={i} onClick={this.handleClick} title={button}> {b} </button>
+            return <button className={`${selectedClass} ${compact} ${list}`} id={i} key={i} onClick={this.handleClick} title={b}> {b} </button>
           })
         }
       </div>
