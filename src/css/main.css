@@ -68,9 +68,9 @@ img {
 }
 
 .img--medium {
-  width: 7em;
-  height: 7em;
-  align-self: center;
+    height:100%;
+    object-fit: cover;
+    overflow: hidden;
 }
 
 .img--small {
@@ -519,6 +519,11 @@ label {
   grid-template-columns: 30% 70%;
   grid-gap: .3rem;
   width: 100%;
+}
+
+.div-track .link-center {
+  width: 7rem;
+  height: 7rem;
 }
 
 .features {
