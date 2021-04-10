@@ -5,8 +5,7 @@ const download = require('downloadjs');
 const options = {
   style : {
     background: "#131313",
-  },
-  pixelRatio: 1
+  }
 }
 
 const saveImage = async (listRef, name) => {
