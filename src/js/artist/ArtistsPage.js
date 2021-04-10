@@ -182,7 +182,7 @@ class ArtistsPage extends React.Component {
             highlight
             buttons={["compact", "list"]}
             callback={this.setView}
-            rightButtons={this.listRef && this.state.compact ? ["Save As Image"] : null}
+            // rightButtons={this.listRef && this.state.compact ? ["Save As Image"] : null}
             rightCallback={this.save}
           />
           <ArtistList 

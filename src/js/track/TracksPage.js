@@ -249,7 +249,7 @@ class TracksPage extends React.Component {
             highlight
             buttons={["Compact","List"]}
             callback={this.setView}
-            rightButtons={this.listRef && this.state.compact ? ["Save As Image"] : null}
+            // rightButtons={this.listRef && this.state.compact ? ["Save As Image"] : null}
             rightCallback={this.save}
           />
           <TrackList

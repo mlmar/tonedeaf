@@ -17,7 +17,6 @@
 - Built in ReactJS
 - Uses Node express server for auth flow [provided by spotify](https://developer.spotify.com/documentation/web-api/quick-start/)
 - Uses Spotify Web Api JS [by Jose Perez](https://github.com/JMPerez/spotify-web-api-js/)
-- Uses downloadjs and html-to-image to save images of artists/tracks list
 - Hosted through Vercel at https://tonedeaf.vercel.app
 
 
