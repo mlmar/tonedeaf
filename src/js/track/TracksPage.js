@@ -8,9 +8,8 @@ import List from '../helper/List.js';
 import Create from '../helper/Create.js';
 import TrackList from './components/TrackList.js';
 
+import saveImage from '../util/ImageSaver.js'
 import SpotifyWebApi from 'spotify-web-api-js';
-
-
 const spotifyWebApi = new SpotifyWebApi();
 
 
@@ -34,6 +33,9 @@ class TracksPage extends React.Component {
     this.getFeatures = this.getFeatures.bind(this);
     this.getIds = this.getIds.bind(this);
     this.averageFeatures = this.averageFeatures.bind(this);
+
+    this.save = this.save.bind(this);
+    this.listRef = React.createRef();
   }
 
   /*  Set the selected time range for top tracks list
@@ -200,6 +202,10 @@ class TracksPage extends React.Component {
     return keys[number];
   }
 
+  save() {
+    saveImage(this.listRef, "tonedeaf-tracks");
+  }
+
   componentDidMount() {
     var tracksCache = null, featuresCache = null, averageFeaturesCache = null;
     if(session) {
@@ -243,6 +249,8 @@ class TracksPage extends React.Component {
             highlight
             buttons={["Compact","List"]}
             callback={this.setView}
+            rightButtons={this.listRef && this.state.compact ? ["Save As Image"] : null}
+            rightCallback={this.save}
           />
           <TrackList
             compact={this.state.compact}
@@ -250,6 +258,7 @@ class TracksPage extends React.Component {
             data={this.state.tracks[this.state.selectedRange]}
             features={this.state.features[this.state.selectedRange]}
             loadText="Getting your top tracks from Spotify..."
+            divRef={this.listRef}
           />
         </div>
       </>

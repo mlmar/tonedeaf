@@ -15,12 +15,6 @@
   margin: 0;
   padding: 0;
 
-  transition: padding 1s;
-  transition: opacity 1s;
-  transition: color 1s;
-  transition: background 1s;
-  transition: border 1s;
-
   font-family: sans-serif;
   box-sizing: border-box;
 }
@@ -491,9 +485,15 @@ label {
 }
 
 .div-top-artists.compact, .div-top-tracks.compact {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
+  flex-direction: row;
   flex: none;
+  flex-wrap: wrap;
+}
+
+.div-top-artists.compact > .panel, .div-top-tracks.compact > .panel {
+  flex-basis: 20%;
+  height: min-content;
 }
 
 .div-profile--info {
@@ -858,9 +858,9 @@ label {
   justify-content: space-between;
 }
 
-.main-options > button, 
-.sub-options > button,
-.button-bar > button {
+.main-options button, 
+.sub-options button,
+.button-bar button {
   display: flex;
   height: 100%;
   width: min-content;
@@ -887,18 +887,18 @@ label {
   color: gray;
 }
 
-.main-options > button:hover,
-.sub-options > button:hover,
-.button-bar > button:hover,
+.main-options button:hover,
+.sub-options button:hover,
+.button-bar button:hover,
 .hoverable:hover > * {
   color: var(--light);
   cursor: pointer;
   transition: all .3s;
 }
 
-.main-options > button.selected,
-.sub-options > button.selected,
-.button-bar > button.selected,
+.main-options button.selected,
+.sub-options button.selected,
+.button-bar button.selected,
 .hoverable.selected * {
   color: var(--light);
 }
@@ -919,9 +919,19 @@ label {
   padding: 2rem 1rem 1.75rem 1rem !important;
 }
 
-.button-bar > * {
+.button-bar > .left > * {
   margin-right: 1rem !important;
 }
+
+.button-bar > .left {
+  display: flex;
+  width: 100%;
+}
+
+.button-bar > .right {
+  display: flex; 
+}
+
 
 /* special button */
 
@@ -977,7 +987,7 @@ label {
   display: flex;
   height: 100%;
   width: 100%;
-  padding: 1vmax;
+  padding: .8vmax;
   margin: 0;
   overflow: hidden;
 }

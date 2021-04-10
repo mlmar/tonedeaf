@@ -28,7 +28,7 @@ class Track extends React.Component {
 
     if(this.props.compact) {
       return (
-        <div className="panel animate-fade noshadow compact">
+        <div className="panel noshadow compact">
           <a href={this.props.url} className="link-center">
             <img className="img--medium" src={this.props.image} alt="track art" title={rank + this.props.title}/>
           </a>
@@ -74,7 +74,7 @@ class Track extends React.Component {
     }
 
     return (
-      <div className="panel animate-fade">
+      <div className="panel">
         <div className="div-track">
           <a href={this.props.url} className="link-center">
             <img className="img--medium" src={this.props.image} alt="track art"/>

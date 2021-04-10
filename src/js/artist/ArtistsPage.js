@@ -7,6 +7,7 @@ import ButtonBar from '../helper/ButtonBar.js';
 import List from '../helper/List.js';
 import ArtistList from './components/ArtistList.js';
 
+import saveImage from '../util/ImageSaver.js'
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyWebApi = new SpotifyWebApi();
 
@@ -30,6 +31,9 @@ class ArtistsPage extends React.Component {
     this.getTopArtists = this.getTopArtists.bind(this);
     this.countGenres = this.countGenres.bind(this);
     this.filterByGenre = this.filterByGenre.bind(this);
+    
+    this.save = this.save.bind(this);
+    this.listRef = React.createRef();
   }
 
   
@@ -130,6 +134,10 @@ class ArtistsPage extends React.Component {
     }
   }
 
+  save() {
+    saveImage(this.listRef, "tonedeaf-artists");
+  }
+
   componentDidMount() {
     var artistsCache = null, genreCountsCache = null;
     if(session) {
@@ -170,12 +178,20 @@ class ArtistsPage extends React.Component {
         </div>
 
         <div className="div-panels"> 
-            <ButtonBar
-              highlight
-              buttons={["compact", "list"]}
-              callback={this.setView}
-            />
-          <ArtistList compact={this.state.compact} ranked data={this.state.selected} loadText="Getting your top artists from Spotify..."/>
+          <ButtonBar
+            highlight
+            buttons={["compact", "list"]}
+            callback={this.setView}
+            rightButtons={this.listRef && this.state.compact ? ["Save As Image"] : null}
+            rightCallback={this.save}
+          />
+          <ArtistList 
+            compact={this.state.compact} 
+            ranked 
+            data={this.state.selected} 
+            loadText="Getting your top artists from Spotify..." 
+            divRef={this.listRef}
+          />
         </div>
       </>
 

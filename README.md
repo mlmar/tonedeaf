@@ -13,10 +13,11 @@
 - Get recommendations based on selected artists and tracks
 - Ability to save playlists of any tracklist to user's Spotify account
 
-## Framework
+## Framework and Libraries
 - Built in ReactJS
 - Uses Node express server for auth flow [provided by spotify](https://developer.spotify.com/documentation/web-api/quick-start/)
 - Uses Spotify Web Api JS [by Jose Perez](https://github.com/JMPerez/spotify-web-api-js/)
+- Uses downloadjs and html-to-image to save images of artists/tracks list
 - Hosted through Vercel at https://tonedeaf.vercel.app
 
 

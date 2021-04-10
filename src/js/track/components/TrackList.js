@@ -29,7 +29,7 @@ class TrackList extends React.Component {
     
     if(this.props.data) {
       return (
-        <div className={"div-top-tracks " + compact}>
+        <div className={"div-top-tracks " + compact} ref={this.props.divRef}>
           {
             this.props.data.map((t, i) => {
               var track = this.props.recent ? t.track : t; // recent tracks are stored in another json object

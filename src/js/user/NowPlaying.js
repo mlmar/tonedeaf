@@ -20,7 +20,7 @@ class NowPlaying extends React.Component {
         progress : "",
         is_playing : false,
         device : [],
-        item : null
+        item : null,
       },
 
       labelText : "Last Played",
@@ -51,19 +51,19 @@ class NowPlaying extends React.Component {
   getLastPlayed(interval = false) {
     this.spotifyWebApi.getMyRecentlyPlayedTracks()
       .then((response) => {
-        var track = response.items[0].track;
+        var track = response?.items[0].track;
 
         this.setState({
           playing: {
-            artist : track.album.artists,
-            title: track.name,
-            image: track.album.images[0].url,
-            url: track.external_urls.spotify,
-            duration: track.duration_ms,
-            progress : track.progress_ms,
+            artist : track?.album?.artists,
+            title: track?.name,
+            image: track?.album?.images[0]?.url,
+            url: track?.external_urls?.spotify,
+            duration: track?.duration_ms,
+            progress : track?.progress_ms,
             is_playing : false,
             device : "",
-            item: null
+            item: null,
           },
 
           labelText : "Last Played",
@@ -96,15 +96,15 @@ class NowPlaying extends React.Component {
 
           this.setState({
             playing: {
-              artist : response.item.artists,
-              title: response.item.name,
-              image: response.item.album.images[0].url,
-              url: response.item.external_urls.spotify,
-              duration: response.item.duration_ms / 1000, // convert to seconds
-              progress : response.progress_ms / 1000,
-              is_playing : response.is_playing,
-              device : response.device,
-              item : response.item
+              artist : response?.item?.artists,
+              title: response?.item?.name,
+              image: response?.item?.album.images[0].url,
+              url: response?.item?.external_urls.spotify,
+              duration: response?.item?.duration_ms / 1000, // convert to seconds
+              progress : response?.progress_ms / 1000,
+              is_playing : response?.is_playing,
+              device : response?.device,
+              item : response?.item,
             },
 
             labelText : "Now Playing",
@@ -131,6 +131,10 @@ class NowPlaying extends React.Component {
   }
 
   artistsToString(artists) {
+    if(!artists) {
+      return "";
+    }
+
     var result = "";
     for(var i = 0; i < artists.length; i++) {
       result += (i < artists.length - 1) ? artists[i].name + ", " : artists[i].name;
@@ -193,32 +197,12 @@ class NowPlaying extends React.Component {
   }
 
   renderPlayerControls() {
-    if(this.state.playing.is_playing)
+    if(this.state.playing.is_playing);
       return (
         <div className="controls animate-drop">
-          <progress className="progressbar" max={this.state.playing.duration} value={this.state.playing.progress} ref={this.progress}/>
+          <progress className="progressbar" max={this.state.playing.duration || this.state.playing.progress} value={this.state.playing.progress} ref={this.progress}/>
         </div>
       )
-
-    // if(playing.is_playing) {
-    //   return (
-    //     <div className="controls animate-drop">
-    //       <div className="buttons">
-    //         <span className="previous-btn">
-    //           <button onClick={this.previous}> &lt; </button>
-    //         </span>
-    //         <span className="pause-btn">
-    //           <button onClick={this.pause} ref={this.pauseBtn}> {this.pauseText} </button>
-    //         </span>
-    //         <span className="skip-btn">
-    //           <button onClick={this.skip}> &gt; </button>
-    //         </span>
-    //       </div>
-    //       <progress className="progressbar" max="100" value={this.compute()}/>
-    //       <label className="label-subtext"> {this.state.deviceText} {this.state.playing.device.name} </label>
-    //     </div>
-    //   );
-    // }
   }
 
   // increments the progress bar every second to reduce api calls

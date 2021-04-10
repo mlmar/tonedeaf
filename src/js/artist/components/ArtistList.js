@@ -7,6 +7,7 @@ import Load from '../../helper/Load.js';
  *    {this.props.data} : array of artist json objects from Spotify
  */
 class ArtistList extends React.Component {
+
   /*  Iterate through artists array
    *  Pass each artist's attributes to an Artist component
    */
@@ -15,7 +16,7 @@ class ArtistList extends React.Component {
 
     if(this.props.data) {
       return (
-        <div className={"div-top-artists " + compact}>
+        <div className={"div-top-artists " + compact} ref={this.props.divRef}>
           {
             this.props.data.map((artist, i) => {
               return (
