@@ -7,7 +7,6 @@ import ButtonBar from '../helper/ButtonBar.js';
 import List from '../helper/List.js';
 import ArtistList from './components/ArtistList.js';
 
-import saveImage from '../util/ImageSaver.js'
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyWebApi = new SpotifyWebApi();
 
@@ -32,8 +31,6 @@ class ArtistsPage extends React.Component {
     this.countGenres = this.countGenres.bind(this);
     this.filterByGenre = this.filterByGenre.bind(this);
     
-    this.save = this.save.bind(this);
-    this.listRef = React.createRef();
   }
 
   
@@ -134,10 +131,6 @@ class ArtistsPage extends React.Component {
     }
   }
 
-  save() {
-    saveImage(this.listRef, "tonedeaf-artists");
-  }
-
   componentDidMount() {
     var artistsCache = null, genreCountsCache = null;
     if(session) {
@@ -183,7 +176,7 @@ class ArtistsPage extends React.Component {
             buttons={["compact", "list"]}
             callback={this.setView}
             // rightButtons={this.listRef && this.state.compact ? ["Save As Image"] : null}
-            rightCallback={this.save}
+            // rightCallback={this.save}
           />
           <ArtistList 
             compact={this.state.compact} 

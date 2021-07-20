@@ -18,9 +18,6 @@ import TracksPage from './js/track/TracksPage.js';
 import RecentPage from './js/track/RecentPage.js';
 import TunerPage from './js/tuner/TunerPage.js';
 import ScopePage from './js/scope/ScopePage.js';
-import UserSearchPage from './js/social/UserSearchPage.js';
-
-import TonedeafService from './js/util/TonedeafService.js';
 
 // Spotify Web API JS by Jose Perez on github
 // https://github.com/JMPerez/spotify-web-api-js
@@ -42,6 +39,7 @@ class App extends React.Component {
     /********* COMPONENT STATES *********/
     this.state = {
       loggedIn      : false, // true if a token is retrieved
+      demo          : false,
 
       nav           : [ // nav elements
                         "Now Playing", 
@@ -49,14 +47,12 @@ class App extends React.Component {
                         "Tracks", 
                         "Recent",
                         "Tuner",
-                        "Scope",
-                        // "Number Ones"
+                        "Scope"
                       ],
 
       selectedIndex : 0, // selected nav element
     }
 
-    this.tonedeafService = new TonedeafService();
     this.userID = 0; // passed to components that use PlaylistCreator
     
     /********* BINDINGS *********/
@@ -64,6 +60,7 @@ class App extends React.Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.saveUser = this.saveUser.bind(this);
+    this.handleDemoClick = this.handleDemoClick.bind(this);
     this.renderControl = this.renderControl.bind(this);
   }
 
@@ -132,15 +129,10 @@ class App extends React.Component {
     session.setCache("user", "display_name", display);
   }
 
-  /*  callback function to search for recommendations based on the current song
-   *    - called from the nowplaying component when on the Scope page
-   *    - params :
-   *        artistArray : array of artists from spotify response object
-   *        trackId     : id of currently playing track
-   */
-  searchCurrent(artistArray, trackId) {
-    // this.scope.current.externalSearch(artistArray,trackId);
+  handleDemoClick() {
+    this.setState({ demo : true });
   }
+
 
   /*  render components based on selectedIndex
    *    - each case represents a selectedIndex
@@ -158,7 +150,7 @@ class App extends React.Component {
     var top; // only assign if logged in
     var frontpage; // shows front page if not logged in
     
-    if(this.state.loggedIn) {
+    if(this.state.loggedIn || this.state.demo) {
 
       var content; // right side content panels
       var profile = <Profile callback={this.saveUser}/>
@@ -172,7 +164,7 @@ class App extends React.Component {
             <>
               <div className="div-sidebar"> {profile} </div>
               <div className="div-panels">
-                <NowPlaying full logout={this.logout}/>
+                <NowPlaying full logout={this.logout} demo={this.state.demo}/>
               </div>
             </>
           break;
@@ -197,23 +189,19 @@ class App extends React.Component {
           content = <ScopePage></ScopePage>
           break;
         
-        case 6: /*** Social, time ranges, type, playlist creator ***/
-          content = <UserSearchPage> {showNowPlaying} </UserSearchPage>
-          break;
-
         default: /*** show info page if the page breaks ***/
           content = <Info> {showNowPlaying} </Info>
           break;
       }
 
       // construct navbar
-      top = <Nav onClick={this.navClick} nav={this.state.nav} selectedIndex={this.state.selectedIndex} logout={this.logout}/>
+      top = <Nav onClick={this.navClick} nav={this.state.nav} selectedIndex={this.state.selectedIndex} logout={this.logout} demo={this.state.demo}/>
 
       // contruct the front page
       frontpage = <div className="div-content"> {content} </div>
 
     } else {
-      frontpage = <FrontPage return={SYSTEM.LOGIN}/> // show sign in page if nto logged in
+      frontpage = <FrontPage return={SYSTEM.LOGIN} handleDemoClick={this.handleDemoClick}/> // show sign in page if nto logged in
     }
     
     return <> {top} {frontpage} </>

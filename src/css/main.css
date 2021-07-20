@@ -356,13 +356,18 @@ label {
   justify-content: center;
 }
 
+.div-frontpage .text {
+  margin-top: 1rem;
+}
+
+
 .sign {
   font-weight: bolder;
   color: var(--light);
   transition: color 1s ease;
 }
 
-.sign:hover {
+.demo:hover, .sign:hover {
   color: #6fb0ec;
   transition: all 1s ease;
 }
@@ -375,6 +380,7 @@ label {
   border-radius: 2rem;
   text-align: center;
 }
+
 
 .bottom {
   display: flex;

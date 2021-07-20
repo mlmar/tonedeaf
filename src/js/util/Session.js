@@ -1,5 +1,3 @@
-// import TonedeafService from  './TonedeafService';
-
 const INITIAL_CACHE = {
   // user
   user : { display_name : null, id : null },
@@ -28,11 +26,8 @@ class Session {
 
   constructor() {
 
-    // predetermined some caches because i already know what data is coming in
-    //  this step wasn't necessary but i'm just using this for reference
     this._cache = INITIAL_CACHE;
     this._token = null;
-    // this.tonedeafService = new TonedeafService();
   }
 
   // set a cache based on it name and key
@@ -44,11 +39,6 @@ class Session {
     this._cache[cache][key] = value
     console.log("SESSION: setting " + cache + "[" + key + "]");
 
-    // if(cache === "artists") {
-    //   this.tonedeafService.addArtist(value[0]);
-    // } else if(cache === "tracks") {
-    //   this.tonedeafService.addTrack(value[0]);
-    // }
   };
 
   // get a cache
