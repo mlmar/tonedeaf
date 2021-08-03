@@ -1,5 +1,5 @@
 # tonedeaf
-- First version of tonedeaf can be found at github.com/mlmar/tonedeaf-old.git
+- First version of tonedeaf can be found [here](https://github.com/mlmar/tonedeaf-old.git)
 - This is a total rewrite of the original project primarily using functional components, async/await calls, and an updated UI
 
 
