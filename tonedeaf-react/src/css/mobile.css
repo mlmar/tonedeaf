@@ -1,0 +1,204 @@
+@media only screen 
+  and (max-width: 1000px) {
+
+  :root {
+    --side-padding: .5rem;
+  }
+
+  .mobile {
+    display: inherit !important;
+  }
+
+  .desktop {
+    display: none !important;
+  }
+
+  .mobile-flex {
+    flex-direction: column !important;
+  }
+
+  .mobile-flex > *{
+    margin-bottom: var(--side-padding);
+  }
+
+  .super {
+    font-size: 20vw;
+    font-weight: 500;
+  }
+
+  .large {
+    font-size: 1rem;
+  }
+
+  .big {
+    font-size: 1rem;
+  }
+
+  .medium {
+    font-size: .8rem;
+  }
+
+  .small {
+    font-size: .8rem;
+  }
+
+  .tiny {
+    font-size: .7rem;
+  }
+
+  .page {
+    overflow: auto;
+  }
+
+  /*** PAGE AND OPTIONS ***/
+
+  .page .flex .options-panel:not(:last-child) {
+    margin-right: 0 !important;
+  }
+
+  .options-panel .options {
+   flex: 1 1;
+   width: 100%;
+  }
+
+  .options-panel .options button {
+    flex: 1 1;
+  }
+
+  .genres-panel .buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .genres-panel .overflow-true .overflow {
+    display: inherit;
+  }
+
+  .genres-panel .overflow-false .overflow {
+    display: none;
+  }
+
+  .genres-panel > .overflow-btn {
+    margin: var(--side-padding) 0;
+  }
+
+  /*** NAV ***/
+
+  .mobile-options {
+    z-index: 100;
+    flex-direction: column;
+    position: absolute;
+    top: 2.5rem;
+    width: 45%;
+    padding-right: 1rem;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    background:  var(--dark);
+    animation: slide-left .3s ease forwards;
+  }
+
+  .mobile-options button {
+    justify-content: flex-end;
+  }
+
+  .mobile-options ~ .back {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .nav button {
+    height: 2.5rem;
+  }
+
+  .mobile-options .selected {
+    color: var(--active);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  /*** CARDS ***/
+
+  .images {
+    margin-bottom: 2rem;
+  }
+
+  .images .image-wrapper {
+    flex-basis: 20%;
+  }
+
+  .cards > * {
+    margin-bottom: var(--side-padding);
+  }
+  
+  .cards .image-wrapper:not(.icon) {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .cards .description {
+    padding-left: var(--side-padding);
+  }
+
+  
+  .cards .description .large {
+    padding-bottom: .2rem;
+  }
+
+  .cards .description .medium {
+    padding-bottom: .2rem;
+  }
+
+  .cards .image-wrapper.icon {
+    margin-top: .2rem;
+    width: 3.5rem;
+  }
+
+  .track-card button {
+    margin-top: .5rem;
+    height: 1rem;
+    font-size: .8rem;
+  }
+
+  /*** NOW PLAYING ***/
+
+  .now-playing {
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--side-padding);
+    margin-top: var(--side-padding);
+  }
+  
+  .now-playing .image-wrapper {
+    max-width: 100%;
+  }
+  
+  .now-playing .description {
+    padding: var(--side-padding) 0;
+    flex: 1 1;
+  }
+
+  .now-playing .description > *:first-child {
+    font-size: 2rem;
+  }
+
+  
+  .now-playing .description > *:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  .now-playing .icon {
+    width: 6rem;
+  }
+
+
+  @keyframes slide-left {
+    0% { margin-right: -45%; }
+    100% { margin-right: 0 }
+  }
+}

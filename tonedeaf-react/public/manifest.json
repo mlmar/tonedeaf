@@ -1,0 +1,15 @@
+{
+  "short_name": "tonedeaf",
+  "name": "spotify web service",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#212121",
+  "background_color": "#eaeaea",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "300x300",
+      "type": "image/png"
+    }
+  ]
+}
