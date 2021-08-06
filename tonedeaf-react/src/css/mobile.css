@@ -220,6 +220,10 @@
     padding-bottom: .2rem;
   }
 
+  .hover-select:hover::after, .hover-deselect:hover::after {
+    font-size: 5rem;
+  }
+
   @keyframes slide-left {
     0% { margin-right: -45%; }
     100% { margin-right: 0 }
