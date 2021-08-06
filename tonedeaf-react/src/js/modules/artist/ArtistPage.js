@@ -6,12 +6,11 @@ import ImageWrapper from '../ui/ImageWrapper.js';
 import ArtistCard from './ArtistCard.js';
 
 import Load from '../ui/Load.js';
+import { CHECK } from '../../util/IconUtil.js';
 
 const TIME_OPTIONS = ["Long Term", "6 Months", "1 Month"];
 const VIEW_OPTIONS = ["Grid", "List"]
 
-
-const CHECK = <> &#10003; </>;
 
 
 /*

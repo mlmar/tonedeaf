@@ -1,0 +1,1 @@
+export const CHECK = <> &#10003; </>;

@@ -1,8 +1,12 @@
 @media only screen 
   and (max-width: 1000px) {
 
+
+  /*** DEFAULTS ***/
+
   :root {
     --side-padding: .5rem;
+    --padding: .5rem;
   }
 
   .mobile {
@@ -13,11 +17,14 @@
     display: none !important;
   }
 
+  /*** NAV ***/
+
+
   .mobile-flex {
     flex-direction: column !important;
   }
 
-  .mobile-flex > *{
+  .mobile-flex > *:not(:last-child) {
     margin-bottom: var(--side-padding);
   }
 
@@ -61,8 +68,12 @@
    width: 100%;
   }
 
-  .options-panel .options button {
+  .gray-btn {
     flex: 1 1;
+  }
+
+  .gray-btnbutton:hover:not(.selected) {
+    background: var(--inactive);
   }
 
   .genres-panel .buttons {
@@ -107,6 +118,7 @@
     left: 0;
     height: 100%;
     width: 100%;
+    z-index: 99;
   }
 
   .nav button {
@@ -151,11 +163,11 @@
   }
 
   .cards .description .medium {
-    padding-bottom: .2rem;
+    padding-bottom: .1rem;
   }
 
   .cards .image-wrapper.icon {
-    margin-top: .2rem;
+    margin-top: .1rem;
     width: 3.5rem;
   }
 
@@ -196,6 +208,17 @@
     width: 6rem;
   }
 
+  .now-playing-widget .image-wrapper:not(.icon) {
+    width: 6rem;
+  }
+
+  .now-playing-widget .icon {
+    width: 3.5rem;
+  }
+
+  .now-playing-widget .big {
+    padding-bottom: .2rem;
+  }
 
   @keyframes slide-left {
     0% { margin-right: -45%; }

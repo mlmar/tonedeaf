@@ -14,6 +14,8 @@
   --hover: rgb(211, 211, 211);
 
   --side-padding: 2rem;
+  --padding: 1rem;
+  --border-radius: 1rem;
 }
 
 
@@ -160,6 +162,28 @@ label, p {
   background: gray;
 }
 
+
+/*** GRAY BUTTON ***/
+
+.gray-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 9rem;
+  height: 1.8rem;
+  background: var(--inactive-btn);
+  transition: background .5s ease;
+}
+
+
+.gray-btn:hover:not(.selected) {
+  background: var(--hover);
+}
+
+.round {
+  border-radius: var(--border-radius);
+}
+
 /*** IMAGE ***/
 
 .image-wrapper {
@@ -168,6 +192,7 @@ label, p {
   height: fit-content;
   align-items: center;
   color: var(--fg);
+  justify-content: center;
 }
 
 .image-wrapper > img {
@@ -187,29 +212,14 @@ label, p {
 }
 
 .options-panel .medium {
-  padding: 0 0 1rem 0;
+  padding-bottom: var(--padding);
 }
 
 .options-panel .options {
   display: flex;
   width: min-content;
-  border-radius: 1rem;
+  border-radius: var(--border-radius);
   overflow: hidden;
-}
-
-.options-panel .options button {
-  display:flex;
-  align-items: center;
-  justify-content: center;
-  width: 9rem;
-  height: 1.8rem;
-  background: var(--inactive-btn);
-  transition: background .5s ease;
-}
-
-
-.options-panel .options button:hover:not(.selected) {
-  background: var(--hover);
 }
 
 .options-panel .options .selected {
@@ -423,8 +433,9 @@ label, p {
   max-width: 40%;
 }
 
-.now-playing .description {
-  padding: 0 0 0 2rem;
+.now-playing .description,
+.now-playing-widget .description {
+  padding: 0 0 0 var(--side-padding);
   flex: 1 1;
 }
 
@@ -434,6 +445,27 @@ label, p {
 
 .now-playing .icon {
   width: 10rem;
+}
+
+.now-playing-widget .title {
+  padding-bottom: var(--padding);
+}
+
+.now-playing-widget .image-wrapper:not(.icon) {
+  width: 8rem;
+}
+
+.now-playing-widget .icon {
+  width: 6rem;
+  margin-right: var(--side-padding);
+}
+
+.now-playing-widget span {
+  display: flex;
+}
+
+.now-playing-widget button {
+  margin-bottom: var(--padding);
 }
 
 /*** PAGE ***/
@@ -608,6 +640,7 @@ label, p {
 
 .images.selected .image-wrapper {
   flex-basis: 20%;
+  background: black;
 }
 
 .hover-select, .hover-deselect {

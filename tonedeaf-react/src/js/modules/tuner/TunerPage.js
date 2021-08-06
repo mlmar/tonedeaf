@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { cache } from '../../util/Session.js';
 import { fetchSeeds } from '../../util/DataUtil.js';
-import { getAttributes, getAttributeRecs, createPlaylist } from "../../util/SpotifyUtil.js";
+import { getDefaultAttributes, getParamAttributes, getAttributeRecs, createPlaylist } from "../../util/SpotifyUtil.js";
+import { isEqual } from '../../util/ObjectUtil.js';
 
 import Options from '../ui/Options.js';
 import Alert from '../ui/Alert.js';
@@ -9,10 +10,13 @@ import AttributeInput from './AttributeInput.js';
 import TrackCard from '../track/TrackCard.js';
 
 import Load from '../ui/Load.js';
+import { CHECK } from '../../util/IconUtil.js';
 
 const VIEW_OPTIONS = ["Attributes", "Recommendations"];
 const VIEW_OPTIONS_TEMP = ["Attributes"];
-const CHECK = <> &#10003; </>;
+const PLAYLIST_OPTIONS = ["Create Playlist", "Reroll"]
+
+const DEFAULT_ATTRIBUTES = getDefaultAttributes();
 
 /*
   Users can select up to 5 genres and edit preferred track attributes to get song recommendations
@@ -20,26 +24,20 @@ const CHECK = <> &#10003; </>;
 const TunerPage = () => {
   const [viewIndex, setViewIndex] = useState(0);
   const [genreSeeds, setGenreSeeds] = useState(null);
-  const [attributes, setAttributes] = useState(null);
+
+  const [attributes, setAttributes] = useState(getParamAttributes());
+  const [prevAttributes, setPrevAttributes] = useState(null);
+
   const [selected, setSelected] = useState(new Set());
+  const [prevSelected, setPrevSelected] = useState(null);
+  
   const [tracks, setTracks] = useState(null);
 
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertText, setAlertText] = useState("Playlist Created");
 
-  const attributeParams = useRef({});
-  
-  // get list of genres
-  useEffect(() => {
-    const fetch = async () => {
-      const seeds = await fetchSeeds();
-      setGenreSeeds(seeds);
-    }
 
-    fetch();
-    setAttributes(getAttributes());
-  }, [])
-
+  // display demo message
   useEffect(() => {
     if(cache["demo"]) {
       setAlertText("Sign in to use this feature");
@@ -47,27 +45,57 @@ const TunerPage = () => {
       return;
     }
   }, []);
+  
+  // get list of genres
+  useEffect(() => {
+    const fetch = async () => {
+      const seeds = await fetchSeeds();
+      setGenreSeeds(seeds);
+    }
+    
+    fetch();
+  }, []);
 
+  const handleAlertClick = () => {
+    setAlertVisible(false);
+  }
+  
   // if user tries to view results, fetch them from Spotify
   const handleViewClick = (index) => {
     if(index === 1 && cache["demo"]) {
       setAlertVisible(true);
       return;
     }
-
+    
     setViewIndex(index);
-
-    if(index === 1) {
-      const fetchResults = async () => {
-        let _selected = [];
-        selected?.forEach((genre) => {
-          _selected.push(genre);
-        });
-        const recs = await getAttributeRecs(_selected, attributeParams.current);
-        setTracks(recs);
-      }
-      fetchResults();
+    
+    const equalSets = (selected?.size === prevSelected?.size) && ([...selected].every((elem) => prevSelected?.has(elem)));
+    const equalAttributes = isEqual(attributes, prevAttributes);
+    console.warn(equalAttributes);
+    if(index === 1 && (!equalSets || !equalAttributes)) {
+      setPrevSelected(selected);
+      setPrevAttributes(attributes);
+      getRecommendations();
     }
+  }
+
+  const handlePlaylistOptions = async (index) => {
+    if(index === 0) {
+      const id = cache["userInfo"]?.id;
+      const response = await createPlaylist(id, "tonedeaf tuner tracks", tracks);
+      if(response) setAlertVisible(true);
+    } else {
+      getRecommendations();
+    }
+  }
+  
+  const getRecommendations = async () => {
+    let _selected = [];
+    selected?.forEach((genre) => {
+      _selected.push(genre);
+    });
+    const recs = await getAttributeRecs(_selected, attributes);
+    setTracks(recs);
   }
 
   /*
@@ -89,21 +117,15 @@ const TunerPage = () => {
   /*
     - callback function to be passed to AttributeInput component 
     - if user changes any of the input ranges for the attributes, save both min and max
-    * this is also called upon initialization of the AttributeInput component so attributeParams.current is filled by default
+    - prevent the max from ever being lower than the min
   */
-  const handleAttributeChange = (id, min, max) => {
-    attributeParams.current["min_" + id] = min;
-    attributeParams.current["max_" + id] = max;
-  }
-
-  const handleCreatePlaylist = async () => {
-    const id = cache["userInfo"]?.id;
-    const response = await createPlaylist(id, "tonedeaf tuner tracks", tracks);
-    if(response) setAlertVisible(true);
-  }
-
-  const handleAlertClick = () => {
-    setAlertVisible(false);
+  const handleAttributeChange = (id, value, type) => {
+    setAttributes((prev) => {
+      const temp = {...prev};
+      if(type === "max") {temp["max_" + id] = value;}
+      if(type === "min" || temp["max_" + id] < temp["min_" + id]) temp["min_" + id] = value;
+      return temp;
+    })
   }
 
   const getGenreButton = (genre) => {
@@ -126,7 +148,13 @@ const TunerPage = () => {
             </Options>
             <hr/>
             <Options title="Edit your preferred song attributes" description="Choose the minimum and maximum ranges for specific attributes">
-              { attributes?.map((attribute) => <AttributeInput {...attribute} onChange={handleAttributeChange} key={attribute.id}/>)}
+              { DEFAULT_ATTRIBUTES?.map((attr) => 
+                <AttributeInput {...attr} 
+                  userMin={attributes["min_" + attr.id]} 
+                  userMax={attributes["max_" + attr.id]} 
+                  onChange={handleAttributeChange} 
+                  key={attr.id}/>
+              )}
             </Options>
           </>
         )
@@ -151,7 +179,7 @@ const TunerPage = () => {
       <div className="flex mobile-flex">
         <Options title="View" options={selected.size ? VIEW_OPTIONS : VIEW_OPTIONS_TEMP} onClick={handleViewClick} index={viewIndex}/>
         { (tracks && viewIndex === 1) &&
-          <Options title="Like These Tracks?" options={["Create Playlist"]} onClick={handleCreatePlaylist}/>
+          <Options title="Like These Tracks?" options={PLAYLIST_OPTIONS} onClick={handlePlaylistOptions}/>
         }
       </div>
       { (viewIndex === 0) &&

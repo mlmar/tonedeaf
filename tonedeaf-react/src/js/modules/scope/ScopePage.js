@@ -7,56 +7,95 @@ import Alert from '../ui/Alert.js';
 import ImageWrapper from '../ui/ImageWrapper.js';
 import ArtistCard from '../artist/ArtistCard.js';
 import TrackCard from '../track/TrackCard.js';
+import NowPlaying from '../user/NowPlaying.js';
 
 import Load from '../ui/Load.js';
 
 const VIEW_OPTIONS = ["Search", "Recommendations"];
 const VIEW_OPTIONS_TEMP = ["Search"];
 const SEARCH_OPTIONS = ["Artists", "Tracks"]
-const TIME = 500;
 
+const PLAYLIST_OPTIONS = ["Create Playlist", "Reroll"];
+const PLAYLIST_OPTIONS_TEMP = ["Create Playlist"];
+
+const SEARCH_TIMEOUT = 500;
 
 /*
-  Find song recommendations by choosing a combination of >5 artists/tracks
+Find song recommendations by choosing a combination of >5 artists/tracks
 */
 const Scope = () => {
   const [viewIndex, setViewIndex] = useState(0);
   const [searchIndex, setSearchIndex] = useState(0);
   const [searchResults, setSearchResults] = useState(null);
   const [selected, setSelected] = useState([]);
+  const [prevSeleected, setPrevSelected] = useState(null);
   const [tracks, setTracks] = useState(null);
   
   const [searchInput, setSearchInput] = useState("");
-
+  
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertText, setAlertText] = useState("Playlist Created");
-
+  
   const searchTimer = useRef(null);
+  const nowPlayingTrack = useRef(null); // store currently playing track
+  
+  useEffect(() => {
+    if(cache["demo"]) {
+      setAlertText("Sign in to use this feature");
+      setAlertVisible(true);
+      setSearchResults([]);
+      return;
+    }
+  }, []);
 
   // create playlist with track ids
-  const handleCreatePlaylist = async () => {
-    const id = cache["userInfo"]?.id;
-    const response = await createPlaylist(id, "tonedeaf scope tracks", tracks);
-    if(response) setAlertVisible(true);
-  }
-
+  
   const handleAlertClick = () => {
     setAlertVisible(false);
   }
-
-
+  
+  
   // When a search option is pressed, set the appropriate search type
   const handleSearchClick = (index) => {
     setSearchIndex(index);
   }
-
+  
   const handleViewClick = (index) => {
     setViewIndex(index);
-    if(index === 1) getRecommendations();
+    if(index === 1 && selected !== prevSeleected) {
+      setPrevSelected(selected);
+      getRecommendations();
+    }
+  }
+  
+  const handlePlaylistOptions = async (index) => {
+    if(index === 0) {
+      const id = cache["userInfo"]?.id;
+      const response = await createPlaylist(id, "tonedeaf scope tracks", tracks);
+      if(response) setAlertVisible(true);
+    } else {
+      getRecommendations();
+    }
+  }
+
+  const handleNowPlaying = (track) => {
+    nowPlayingTrack.current = { ...track, type: "track"};
+  }
+
+  const handleFindMore = async () => {
+    if(cache["demo"]) return;
+
+    const artistIDS = [nowPlayingTrack.current?.artistID];
+    const trackIDS = [nowPlayingTrack.current?.trackID];
+
+    const _tracks = await getSearchRecs(artistIDS, trackIDS);
+    setTracks(_tracks);
+    setViewIndex(1);
+    setSelected([]);
   }
 
   /*
-    Upon getting recomendations
+  Upon getting recomendations
     - set an invalid search index to disable highlighting on the option panel
     - set the rec view index
     - set the tracks
@@ -64,8 +103,15 @@ const Scope = () => {
   const getRecommendations = async () => {
     setViewIndex(1);
 
-    let ids = selected.map((sel) => sel?.id);
-    const _tracks = await getSearchRecs(ids);
+    let artistIDS = [];
+    let trackIDS = [];
+
+    selected.forEach((sel) => {
+      if(sel?.type === "artist") artistIDS.push(sel?.id);
+      if(sel?.type === "track") trackIDS.push(sel?.id);
+    });
+
+    const _tracks = await getSearchRecs(artistIDS, trackIDS);
     setTracks(_tracks);
   }
 
@@ -89,14 +135,6 @@ const Scope = () => {
     setSelected((prev) => prev.filter((fil) => fil.id !== info?.id));
   }
 
-  useEffect(() => {
-    if(cache["demo"]) {
-      setAlertText("Sign in to use this feature");
-      setAlertVisible(true);
-      setSearchResults([]);
-      return;
-    }
-  }, []);
 
   // every time user input changes or search type is changed, perform the search
   useEffect(() => {
@@ -122,7 +160,7 @@ const Scope = () => {
           cache["search"][value + searchIndex] = _searchResults;
           setSearchResults(_searchResults);
           console.log("Cacheing search")
-        }, TIME);
+        }, SEARCH_TIMEOUT);
       }
     }
 
@@ -160,9 +198,13 @@ const Scope = () => {
 
     let res = null;
     if(searchIndex === 0) {
-      res = searchResults?.map((artist,i) => <ArtistCard {...artist} className="hover-select" onClick={handleSelect} rank={i+1} key={artist?.name + i} norank/>)
+      res = searchResults?.map((artist, i) => 
+        selected.find((item) => item.id === artist.id) ? 
+          null : <ArtistCard {...artist} className="hover-select" onClick={handleSelect} rank={i+1} key={artist?.name + i} norank/>)
     } else if(searchIndex === 1) { 
-      res = searchResults?.map((track, i) => <TrackCard {...track} className="hover-select" onClick={handleSelect} rank={i+1} key={track?.name + i} norank/>)
+      res = searchResults?.map((track, i) => selected.find((item) => 
+        item.id === track.id) ? 
+          null : <TrackCard {...track} className="hover-select" onClick={handleSelect} rank={i+1} key={track?.name + i} norank/>)
     }
 
     return (
@@ -177,9 +219,12 @@ const Scope = () => {
   const getView = () => {
     let view = null;
     switch(viewIndex) {
-      default: // display search bar
+      default: // display now playing widget and search bar
         view = (
           <>
+            <NowPlaying onChange={handleNowPlaying} widget>
+              <button className="gray-btn bold round" onClick={handleFindMore}> Find More Like This </button>
+            </NowPlaying>
             <hr/>
             <label className="medium bold"> Find song recommendations based on a combination of up to 5 artists and tracks. </label>
             <input className="search medium" type="text" placeholder={"Search for " + SEARCH_OPTIONS[searchIndex]} value={searchInput} onChange={handleSearchChange} autoFocus/>
@@ -212,7 +257,7 @@ const Scope = () => {
       <div className="flex mobile-flex">
         <Options title="View" options={selected.length ? VIEW_OPTIONS : VIEW_OPTIONS_TEMP} onClick={handleViewClick} index={viewIndex}/>
         { (viewIndex === 0) && <Options title="Search For" options={SEARCH_OPTIONS} onClick={handleSearchClick} index={searchIndex}/> }
-        { (tracks && viewIndex === 1) && <Options title="Like These Tracks?" options={["Create Playlist"]} onClick={handleCreatePlaylist}/> }
+        { (tracks && viewIndex === 1) && <Options title="Like These Tracks?" options={selected.length ? PLAYLIST_OPTIONS : PLAYLIST_OPTIONS_TEMP} onClick={handlePlaylistOptions}/> }
       </div>
       {getView()}
     </div>

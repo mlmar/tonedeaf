@@ -2,12 +2,18 @@ import { useState, useEffect, useRef } from 'react';
 
 import { fetchNowPlaying } from '../../util/DataUtil.js';
 import ImageWrapper from '../ui/ImageWrapper.js';
-
-import ICON from "../../../icons/SpotifyGreen.png";
+import Load from '../ui/Load.js';
+import ICON from '../../../icons/SpotifyGreen.png';
 
 const TIME = 10000;
 
-const NowPlaying = ({ onLogout }) => {
+/*
+  Displays currently playing track or last played track
+
+  widget    :   compact widget for scope page
+  onChange  :   on track change, the track is passed as argument
+*/
+const NowPlaying = ({ widget, onChange, children }) => {
   const [track, setTrack] = useState(null);
   const fetchInterval = useRef(null);
 
@@ -22,29 +28,59 @@ const NowPlaying = ({ onLogout }) => {
       if(mounted.current) setTrack(response);
     }
     
-    fetch();
-    
-    fetchInterval.current = setInterval(fetchNowPlaying, TIME)
+    fetch(); // initial fetch
+    fetchInterval.current = setInterval(fetch, TIME) // fetch track every interval
     return () => {
       mounted.current = false;
       clearInterval(fetchInterval.current);
     }
-  }, [onLogout])
+  }, [])
 
-  return (
-    <div className="now-playing">
-      { track &&
-        <>
-            <ImageWrapper className="art" src={track?.image} alt={track?.title}  title={track?.title} nohover/>
+  useEffect(() => {
+    if(onChange && track) onChange(track);
+  }, [onChange, track])
+
+  if(!widget) {
+    return (
+      <div className="now-playing">
+        { track ? (
+            <>
+              <ImageWrapper src={track?.image} alt={track?.title}  title={track?.title} nohover/>
+              <div className="description flex-col">
+                <label className="large bold"> {track?.title} </label>
+                <label className="big bold"> {track?.artists?.join(", ")} </label>
+                <div className="flex-col flex-fill flex-reverse"> <ImageWrapper className="icon" src={ICON} title={`Open ${track?.name} in Spotify`} url={track?.url} nohover/> </div>
+              </div>
+            </>
+          ) : (
+            <Load/>
+          )
+        }
+      </div>
+    )
+  } else {
+    return (
+      track?.playing === true ? (
+        <div className="now-playing-widget flex-col">
+          <label className="bold medium title"> Now Playing </label>
+          <span>
+            {children}
+          </span>
+          <div className="flex">
+            <ImageWrapper src={track?.image} alt={track?.title}  title={track?.title} nohover/>
             <div className="description flex-col">
-              <label className="large bold"> {track?.title} </label>
-              <label className="big bold"> {track?.artists?.join(", ")} </label>
+              <label className="big bold"> {track?.title} </label>
+              <label className="medium"> {track?.artists?.join(", ")} </label>
               <div className="flex-col flex-fill flex-reverse"> <ImageWrapper className="icon" src={ICON} title={`Open ${track?.name} in Spotify`} url={track?.url} nohover/> </div>
             </div>
-        </>
-      }
-    </div>
-  )
+          </div>
+        </div>
+      ) : (
+        null
+      )
+    )
+  }
+
 }
 
 export default NowPlaying;

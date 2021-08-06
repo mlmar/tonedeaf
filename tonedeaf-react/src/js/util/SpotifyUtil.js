@@ -39,6 +39,8 @@ export const getNowPlaying = async () => {
     progress: null,
     url: null,
     playing: null,
+    artistID: null,
+    trackID: null
   }
 
   try {
@@ -52,9 +54,11 @@ export const getNowPlaying = async () => {
       track["progress"] = response.progress_ms / 1000; // convert to seconds;
       track["url"] = response.item?.uri;
       track["playing"] = response.is_playing;
+      track["artistID"] = response.item?.artists?.[0]?.id;
+      track["trackID"] = response.item?.id
 
       if(DEV) console.log(track);
-      
+
       return track;
       
     } else {
@@ -269,26 +273,27 @@ export const createPlaylist = async (id, text, tracks, recent) => {
   }
 }
 
-export const getAttributes = () => {
+const attributesArray = [
+  ["Acousticness",      "acousticness",     0, 1, .1,   0, 1],
+  ["Danceabilitiy",     "danceabilitiy",    0, 1, .1,   0, 1],
+  ["Energy",            "energy",           0, 1, .1,   0, 1],
+  ["Instrumentalness",  "instrumentalness", 0, 1, .1,   0, .5],
+  ["Key",               "key",              0, 10, 1,   0, 10],
+  ["Liveness",          "liveness",         0, 1, .1,   0, .5],
+  ["Loudness",          "loudness",       -80, 80, 1, -60, 30],
+  ["Minor/Major",       "mode",             0, 1, 1,    1,  1],
+  ["Popularity",        "popularity",       0, 100, 1,  0,  100],
+  ["Speechiness",       "speechiness",      0, 1, .1,   0,  .3],
+  ["Tempo",             "tempo",            0, 200, 1,  0,  150],
+  ["Time signature",    "time_signature",   0, 10, 1,   0,  8],
+  ["Valence",           "valence",          0, 1, .1,   0,  1]
+];
+
+export const getDefaultAttributes = () => {
   // [ attribute, id, min, max, step, defaultMin, defaultMax ]
-  const info = [
-    ["Acousticness",      "acousticness",     0, 1, .1,   0, 1],
-    ["Danceabilitiy",     "danceabilitiy",    0, 1, .1,   0, 1],
-    ["Energy",            "energy",           0, 1, .1,   0, 1],
-    ["Instrumentalness",  "instrumentalness", 0, 1, .1,   0, .5],
-    ["Key",               "key",              0, 10, 1,   0, 10],
-    ["Liveness",          "liveness",         0, 1, .1,   0, .5],
-    ["Loudness",          "loudness",       -80, 80, 1, -60, 30],
-    ["Minor/Major",       "mode",             0, 1, 1,    1,  1],
-    ["Popularity",        "popularity",       0, 100, 1,  0,  100],
-    ["Speechiness",       "speechiness",      0, 1, .1,   0,  .3],
-    ["Tempo",             "tempo",            0, 200, 1,  0,  150],
-    ["Time signature",    "time_signature",   0, 10, 1,   0,  8],
-    ["Valence",           "valence",          0, 1, .1,   0,  1]
-  ];
 
   const attributes = [];
-  info.forEach((attribute) => {
+  attributesArray.forEach((attribute) => {
     const attributesObj = {
       name: attribute[0],
       id: attribute[1],
@@ -303,6 +308,15 @@ export const getAttributes = () => {
   });
 
   return attributes;
+}
+
+export const getParamAttributes = () => {
+  const params = {};
+  getDefaultAttributes().forEach((attribute) => {
+    params["min_" + attribute.id] = attribute.defaultMin;
+    params["max_" + attribute.id] = attribute.defaultMax;
+  });
+  return params;
 }
 
 export const getGenreSeeds = async () => {
@@ -352,9 +366,9 @@ export const search = async (value, searchIndex) => {
   }
 }
 
-export const getSearchRecs = async (ids) => {
+export const getSearchRecs = async (artistIDS, trackIDS) => {
   try {
-    const params = { seed_artists : ids, limit : 50 };
+    const params = { seed_artists : artistIDS, seed_tracks : trackIDS, limit : 50 };
     const response = await spotifyWebApi.getRecommendations(params);
 
     if(DEV) console.log(response?.tracks);

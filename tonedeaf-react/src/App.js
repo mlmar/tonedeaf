@@ -71,7 +71,7 @@ const App = () => {
   const getContent = () => {
     switch(navIndex) {
       case 0:
-        return <NowPlaying onLogout={logout}/>
+        return <NowPlaying/>
       case 1:
         return <ArtistPage/>
       case 2:
