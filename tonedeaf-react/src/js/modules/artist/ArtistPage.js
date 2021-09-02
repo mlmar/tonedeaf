@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { fetchArtistsAndGenres } from '../../util/DataUtil.js';
 
 import Options from "../ui/Options.js";
@@ -25,6 +25,8 @@ const ArtistPage = () => {
   const [selectedGenre, setSelectedGenre] = useState("all");
 
   const [overflowVisible, setOverflowVisible] = useState(false);
+
+  const gridRef = useRef(null);
 
   // get list of top artists
   useEffect(() => {
@@ -85,7 +87,7 @@ const ArtistPage = () => {
     switch(viewIndex) {
       default: // display grid view by default
         view = (
-          <div className="images">
+          <div className="images" ref={gridRef}>
             { filteredArtists?.map((artist,i) => 
               <ImageWrapper 
                 src={artist?.images?.[0]?.url} 

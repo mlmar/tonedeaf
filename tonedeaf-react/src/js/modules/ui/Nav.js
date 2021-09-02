@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { HOME_URL } from '../../util/System.js';
 
 /*
   Navigation bar ui element
@@ -11,6 +12,10 @@ import { useState } from 'react';
 */
 const Nav = ({ index, setIndex, options, text, onLogout }) => {
   const [mobileButtonsVisible, setMobileButtonsVisible] = useState(false);
+
+  useEffect(() => {
+    window.history.replaceState(null, "tonedeaf", HOME_URL);
+  }, [index])
 
   const setNavIndex = (event) => {
     if(setIndex) setIndex(parseInt(event.target.id));
