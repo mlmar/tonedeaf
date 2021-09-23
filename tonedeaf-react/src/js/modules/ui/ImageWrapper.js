@@ -6,8 +6,8 @@
   {nohover} : disables hover zoom css
 */
 const ImageWrapper = ({ src, alt, title, width, url, className, onClick, nohover, id}) => {
-  const handleClick = () => {
-    if(onClick) onClick();
+  const handleClick = (event) => {
+    if(onClick) onClick(event);
   }
 
   const css = "image-wrapper " + (nohover ? "" : "hover pointer ") + (className || "");

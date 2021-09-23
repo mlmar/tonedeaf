@@ -12,7 +12,6 @@ const TIME_OPTIONS = ["Long Term", "6 Months", "1 Month"];
 const VIEW_OPTIONS = ["Grid", "List"]
 
 
-
 /*
   Displays list of users top artists from a selected time range
 */

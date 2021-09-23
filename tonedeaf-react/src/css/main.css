@@ -474,7 +474,7 @@ label, p {
   display: flex;
   flex-direction: column;
   flex: 1 1;
-  overflow: overlay;
+  overflow: auto;
   background: var(--dark);
 }
 
