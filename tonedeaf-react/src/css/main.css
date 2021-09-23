@@ -585,7 +585,7 @@ label, p {
 /*** ATTRIBUTES ***/
 
 .attribute {
-  margin: 1rem 0;
+  margin: 1.2rem 0;
 }
 
 .attribute .flex {
@@ -593,7 +593,7 @@ label, p {
 }
 
 .attribute .description label {
-  margin-bottom: 1rem;
+  margin-bottom: .5rem;
 }
 
 .attribute .slider-label {

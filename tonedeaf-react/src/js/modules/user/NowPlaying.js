@@ -42,21 +42,18 @@ const NowPlaying = ({ widget, onChange, children }) => {
 
   if(!widget) {
     return (
-      <div className="now-playing">
-        { track ? (
-            <>
-              <ImageWrapper src={track?.image} alt={track?.title}  title={track?.title} nohover/>
-              <div className="description flex-col">
-                <label className="large bold"> {track?.title} </label>
-                <label className="big bold"> {track?.artists?.join(", ")} </label>
-                <div className="flex-col flex-fill flex-reverse"> <ImageWrapper className="icon" src={ICON} title={`Open ${track?.name} in Spotify`} url={track?.url} nohover/> </div>
-              </div>
-            </>
-          ) : (
-            <Load/>
-          )
-        }
-      </div>
+      track ? (
+        <div className="now-playing">
+          <ImageWrapper src={track?.image} alt={track?.title}  title={track?.title} nohover/>
+          <div className="description flex-col">
+            <label className="large bold"> {track?.title} </label>
+            <label className="big bold"> {track?.artists?.join(", ")} </label>
+            <div className="flex-col flex-fill flex-reverse"> <ImageWrapper className="icon" src={ICON} title={`Open ${track?.name} in Spotify`} url={track?.url} nohover/> </div>
+          </div>
+        </div>
+      ) : (
+        <Load/>
+      )
     )
   } else {
     return (
