@@ -500,7 +500,7 @@ label, p {
 .cards {
   display: flex;
   flex-direction: column;
-  flex: 1 1;
+  flex: 1 0;
 }
 
 .cards > * {
@@ -508,7 +508,7 @@ label, p {
 }
 
 .cards .description {
-  flex: 1 1;
+  flex: 1 0;
   padding-left: 5rem;
 }
 
