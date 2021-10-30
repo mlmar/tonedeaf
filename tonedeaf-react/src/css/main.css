@@ -310,8 +310,8 @@ label, p {
 
 .main {
   display: flex;
-  flex-direction: column;
   flex: 1 1;
+  flex-direction: column;
   overflow: hidden;
 }
 
@@ -500,7 +500,7 @@ label, p {
 .cards {
   display: flex;
   flex-direction: column;
-  flex: 1 0;
+  flex: 1 1;
 }
 
 .cards > * {
@@ -586,6 +586,7 @@ label, p {
 
 .attribute {
   margin: 1.2rem 0;
+  flex-shrink: 0;
 }
 
 .attribute .flex {

@@ -14,7 +14,7 @@ const Nav = ({ index, setIndex, options, text, onLogout }) => {
   const [mobileButtonsVisible, setMobileButtonsVisible] = useState(false);
 
   useEffect(() => {
-    window.history.replaceState(null, "tonedeaf", HOME_URL);
+    // window.history.replaceState(null, "tonedeaf", HOME_URL);
   }, [index])
 
   const setNavIndex = (event) => {

@@ -20,8 +20,9 @@
   /*** NAV ***/
 
 
-  .mobile-flex {
+  .mobile-flex, .genres-panel {
     flex-direction: column !important;
+    flex-shrink: 0;
   }
 
   .mobile-flex > *:not(:last-child) {
@@ -64,12 +65,12 @@
   }
 
   .options-panel .options {
-   flex: 1 1;
-   width: 100%;
+    flex: 1 1;
+    width: 100%;
   }
 
   .gray-btn {
-    flex: 1 0;
+    flex: 1 1;
   }
 
   .gray-btnbutton:hover:not(.selected) {
@@ -145,6 +146,7 @@
   }
 
   .cards > * {
+    flex-shrink: 0;
     margin-bottom: var(--side-padding);
   }
   

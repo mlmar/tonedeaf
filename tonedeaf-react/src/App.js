@@ -46,7 +46,7 @@ const App = () => {
     if(token) {
       const info = await getProfile();
       cache["userInfo"] = info;
-      window.history.replaceState(null, "tonedeaf", HOME_URL)
+      // window.history.replaceState(null, "tonedeaf", HOME_URL)
     }
   }
   
