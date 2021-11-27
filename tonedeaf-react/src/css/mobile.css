@@ -107,7 +107,6 @@
     display: flex;
     background:  var(--dark);
     animation: slide-left .3s ease forwards;
-    -webkit-animation: slide-left .3s ease forwards;
   }
 
   .mobile-options button {
@@ -229,11 +228,7 @@
 
   @keyframes slide-left {
     0% { margin-right: -45%; }
-    100% { margin-right: 0% }
-  }
-
-  @-webkit-keyframes slide-left {
-    0% { margin-right: -45%; }
+    1% { margin-right: -45%; }
     100% { margin-right: 0% }
   }
 
