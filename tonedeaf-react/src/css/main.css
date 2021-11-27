@@ -173,6 +173,7 @@ label, p {
   height: 1.8rem;
   background: var(--inactive-btn);
   transition: background .5s ease;
+  color: black;
 }
 
 

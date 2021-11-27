@@ -46,7 +46,11 @@ const App = () => {
     if(token) {
       const info = await getProfile();
       cache["userInfo"] = info;
-      window.history.replaceState(null, "tonedeaf", HOME_URL)
+      try {
+        window.history.replaceState(null, "tonedeaf", HOME_URL)
+      } catch(error) {
+        console.warn("Unable to replace history state");
+      }
     }
   }
   
