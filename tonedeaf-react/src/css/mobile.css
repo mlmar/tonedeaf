@@ -106,7 +106,10 @@
     right: 0;
     display: flex;
     background:  var(--dark);
-    animation: slide-left .3s ease forwards;
+    animation-name: slide-left;
+    animation-duration: .3s;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
   }
 
   .mobile-options button {
@@ -228,7 +231,6 @@
 
   @keyframes slide-left {
     0% { margin-right: -45%; }
-    1% { margin-right: -45%; }
     100% { margin-right: 0% }
   }
 
