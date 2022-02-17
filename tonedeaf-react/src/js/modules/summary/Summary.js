@@ -7,9 +7,8 @@ import Load from '../ui/Load';
 import DEFAULTS from '../../util/Defaults';
 
 const Summary = ({ setNavIndex }) => {
-  const [timeFrameIndex, setTimeFrameIndex] = useState(2);
-  const artistsInfo = useArtistsAndGenres(timeFrameIndex);
-  const tracksInfo = useTracksAndFeatures(timeFrameIndex);
+  const artistsInfo = useArtistsAndGenres(2);
+  const tracksInfo = useTracksAndFeatures(2);
 
   const topArtists = useMemo(() => {
     let artists = [];
