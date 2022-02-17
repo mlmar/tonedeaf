@@ -5,7 +5,7 @@
   /*** DEFAULTS ***/
 
   :root {
-    --side-padding: .5rem;
+    --side-padding: 1.2rem;
     --padding: .5rem;
   }
 
@@ -111,6 +111,8 @@
 
   .mobile-options button {
     justify-content: flex-end;
+    font-size: 1.2rem;
+    padding: 1rem 0;
   }
 
   .mobile-options ~ .back {
@@ -123,7 +125,7 @@
   }
 
   .nav button {
-    height: 2.5rem;
+    height: unset;
   }
 
   .mobile-options .selected {
@@ -147,7 +149,6 @@
 
   .cards > * {
     flex-shrink: 0;
-    margin-bottom: var(--side-padding);
   }
   
   .cards .image-wrapper:not(.icon) {
@@ -225,6 +226,37 @@
   .hover-select:hover::after, .hover-deselect:hover::after {
     font-size: 5rem;
   }
+
+  /* SUMMARY */
+
+  .summary > * {
+    flex-direction: column;
+  }
+
+  .summary .stats {
+    margin-left: unset;
+  }
+
+  .summary .blocks {
+    flex-direction: row;
+    flex: 1 1;
+    justify-content: space-between;
+    margin-bottom: var(--side-padding);
+  }
+
+  .summary .blocks > * {
+    flex-basis: 49.5%;
+  }
+
+  .summary .block-4:first-child {
+    margin-bottom: unset;
+  }
+
+  .summary .stats > * > label span {
+    padding-bottom: .05rem;
+    font-size: .7em;
+  }
+  
 
   @keyframes slide-left {
     0% { margin-right: -45vw; }

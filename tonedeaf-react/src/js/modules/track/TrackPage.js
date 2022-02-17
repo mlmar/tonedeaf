@@ -1,48 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { cache } from '../../util/Session.js';
-import { fetchTracksAndFeatures } from '../../util/DataUtil.js';
+import { useTracksAndFeatures } from '../../hooks/SpotifyHooks.js';
 import { createPlaylist } from '../../util/SpotifyUtil.js';
+import { useAlert } from '../../hooks/AlertHooks.js';
 
 import Options from '../ui/Options.js';
-import Alert from '../ui/Alert.js';
 import ImageWrapper from '../ui/ImageWrapper.js';
 import TrackCard from './TrackCard.js';
 
 import Load from '../ui/Load.js';
 
-const TIME_OPTIONS = ["Long Term", "6 Months", "1 Month"];
-const VIEW_OPTIONS = ["Grid", "List"]
+import DEFAULTS from '../../util/Defaults.js';
 
 /*
   Display user's top tracks from a selected time range
 */
 const TrackPage = () => {
-  const [timeFrameIndex, setTimeFrameIndex] = useState(0); // long term by default
-  const [viewIndex, setViewIndex] = useState(0); // 0 = grid, 1 = list, 2 = stats
-
-  const [info, setInfo] = useState(null);
-
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertText, setAlertText] = useState("Playlist Created");
-
-  // get top tracks
-  useEffect(() => {
-    const fetch = async () => {
-      const response = await fetchTracksAndFeatures(timeFrameIndex);
-      setInfo(response);
-    }
-    fetch();
-  },[timeFrameIndex])
-
+  const [timeFrameIndex, setTimeFrameIndex] = useState(DEFAULTS.TIME_FRAME_INDEX); // long term by default
+  const [viewIndex, setViewIndex] = useState(DEFAULTS.VIEW_INDEX); // 0 = grid, 1 = list, 2 = stats
+  const info = useTracksAndFeatures(timeFrameIndex);
+  
+  const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
   const handleCreatePlaylist = async () => {
     const id = cache["userInfo"]?.id;
     const response = await createPlaylist(id, "tonedeaf top tracks", info?.tracks);
     if(response?.status === "demo") setAlertText("Sign in to use this feature")
     if(response) setAlertVisible(true);
-  }
-
-  const handleAlertClick = () => {
-    setAlertVisible(false);
   }
 
   // if an tracks's image is pressed in the grid view, display location of track in list view
@@ -85,10 +68,10 @@ const TrackPage = () => {
 
   return (
     <div className="page">
-      <Alert visible={alertVisible} onClick={handleAlertClick}> {alertText} </Alert>
+      {alertElement}
       <div className="flex mobile-flex">
-        <Options title="Your Top Tracks" options={TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
-        <Options title="View" options={VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
+        <Options title="Your Top Tracks" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
+        <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
         { (viewIndex === 0 || viewIndex === 1) &&
           <Options title="Like These Tracks?" options={["Create Playlist"]} onClick={handleCreatePlaylist}/>
         }

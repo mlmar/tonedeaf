@@ -245,7 +245,6 @@ label, p {
 
 .images .image-wrapper {
   position: relative;
-  display: flex;
   flex-basis: 10%;
   height: min-content;
   flex-direction: column;
@@ -284,7 +283,6 @@ label, p {
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  border-radius: 1rem;
 }
 
 .alert button {
@@ -364,6 +362,7 @@ label, p {
 }
 
 
+
 /*** NAV ***/
 
 .nav {
@@ -422,6 +421,110 @@ label, p {
 .profile .description {
   padding: 0 2rem;
 }
+
+/*** SUMMARY ***/
+
+.summary {
+  height: 100%;
+  padding-bottom: var(--side-padding);
+}
+
+.summary .stats {
+  margin-left: var(--side-padding);
+}
+
+.summary .stats > * {
+  background: var(--bg);
+  padding: var(--side-padding);
+}
+
+.summary .stats > *:not(:last-child) {
+  margin-bottom:var(--side-padding);
+}
+
+.summary .stats > * > label {
+  margin-bottom: .5rem;
+}
+
+.summary .stats > * > label span {
+  align-items: flex-end;
+  margin-left: .5rem;
+  padding-bottom: .05rem;
+  color: var(--inactive);
+  font-size: .65em;
+}
+
+
+.summary .genre-percents > span:first-child {
+  margin-bottom: 1rem;
+}
+
+.summary .genre-percents button {
+  margin-top: 1rem;
+}
+
+.summary .block-4:not(:last-child) {
+  margin-bottom: var(--side-padding);
+}
+
+.summary .block-4 {
+  transition: transform .3s ease;
+  cursor: pointer;
+}
+
+.summary .block-4:hover {
+  transform: scale(1.03);
+  z-index: 99;
+}
+
+.block-4 {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.block-4 .image-wrapper {
+  position: relative;
+  flex-basis: 50%;
+  height: min-content;
+  flex-direction: column;
+}
+
+.block-4 .image-wrapper:before {
+  content: "";
+  padding-bottom: 100%;
+}
+
+.block-4 img {
+  position: absolute;
+}
+
+
+
+/*** CHART ***/
+
+.chart .row {
+  align-items: center;
+}
+
+.chart .row:not(:last-child) {
+  margin-bottom: .5rem;
+}
+
+.chart .row label {
+  width: 9rem;
+  flex-shrink: 0;
+}
+
+.chart .row .bar {
+  height: .5em;
+}
+
+.chart .row .color {
+  background: var(--inactive);
+  border-radius: var(--border-radius);
+  transition: width .5s ease;
+}
+
 
 /*** NOW PLAYING ***/
 
@@ -690,10 +793,9 @@ label, p {
 
 /*** BURGER ***/
 .burger-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
+  justify-content: flex-end !important;
+  width: 4rem;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  height: 2.5rem !important;
 }

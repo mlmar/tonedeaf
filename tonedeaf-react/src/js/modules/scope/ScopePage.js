@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { cache } from '../../util/Session.js';
 import { search, getSearchRecs, createPlaylist } from '../../util/SpotifyUtil.js';
+import { useAlert } from '../../hooks/AlertHooks.js';
 
 import Options from '../ui/Options.js';
-import Alert from '../ui/Alert.js';
 import ImageWrapper from '../ui/ImageWrapper.js';
 import ArtistCard from '../artist/ArtistCard.js';
 import TrackCard from '../track/TrackCard.js';
@@ -32,13 +32,10 @@ const Scope = () => {
   const [tracks, setTracks] = useState(null);
   
   const [searchInput, setSearchInput] = useState("");
-  
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertText, setAlertText] = useState("Playlist Created");
-  
   const searchTimer = useRef(null);
   const nowPlayingTrack = useRef(null); // store currently playing track
   
+  const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
   useEffect(() => {
     if(cache["demo"]) {
       setAlertText("Sign in to use this feature");
@@ -46,14 +43,7 @@ const Scope = () => {
       setSearchResults([]);
       return;
     }
-  }, []);
-
-  // create playlist with track ids
-  
-  const handleAlertClick = () => {
-    setAlertVisible(false);
-  }
-  
+  }, [setAlertText, setAlertVisible]);
   
   // When a search option is pressed, set the appropriate search type
   const handleSearchClick = (index) => {
@@ -253,7 +243,7 @@ const Scope = () => {
 
   return (
     <div className="page">
-      <Alert visible={alertVisible} onClick={handleAlertClick}> {alertText} </Alert>
+      {alertElement}
       <div className="flex mobile-flex">
         <Options title="View" options={selected.length ? VIEW_OPTIONS : VIEW_OPTIONS_TEMP} onClick={handleViewClick} index={viewIndex}/>
         { (viewIndex === 0) && <Options title="Search For" options={SEARCH_OPTIONS} onClick={handleSearchClick} index={searchIndex}/> }

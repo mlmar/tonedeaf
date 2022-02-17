@@ -10,7 +10,6 @@
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var cors = require('cors');
-var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
 require('dotenv').config();
@@ -68,7 +67,7 @@ app.get('/login', function(req, res) {
   // your application requests authorization
   var scope = 'user-read-private user-read-email user-read-playback-state user-follow-read user-library-read playlist-read-private playlist-read-collaborative user-top-read user-read-playback-position user-read-recently-played playlist-modify-private playlist-modify-public user-modify-playback-state';
   res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
+    new URLSearchParams({
       response_type: 'code',
       client_id: client_id,
       scope: scope,
@@ -88,7 +87,7 @@ app.get('/callback', function(req, res) {
 
   if (state === null || state !== storedState) {
     res.redirect('/#' +
-      querystring.stringify({
+      new URLSearchParams({
         error: 'state_mismatch'
       }));
   } else {
@@ -125,13 +124,13 @@ app.get('/callback', function(req, res) {
 
         // we can also pass the token to the browser to make requests from there
         res.redirect(home + '/#' +
-          querystring.stringify({
+          new URLSearchParams({
             access_token: access_token,
             refresh_token: refresh_token
           }));
       } else {
         res.redirect('/#' +
-          querystring.stringify({
+          new URLSearchParams({
             error: 'invalid_token'
           }));
       }

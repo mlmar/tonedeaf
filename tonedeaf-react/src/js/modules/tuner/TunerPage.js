@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { cache } from '../../util/Session.js';
 import { fetchSeeds } from '../../util/DataUtil.js';
 import { getDefaultAttributes, getParamAttributes, getAttributeRecs, createPlaylist } from "../../util/SpotifyUtil.js";
+import { useAlert } from '../../hooks/AlertHooks.js';
 import { isEqual } from '../../util/ObjectUtil.js';
 
 import Options from '../ui/Options.js';
-import Alert from '../ui/Alert.js';
 import AttributeInput from './AttributeInput.js';
 import TrackCard from '../track/TrackCard.js';
 
@@ -33,10 +33,7 @@ const TunerPage = () => {
   
   const [tracks, setTracks] = useState(null);
 
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertText, setAlertText] = useState("Playlist Created");
-
-
+  const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
   // display demo message
   useEffect(() => {
     if(cache["demo"]) {
@@ -44,7 +41,7 @@ const TunerPage = () => {
       setAlertVisible(true);
       return;
     }
-  }, []);
+  }, [setAlertText, setAlertVisible]);
   
   // get list of genres
   useEffect(() => {
@@ -55,10 +52,6 @@ const TunerPage = () => {
     
     fetch();
   }, []);
-
-  const handleAlertClick = () => {
-    setAlertVisible(false);
-  }
   
   // if user tries to view results, fetch them from Spotify
   const handleViewClick = (index) => {
@@ -175,7 +168,7 @@ const TunerPage = () => {
 
   return (
     <div className="page">
-      <Alert visible={alertVisible} onClick={handleAlertClick}> {alertText} </Alert>
+      {alertElement}
       <div className="flex mobile-flex">
         <Options title="View" options={selected.size ? VIEW_OPTIONS : VIEW_OPTIONS_TEMP} onClick={handleViewClick} index={viewIndex}/>
         { (tracks && viewIndex === 1) &&

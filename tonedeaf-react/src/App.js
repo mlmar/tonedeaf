@@ -11,7 +11,8 @@ import Login from './js/modules/login/Login.js';
 import Nav from './js/modules/ui/Nav.js';
 
 // import Profile from './js/modules/user/Profile.js';
-import NowPlaying from './js/modules/user/NowPlaying.js';
+import Summary from './js/modules/summary/Summary';
+// import NowPlaying from './js/modules/user/NowPlaying.js';
 import ArtistPage from './js/modules/artist/ArtistPage.js';
 import TrackPage from './js/modules/track/TrackPage.js';
 import RecentPage from './js/modules/track/RecentPage.js';
@@ -25,7 +26,7 @@ import { getHashParams } from './js/util/HashUtil.js';
 
 import { setAccessToken } from './js/util/SpotifyUtil.js';
 
-const NAV_OPTIONS = ["Now Playing", "Artists", "Tracks", "Recent", "Scope", "Tuner"];
+const NAV_OPTIONS = ["Profile", "Artists", "Tracks", "Recent", "Scope", "Tuner"];
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -75,7 +76,7 @@ const App = () => {
   const getContent = () => {
     switch(navIndex) {
       case 0:
-        return <NowPlaying/>
+        return <Summary setNavIndex={setNavIndex}/>
       case 1:
         return <ArtistPage/>
       case 2:
