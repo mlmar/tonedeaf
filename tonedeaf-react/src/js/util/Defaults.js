@@ -1,4 +1,4 @@
-export default {
+const DEFAULTS = {
   TIME_FRAME_INDEX: 2,
   TIME_OPTIONS: ["Long Term", "6 Months", "1 Month"],
 
@@ -9,3 +9,5 @@ export default {
 
   CHART_COLS: ['acousticness', 'danceability', 'energy', 'popularity', 'valence'],
 }
+
+export default DEFAULTS;

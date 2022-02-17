@@ -1,4 +1,4 @@
-import { useState, useMemo  } from 'react';
+import { useMemo  } from 'react';
 import { useArtistsAndGenres, useTracksAndFeatures } from '../../hooks/SpotifyHooks';
 import ImageWrapper from '../ui/ImageWrapper';
 import Chart from './Chart';
