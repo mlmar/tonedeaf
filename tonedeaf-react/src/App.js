@@ -11,6 +11,7 @@ import Login from './js/modules/login/Login.js';
 import Nav from './js/modules/ui/Nav.js';
 
 // import Profile from './js/modules/user/Profile.js';
+// import PreFetch from './js/modules/PreFetchWrapper';
 import Summary from './js/modules/summary/Summary';
 // import NowPlaying from './js/modules/user/NowPlaying.js';
 import ArtistPage from './js/modules/artist/ArtistPage.js';
@@ -30,7 +31,6 @@ const NAV_OPTIONS = ["Profile", "Artists", "Tracks", "Recent", "Scope", "Tuner"]
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-
   const [navIndex, setNavIndex] = useState(0); // current navigation index for Nav bar
 
   /*
@@ -47,6 +47,7 @@ const App = () => {
     if(token) {
       const info = await getProfile();
       cache["userInfo"] = info;
+
       try {
         window.history.replaceState(null, "tonedeaf", HOME_URL)
       } catch(error) {
@@ -95,7 +96,7 @@ const App = () => {
   return (
     <div className="app">
         { !loggedIn ? (
-          <Login>
+            <Login>
               <a href={LOGIN_URL} className="login-btn large"> sign in with Spotify </a>
               <button className="demo-btn medium" onClick={handleDemo}> or try a demo </button>
             </Login>

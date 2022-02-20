@@ -215,9 +215,11 @@ const Scope = () => {
             <NowPlaying onChange={handleNowPlaying} widget>
               <button className="gray-btn bold round" onClick={handleFindMore}> Find More Like This </button>
             </NowPlaying>
-            <hr/>
             <label className="medium bold"> Find song recommendations based on a combination of up to 5 artists and tracks. </label>
-            <input className="search medium" type="text" placeholder={"Search for " + SEARCH_OPTIONS[searchIndex]} value={searchInput} onChange={handleSearchChange} autoFocus/>
+            <hr/>
+            <div className="flex">
+              <input className="search medium flex-fill" type="text" placeholder={"Search for " + SEARCH_OPTIONS[searchIndex]} value={searchInput} onChange={handleSearchChange} autoFocus/>
+            </div>
             {getSelected()}
             {getSearchCards()}
           </>

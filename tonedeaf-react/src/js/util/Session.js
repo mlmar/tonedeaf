@@ -15,5 +15,7 @@ export const cache = {
 
   search : {},
 
-  demo : false
+  demo : false,
+
+  lookup: null
 }

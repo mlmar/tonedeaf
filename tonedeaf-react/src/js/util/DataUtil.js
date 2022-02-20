@@ -1,11 +1,25 @@
 import { cache } from './Session.js';
 import { getDemoNowPlaying, getDemoArtists, getDemoGenres, getDemoTracks, getDemoFeatures, getDemoAverages, getDemoRecent, getDemoSeeds } from '../service/DemoService.js';
 import { getNowPlaying, getTopArtistsAndGenres, getTracksAndFeatures, getRecentTracks, getGenreSeeds } from './SpotifyUtil.js';
+import { createLookup } from './StatsUtil.js';
 
 /*
   - Caches all responses
   - If session is a demo, then redirect all requests to the demo server
 */
+
+export const preFetch = async () => {
+  await fetchArtistsAndGenres(0);
+  await fetchArtistsAndGenres(1);
+  await fetchArtistsAndGenres(2);
+
+  await fetchTracksAndFeatures(0);
+  await fetchTracksAndFeatures(1);
+  await fetchTracksAndFeatures(2);
+  createLookup();
+
+  return true;
+}
 
 export const fetchNowPlaying = async () => {
   if(cache["demo"]) {

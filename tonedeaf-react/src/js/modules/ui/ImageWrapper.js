@@ -5,7 +5,7 @@
   {url}     : if a url is provided then the wrapper will be an anchor tag
   {nohover} : disables hover zoom css
 */
-const ImageWrapper = ({ src, alt, title, width, url, className, onClick, nohover, id}) => {
+const ImageWrapper = ({ src, alt, title, width, url, className, onClick, nohover, id, style}) => {
   const handleClick = (event) => {
     if(onClick) onClick(event);
   }
@@ -15,12 +15,12 @@ const ImageWrapper = ({ src, alt, title, width, url, className, onClick, nohover
 
   return (
     url ? (
-      <a className={css} href={url} onClick={handleClick}>
+      <a className={css} href={url} onClick={handleClick} style={style}>
         {img}
       </a>
     )
     : (
-      <div className={css} onClick={handleClick}>
+      <div className={css} onClick={handleClick} style={style}>
         {img}
       </div>
     )

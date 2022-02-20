@@ -85,7 +85,12 @@ label, p {
 }
 
 .flex-split { display: flex}
-.flex-split > *:first-child { flex-basis: 50%; }
+.flex-split > * { flex-basis: 50%; }
+
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
 
 .flex-fill {
   flex: 1 1;
@@ -158,8 +163,67 @@ label, p {
   color: var(--inactive);
 }
 
+.white {
+  color: var(--fg);
+}
+
 .gray-bg {
   background: gray;
+}
+
+.panel {
+  padding: var(--side-padding);
+  background: var(--bg);
+}
+
+/*** RESTRICT ***/
+
+.restrict {
+  align-items: center;
+}
+
+.restrict > * {
+  max-width: 75rem;
+  width: calc(100% - 2 * var(--side-padding));
+}
+
+/*** GENERIC FLOAT IMAGES ***/
+
+.float-images .image-wrapper {
+  position: relative;
+  height: min-content;
+  flex-direction: column;
+}
+
+.float-images .image-wrapper:before {
+  content: "";
+  padding-bottom: 100%;
+}
+
+.float-images img {
+  position: absolute;
+}
+
+/*** PLUS BUTTON ***/
+
+.plus-btn {
+  position: relative;
+  color: white;
+  overflow: hidden;
+  justify-content: center;
+  background: var(--bg);
+  transition: background .5s ease;
+}
+
+.plus-btn::before {
+  position: absolute;
+  content: '+40';
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  color: white;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
 
@@ -183,6 +247,22 @@ label, p {
 
 .round {
   border-radius: var(--border-radius);
+}
+
+/*** FADE ***/
+.fade {
+  position: relative;
+}
+
+.fade::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  pointer-events   : none;
+  background-image: linear-gradient(to bottom, transparent, var(--bg));
+  width: 100%;
+  height: 100%;
 }
 
 /*** IMAGE ***/
@@ -425,80 +505,48 @@ label, p {
 /*** SUMMARY ***/
 
 .summary {
-  height: 100%;
   padding-bottom: var(--side-padding);
 }
 
-.summary .stats {
-  margin-left: var(--side-padding);
-}
-
-.summary .stats > * {
+.summary > div {
   background: var(--bg);
-  padding: var(--side-padding);
 }
 
-.summary .stats > *:not(:last-child) {
-  margin-bottom:var(--side-padding);
+.summary .flex > .image-wrapper {
+  flex-basis: 30%;
 }
 
-.summary .stats > * > label {
-  margin-bottom: .5rem;
-}
-
-.summary .stats > * > label span {
-  align-items: flex-end;
-  margin-left: .5rem;
-  padding-bottom: .05rem;
-  color: var(--inactive);
-  font-size: .65em;
-}
-
-
-.summary .genre-percents > span:first-child {
-  margin-bottom: 1rem;
-}
-
-.summary .genre-percents button {
-  margin-top: 1rem;
-}
-
-.summary .block-4:not(:last-child) {
-  margin-bottom: var(--side-padding);
-}
-
-.summary .block-4 {
-  transition: transform .3s ease;
+.summary .float-images {
   cursor: pointer;
 }
 
-.summary .block-4:hover {
-  transform: scale(1.03);
-  z-index: 99;
+.summary .float-images:hover .plus-btn {
+  background: var(--inactive);
 }
 
-.block-4 {
-  display: flex;
-  flex-wrap: wrap;
+.summary .panel p {
+  margin-bottom: 1rem;
 }
 
-.block-4 .image-wrapper {
-  position: relative;
-  flex-basis: 50%;
-  height: min-content;
-  flex-direction: column;
+.summary .stats > * {
+  flex-basis: 33%;
+  margin-bottom: 1rem;
 }
 
-.block-4 .image-wrapper:before {
-  content: "";
-  padding-bottom: 100%;
+.summary .stats label span {
+  align-items: flex-end;
+  color: var(--inactive);
+  font-size: .75em;
+  margin-top: .3em;
 }
 
-.block-4 img {
-  position: absolute;
+.summary .stats button {
+  margin-top: 1rem;
 }
 
-
+.summary .chart {
+  margin-right: var(--side-padding)
+}
 
 /*** CHART ***/
 
@@ -511,7 +559,7 @@ label, p {
 }
 
 .chart .row label {
-  width: 9rem;
+  width: 9em;
   flex-shrink: 0;
 }
 
@@ -782,6 +830,7 @@ label, p {
   border-radius: 50%;
   animation: spin .75s linear infinite;
   margin: auto !important;
+  background: transparent !important;
 }
 
 @keyframes spin {
@@ -799,3 +848,4 @@ label, p {
   font-size: 1.3rem;
   height: 2.5rem !important;
 }
+
