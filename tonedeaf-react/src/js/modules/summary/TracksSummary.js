@@ -64,9 +64,7 @@ const TracksSummary = (props) => {
       {trackStats()}
       <div className="flex-wrap float-images" onClick={onClick}> {topTracks()} </div>
     </div>
-  ) : (
-    <Load/>
-  )
+  ) : null
 }
 
 export default TracksSummary;
