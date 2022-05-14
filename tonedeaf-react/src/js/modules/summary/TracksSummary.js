@@ -2,7 +2,6 @@ import { useTracksAndFeatures } from '../../hooks/SpotifyHooks';
 import ImageWrapper from '../ui/ImageWrapper';
 import DEFAULTS from '../../util/Defaults';
 import Chart from './Chart';
-import Load from '../ui/Load';
 
 const TracksSummary = (props) => {
   const { onClick } = props;
