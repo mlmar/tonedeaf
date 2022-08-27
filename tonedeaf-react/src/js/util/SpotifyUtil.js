@@ -234,7 +234,7 @@ export const getUris = (tracks, recent) => {
       return track?.uri;
     }
   });
-  return uris;
+  return recent ? urs.reverse() : uris;
 }
 
 const getDate = () => {
