@@ -236,7 +236,7 @@ export const getUris = (tracks, recent) => {
   });
   return recent ? uris.reverse() : uris;
 }
-``
+
 const getDate = () => {
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
