@@ -662,7 +662,7 @@ label, p {
 
 .cards .description {
   flex: 1 0;
-  padding-left: 5rem;
+  padding-left: 1.5rem;
 }
 
 .cards .description .large {
@@ -674,8 +674,8 @@ label, p {
 }
 
 .cards .image-wrapper:not(.icon) {
-  width: 20rem;
-  height: 20rem;
+  width: 10rem;
+  height: 10rem;
   background: black;
 }
 

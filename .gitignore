@@ -1,5 +1,7 @@
 /tonedeaf-react/node_modules
 /tonedeaf-react/.gitignore
+/tonedeaf-react/.env
 
 /tonedeaf-express/node_modules
 /tonedeaf-express/.gitignore
+/tonedeaf-express/.env
