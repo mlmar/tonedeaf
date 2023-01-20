@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 import html2canvas from 'html2canvas';
 
-export const useDownload = (text) => {
+export const useDownload = () => {
   const exportRef = useRef();
 
-  const shareImage = async () => {
+  const shareImage = async (text) => {
     const el = exportRef?.current;
     if(!el) return;
 
@@ -13,8 +13,7 @@ export const useDownload = (text) => {
       canvas.toBlob(async (blob) => {
         const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
         const shareData = {
-          text: '',
-          title: 'tonedeaf',
+          text: text + ' - https://tonedeaf.vercel.app',
           files,
         }
         if (navigator.canShare(shareData)) {

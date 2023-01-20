@@ -26,7 +26,15 @@ const ArtistPage = () => {
 
   const [overflowVisible, setOverflowVisible] = useState(false);
 
-  const [exportRef, handledownloadClick] = useDownload();
+  const [exportRef, download] = useDownload();
+  const handledownloadClick = () => {
+    let text = 'My top artists ';
+    switch(timeFrameIndex) {
+      case 1: text += 'in the last 6 months'; break;
+      case 2: text += 'in the last month'; break;
+    }
+    download(text);
+  }
 
   // filter artists by user selected genre
   const handleGenreClick = (event) => {

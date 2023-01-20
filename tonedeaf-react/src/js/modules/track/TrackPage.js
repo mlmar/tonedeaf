@@ -21,7 +21,15 @@ const TrackPage = () => {
   const [viewIndex, setViewIndex] = useState(DEFAULTS.VIEW_INDEX); // 0 = grid, 1 = list, 2 = stats
   const info = useTracksAndFeatures(timeFrameIndex);
 
-  const [exportRef, handledownloadClick] = useDownload();
+  const [exportRef, download] = useDownload();
+  const handledownloadClick = () => {
+    let text = 'My top tracks ';
+    switch(timeFrameIndex) {
+      case 1: text += 'in the last 6 months'; break;
+      case 2: text += 'in the last month'; break;
+    }
+    download(text);
+  }
   
   const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
   const handleCreatePlaylist = async () => {
