@@ -40,6 +40,7 @@ export const useDownload = () => {
   }
 
   const shareText = async (text) => {
+    text += '\n' + 'https://tonedeaf.vercel.app';
     if(navigator.canShare) {
       const shareData = {
         text: text
