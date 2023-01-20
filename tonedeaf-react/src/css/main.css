@@ -217,7 +217,7 @@ label, p {
 
 .plus-btn::before {
   position: absolute;
-  content: '+40';
+  content: '+more';
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;

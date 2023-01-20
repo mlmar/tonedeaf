@@ -1,6 +1,10 @@
 import { useRef } from 'react';
 import html2canvas from 'html2canvas';
 
+export const dataToTextList = (list) => {
+  return list.map((item, i) => (i+1).toString().padStart(2,0) + '. ' + item.name).join('\n');
+}
+
 export const useDownload = () => {
   const exportRef = useRef();
 
@@ -13,7 +17,7 @@ export const useDownload = () => {
       canvas.toBlob(async (blob) => {
         const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
         const shareData = {
-          text: text + ' - https://tonedeaf.vercel.app',
+          text: text + '\n' + 'https://tonedeaf.vercel.app',
           files,
         }
         if (navigator.canShare(shareData)) {
@@ -35,5 +39,22 @@ export const useDownload = () => {
     }
   }
 
-  return [exportRef, shareImage];
+  const shareText = async (text) => {
+    if(navigator.canShare) {
+      const shareData = {
+        text: text
+      }
+      if (navigator.canShare(shareData)) {
+        try {
+          await navigator.share(shareData)
+        } catch (err) {
+          console.warn('Sharing not supported for this device.');
+        }
+      }
+    } else if(navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+    }
+  }
+
+  return [exportRef, shareImage, shareText];
 }

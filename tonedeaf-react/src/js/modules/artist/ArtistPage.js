@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useArtistsAndGenres } from '../../hooks/SpotifyHooks.js';
-import { useDownload } from '../../util/DownloadUtil.js';
+import { useDownload, dataToTextList } from '../../util/DownloadUtil.js';
 
 import Options from "../ui/Options.js";
 import ImageWrapper from '../ui/ImageWrapper.js';
@@ -26,14 +26,20 @@ const ArtistPage = () => {
 
   const [overflowVisible, setOverflowVisible] = useState(false);
 
-  const [exportRef, download] = useDownload();
-  const handledownloadClick = () => {
-    let text = 'My top artists ';
-    switch(timeFrameIndex) {
-      case 1: text += 'in the last 6 months'; break;
-      case 2: text += 'in the last month'; break;
+  const [exportRef, shareImage, shareText] = useDownload();
+  const handledownloadClick = (index) => {
+    let text = '';
+    if(index === 0) {
+      text = 'My top artists ';
+      switch(timeFrameIndex) {
+        case 1: text += 'in the last 6 months'; break;
+        case 2: text += 'in the last month'; break;
+      }
+      shareImage(text);
+    } else {
+      text = dataToTextList(filteredArtists);
+      shareText(text);
     }
-    download(text);
   }
 
   // filter artists by user selected genre
@@ -90,7 +96,7 @@ const ArtistPage = () => {
         break;
       case 1: // display list view
         view = (
-          <div className="cards">
+          <div className="cards" ref={exportRef}>
             { filteredArtists?.map((artist,i) => <ArtistCard {...artist} rank={i+1} key={artist?.name + i}/>)}
           </div>
         )
@@ -109,7 +115,7 @@ const ArtistPage = () => {
         <Options title="Your Top Artists" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
         { viewIndex === 0 &&
-          <Options title="Download" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
+          <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
         }
       </div>
       { (viewIndex === 0 || viewIndex === 1) && 

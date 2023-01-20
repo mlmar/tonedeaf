@@ -3,7 +3,7 @@ import { cache } from '../../util/Session.js';
 import { useTracksAndFeatures } from '../../hooks/SpotifyHooks.js';
 import { createPlaylist } from '../../util/SpotifyUtil.js';
 import { useAlert } from '../../hooks/AlertHooks.js';
-import { useDownload } from '../../util/DownloadUtil.js';
+import { useDownload, dataToTextList } from '../../util/DownloadUtil.js';
 
 import Options from '../ui/Options.js';
 import ImageWrapper from '../ui/ImageWrapper.js';
@@ -21,14 +21,20 @@ const TrackPage = () => {
   const [viewIndex, setViewIndex] = useState(DEFAULTS.VIEW_INDEX); // 0 = grid, 1 = list, 2 = stats
   const info = useTracksAndFeatures(timeFrameIndex);
 
-  const [exportRef, download] = useDownload();
-  const handledownloadClick = () => {
-    let text = 'My top tracks ';
-    switch(timeFrameIndex) {
-      case 1: text += 'in the last 6 months'; break;
-      case 2: text += 'in the last month'; break;
+  const [exportRef, shareImage, shareText] = useDownload();
+  const handledownloadClick = (index) => {
+    let text = '';
+    if(index === 0) {
+      text = 'My top tracks ';
+      switch(timeFrameIndex) {
+        case 1: text += 'in the last 6 months'; break;
+        case 2: text += 'in the last month'; break;
+      }
+      shareImage(text);
+    } else {
+      text = dataToTextList(info.tracks);
+      shareText(text);
     }
-    download(text);
   }
   
   const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
@@ -64,7 +70,7 @@ const TrackPage = () => {
         break;
       case 1: // display list view
         view = (
-          <div className="cards">
+          <div className="cards" ref={exportRef}>
             { info?.tracks?.map((track, i) => <TrackCard {...track} features={info.features?.[i]} rank={i+1} key={track?.name + i}/>)}
           </div>
         )
@@ -84,7 +90,7 @@ const TrackPage = () => {
         <Options title="Your Top Tracks" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
         { viewIndex === 0 &&
-          <Options title="Download" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
+          <Options title="Screenshot" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
         }
         { (viewIndex === 0 || viewIndex === 1) &&
           <Options title="Like These Tracks?" options={["Create Playlist"]} onClick={handleCreatePlaylist}/>
