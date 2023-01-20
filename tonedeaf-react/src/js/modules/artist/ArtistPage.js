@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useArtistsAndGenres } from '../../hooks/SpotifyHooks.js';
+import { useDownload } from '../../util/DownloadUtil.js';
 
 import Options from "../ui/Options.js";
 import ImageWrapper from '../ui/ImageWrapper.js';
@@ -24,6 +25,8 @@ const ArtistPage = () => {
   }, [info, genre])
 
   const [overflowVisible, setOverflowVisible] = useState(false);
+
+  const [exportRef, handledownloadClick] = useDownload();
 
   // filter artists by user selected genre
   const handleGenreClick = (event) => {
@@ -64,7 +67,7 @@ const ArtistPage = () => {
     switch(viewIndex) {
       default: // display grid view by default
         view = (
-          <div className="images">
+          <div className="images" ref={exportRef}>
             { filteredArtists?.map((artist,i) => 
               <ImageWrapper 
                 src={artist?.images?.[0]?.url} 
@@ -97,6 +100,9 @@ const ArtistPage = () => {
       <div className="flex mobile-flex">
         <Options title="Your Top Artists" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
+        { viewIndex === 0 &&
+          <Options title="Download" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
+        }
       </div>
       { (viewIndex === 0 || viewIndex === 1) && 
         <Options title="Genres" className="genres-panel" description="Select any genre to filter artists:">

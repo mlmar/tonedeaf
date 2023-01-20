@@ -3,6 +3,7 @@ import { cache } from '../../util/Session.js';
 import { useTracksAndFeatures } from '../../hooks/SpotifyHooks.js';
 import { createPlaylist } from '../../util/SpotifyUtil.js';
 import { useAlert } from '../../hooks/AlertHooks.js';
+import { useDownload } from '../../util/DownloadUtil.js';
 
 import Options from '../ui/Options.js';
 import ImageWrapper from '../ui/ImageWrapper.js';
@@ -19,6 +20,8 @@ const TrackPage = () => {
   const [timeFrameIndex, setTimeFrameIndex] = useState(DEFAULTS.TIME_FRAME_INDEX); // long term by default
   const [viewIndex, setViewIndex] = useState(DEFAULTS.VIEW_INDEX); // 0 = grid, 1 = list, 2 = stats
   const info = useTracksAndFeatures(timeFrameIndex);
+
+  const [exportRef, handledownloadClick] = useDownload();
   
   const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
   const handleCreatePlaylist = async () => {
@@ -38,7 +41,7 @@ const TrackPage = () => {
     switch(viewIndex) {
       default: // display grid view by default
         view = (
-          <div className="images">
+          <div className="images" ref={exportRef}>
             { info?.tracks?.map((track,i) => 
               <ImageWrapper 
                 src={track?.album?.images?.[0]?.url} 
@@ -72,6 +75,9 @@ const TrackPage = () => {
       <div className="flex mobile-flex">
         <Options title="Your Top Tracks" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
+        { viewIndex === 0 &&
+          <Options title="Download" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
+        }
         { (viewIndex === 0 || viewIndex === 1) &&
           <Options title="Like These Tracks?" options={["Create Playlist"]} onClick={handleCreatePlaylist}/>
         }

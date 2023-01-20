@@ -4,6 +4,8 @@ const DEFAULTS = {
 
   VIEW_INDEX: 0,
   VIEW_OPTIONS: ["Grid", "List"],
+
+  DOWNLOAD_OPTIONS: ["Share"],
   
   TOP_IMAGES_LIMIT: 10,
   TOP_GENRES_LIMIT: 9,

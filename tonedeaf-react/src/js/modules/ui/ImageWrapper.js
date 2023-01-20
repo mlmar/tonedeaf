@@ -11,7 +11,7 @@ const ImageWrapper = ({ src, alt, title, width, url, className, onClick, nohover
   }
 
   const css = "image-wrapper " + (nohover ? "" : "hover pointer ") + (className || "");
-  const img = <img width={width || "100"} src={src} alt={alt} title={title} id={id}/>
+  const img = <img width={width || "100"} src={src} alt={alt} title={title} id={id} crossOrigin="Anonymous"/>
 
   return (
     url ? (
