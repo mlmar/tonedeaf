@@ -28,17 +28,10 @@ const ArtistPage = () => {
 
   const [exportRef, shareImage, shareText] = useDownload();
   const handledownloadClick = (index) => {
-    let text = '';
     if(index === 0) {
-      text = 'My top artists ';
-      switch(timeFrameIndex) {
-        case 1: text += 'in the last 6 months'; break;
-        case 2: text += 'in the last month'; break;
-      }
-      shareImage(text);
+      shareImage(DEFAULTS.SHARE_TEXT_ARTISTS[timeFrameIndex]);
     } else {
-      text = dataToTextList(filteredArtists);
-      shareText(text);
+      shareText(dataToTextList(filteredArtists));
     }
   }
 

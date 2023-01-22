@@ -1,6 +1,8 @@
 import { useRef } from 'react';
 import html2canvas from 'html2canvas';
 
+const isMobile = typeof window.orientation !== "undefined";
+
 export const dataToTextList = (list) => {
   return list.map((item, i) => (i+1).toString().padStart(2,0) + '. ' + item.name).join('\n');
 }
@@ -13,7 +15,7 @@ export const useDownload = () => {
     if(!el) return;
 
     const canvas = await html2canvas(el, { useCORS: true });
-    if(navigator.canShare) {
+    if(isMobile && navigator.canShare) {
       canvas.toBlob(async (blob) => {
         const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
         const shareData = {
@@ -41,7 +43,7 @@ export const useDownload = () => {
 
   const shareText = async (text) => {
     text += '\n' + 'https://tonedeaf.vercel.app';
-    if(navigator.canShare) {
+    if(isMobile && navigator.canShare) {
       const shareData = {
         text: text
       }

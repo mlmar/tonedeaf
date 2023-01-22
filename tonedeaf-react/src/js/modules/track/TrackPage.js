@@ -23,17 +23,10 @@ const TrackPage = () => {
 
   const [exportRef, shareImage, shareText] = useDownload();
   const handledownloadClick = (index) => {
-    let text = '';
     if(index === 0) {
-      text = 'My top tracks ';
-      switch(timeFrameIndex) {
-        case 1: text += 'in the last 6 months'; break;
-        case 2: text += 'in the last month'; break;
-      }
-      shareImage(text);
+      shareImage(DEFAULTS.SHARE_TEXT_TRACKS[timeFrameIndex]);
     } else {
-      text = dataToTextList(info.tracks);
-      shareText(text);
+      shareText(dataToTextList(info.tracks));
     }
   }
   

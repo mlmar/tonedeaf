@@ -10,7 +10,11 @@ const DEFAULTS = {
   TOP_IMAGES_LIMIT: 5,
   TOP_GENRES_LIMIT: 9,
 
+  SHARE_TEXT_ARTISTS: ['My top artists', 'My top artists in the last 6 months', 'My top artists in the last month'],
+  SHARE_TEXT_TRACKS: ['My top tracks', 'My top tracks in the last 6 months', 'My top tracks in the last month'],
+
   CHART_COLS: ['acousticness', 'danceability', 'energy', 'valence'],
 }
+
 
 export default DEFAULTS;
