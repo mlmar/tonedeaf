@@ -107,9 +107,7 @@ const ArtistPage = () => {
       <div className="flex mobile-flex">
         <Options title="Your Top Artists" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
-        { viewIndex === 0 &&
-          <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
-        }
+        <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
       </div>
       { (viewIndex === 0 || viewIndex === 1) && 
         <Options title="Genres" className="genres-panel" description="Select any genre to filter artists:">

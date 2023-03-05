@@ -321,6 +321,7 @@ label, p {
 .images {
   display: flex;
   flex-wrap: wrap;
+  background: var(--dark);
 }
 
 .images .image-wrapper {
@@ -565,12 +566,16 @@ label, p {
 
 .chart .row .bar {
   height: .5em;
+  overflow: visible;
+  align-items: center;
 }
 
 .chart .row .color {
   background: var(--inactive);
   border-radius: var(--border-radius);
   transition: width .5s ease;
+  height: 100%;
+  margin-right: .5rem;
 }
 
 
@@ -654,6 +659,7 @@ label, p {
   display: flex;
   flex-direction: column;
   flex: 1 1;
+  background: var(--dark);
 }
 
 .cards > * {

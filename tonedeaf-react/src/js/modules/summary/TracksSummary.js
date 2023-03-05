@@ -9,23 +9,25 @@ const TracksSummary = (props) => {
 
   const topTracks = () => {
     let tracks = [];
-    let style = { flexBasis: 1 / DEFAULTS.TOP_IMAGES_LIMIT * 100 + '%' };
+    let style = { flexBasis: (3 / DEFAULTS.TOP_IMAGES_LIMIT * 100) + '%' };
     if(tracksInfo) {
-      for(let i = 1; i < DEFAULTS.TOP_IMAGES_LIMIT; i++) {
+      for(let i = 0; i < DEFAULTS.TOP_IMAGES_LIMIT; i++) {
         let track = tracksInfo?.tracks?.[i];
         tracks.push(<ImageWrapper src={track?.album?.images?.[0]?.url} style={style} nohover key={i}/>)
       }
     }
-    tracks.push(<div className="plus-btn medium" style={style} key={DEFAULTS.TOP_IMAGES_LIMIT}></div>);
     return tracks;
   }
 
   const topTrack = () => {
     let track = tracksInfo?.tracks?.[0];
     return (
-      <div className="flex">
-        <ImageWrapper src={track?.album.images?.[0].url} nohover/>
-        <p className="large bold inactive panel flex-fill"> <span className="white"> {track?.name} </span> was your number one track </p>
+      <div className="flex-col panel float-images">
+        <p className="large bold inactive flex-fill"> <span className="white"> {track?.name} </span> was your number one track </p>
+        <div className="flex">
+          <ImageWrapper src={track?.album.images?.[0].url} nohover/>
+          <div className="flex-wrap flex-fill" onClick={onClick}> {topTracks()} </div>
+        </div>
       </div>
     )
   }
@@ -58,11 +60,15 @@ const TracksSummary = (props) => {
 
 
   return tracksInfo ? (
-    <div className="flex-col">
-      {topTrack()}
-      {trackStats()}
-      <div className="flex-wrap float-images" onClick={onClick}> {topTracks()} </div>
-    </div>
+    <>
+      <div className="flex-col">
+        {topTrack()}
+      </div>
+      <div className="flex-col">
+        {trackStats()}
+      </div>
+    </>
+
   ) : null
 }
 

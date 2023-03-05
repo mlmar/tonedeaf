@@ -12,6 +12,7 @@ const Chart = (props) => {
                 <label className="flex bold"> {attr.name?.toLowerCase()} </label>
                 <span className="flex bar flex-fill">
                   <span className="flex color" style={{ width: attr.total / 1 * 100 + "%" }}></span>
+                  <span className="flex inactive"> {attr.total} </span>
                 </span>
               </div>
             )

@@ -82,9 +82,7 @@ const TrackPage = () => {
       <div className="flex mobile-flex">
         <Options title="Your Top Tracks" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
-        { viewIndex === 0 &&
-          <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
-        }
+        <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
         { (viewIndex === 0 || viewIndex === 1) &&
           <Options title="Like These Tracks?" options={["Create Playlist"]} onClick={handleCreatePlaylist}/>
         }

@@ -76,20 +76,13 @@ const App = () => {
 
   const getContent = () => {
     switch(navIndex) {
-      case 0:
-        return <Summary setNavIndex={setNavIndex}/>
-      case 1:
-        return <ArtistPage/>
-      case 2:
-        return <TrackPage/>
-      case 3:
-        return <RecentPage/>
-      case 4:
-        return <ScopePage/>
-      case 5:
-        return <TunerPage/>
-      default:
-        return <Load/>
+      case 0:  return <Summary setNavIndex={setNavIndex}/>
+      case 1:  return <ArtistPage/>
+      case 2:  return <TrackPage/>
+      case 3:  return <RecentPage/>
+      case 4:  return <ScopePage/>
+      case 5:  return <TunerPage/>
+      default: return <Load/>
     }
   }
 
