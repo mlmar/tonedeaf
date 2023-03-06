@@ -33,12 +33,12 @@ const ArtistSummary = (props) => {
 
   const topArtists = () => {
     let artists = [];
-    let style = { flexBasis: (3 / DEFAULTS.TOP_IMAGES_LIMIT * 100) + '%'};
+    let style = { flexBasis: (DEFAULTS.TOP_IMAGES_ROWS / DEFAULTS.TOP_IMAGES_LIMIT * 100) + '%'};
 
     if(artistsInfo) {
-      for(let i = 0; i < DEFAULTS.TOP_IMAGES_LIMIT; i++) {
+      for(let i = 1; i < DEFAULTS.TOP_IMAGES_LIMIT+1; i++) {
         let artist = artistsInfo?.artists?.[i];
-        artists.push(<ImageWrapper src={artist?.images?.[0]?.url} style={style} nohover key={i}/>)
+        artists.push(<ImageWrapper src={artist?.images?.[0]?.url} style={style} key={i}/>)
       }
     }
     return artists;
@@ -48,24 +48,22 @@ const ArtistSummary = (props) => {
     const artist = artistsInfo?.artists?.[0];
 
     return (
-      <div className="flex-col panel float-images">
-        <p className="large bold inactive flex-fill"> <span className="white"> {artist?.name} </span> was your number one artist </p>
-        <div className="flex">
-          <ImageWrapper src={artist?.images?.[0].url} nohover/>
-          <div className="flex-wrap flex-fill" onClick={onClick}> {topArtists()} </div>
+      <>
+        <p className="panel large bold inactive"> <span className="white"> {artist?.name} </span> was your number one artist </p>
+        <div className="flex-col float-images" onClick={onClick}>
+          <div className="flex">
+            <ImageWrapper src={artist?.images?.[0].url}/>
+            <div className="flex-wrap flex-fill"> {topArtists()} </div>
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 
   return artistsInfo ? (
     <>
-      <div className="flex-col">
-        {topArtist()}
-      </div>
-      <div className="flex-col">
-        {topGenres()}
-      </div>
+      {topArtist()}
+      {topGenres()}
     </>
   ) : (
     <Load/>

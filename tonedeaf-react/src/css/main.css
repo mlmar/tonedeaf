@@ -505,16 +505,16 @@ label, p {
 
 /*** SUMMARY ***/
 
+.summary.page > :not(p.panel):not(label) {
+  margin-top: 0;
+}
+
 .summary {
   padding-bottom: var(--side-padding);
 }
 
-.summary > div {
-  background: var(--bg);
-}
-
 .summary .flex > .image-wrapper {
-  flex-basis: 30%;
+  flex-basis: 40%;
 }
 
 .summary .float-images {
@@ -644,7 +644,7 @@ label, p {
   margin-top: var(--side-padding);
 }
 
-.page > *:not(.cards):not(.images) {
+.page > *:not(.cards):not(.images):not(.float-images) {
   margin-left: var(--side-padding);
   margin-right: var(--side-padding);
 }

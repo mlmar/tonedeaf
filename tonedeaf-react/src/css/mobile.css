@@ -77,10 +77,6 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .genres-panel .overflow-true .overflow {
-    display: inherit;
-  }
-
   .genres-panel .overflow-false .overflow {
     display: none;
   }

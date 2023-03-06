@@ -26,8 +26,7 @@ import { HOME_URL, LOGIN_URL } from './js/util/System.js';
 import { getHashParams } from './js/util/HashUtil.js';
 
 import { setAccessToken } from './js/util/SpotifyUtil.js';
-
-const NAV_OPTIONS = ["Profile", "Artists", "Tracks", "Recent", "Scope", "Tuner"];
+import DEFAULTS from './js/util/Defaults';
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -39,8 +38,8 @@ const App = () => {
     - Clean the page URL
   */
   const login = async () => {
-    let params = getHashParams();
-    let token = params.access_token;
+    const params = getHashParams();
+    const token = params.access_token;
     setAccessToken(token);
     setLoggedIn(token);
 
@@ -49,7 +48,7 @@ const App = () => {
       cache["userInfo"] = info;
 
       try {
-        window.history.replaceState(null, "tonedeaf", HOME_URL)
+        window.history.replaceState(null, "tonedeaf", HOME_URL);
       } catch(error) {
         console.warn("Unable to replace history state");
       }
@@ -95,7 +94,7 @@ const App = () => {
             </Login>
           ) : (
             <main className="main">
-              <Nav text="tonedeaf" index={navIndex} setIndex={setNavIndex} options={NAV_OPTIONS} onLogout={logout}/>
+              <Nav text="tonedeaf" index={navIndex} setIndex={setNavIndex} options={DEFAULTS.NAV_OPTIONS} onLogout={logout}/>
               <Boundary fallback={<Fallback/>}>
                 {getContent()}
               </Boundary>

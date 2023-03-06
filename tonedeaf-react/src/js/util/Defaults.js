@@ -1,4 +1,6 @@
 const DEFAULTS = {
+  NAV_OPTIONS: ["Summary", "Artists", "Tracks", "Recent", "Scope", "Tuner"],
+
   TIME_FRAME_INDEX: 2,
   TIME_OPTIONS: ["Long Term", "6 Months", "1 Month"],
 
@@ -7,7 +9,8 @@ const DEFAULTS = {
 
   DOWNLOAD_OPTIONS: ["Screenshot", "Text"],
   
-  TOP_IMAGES_LIMIT: 21,
+  TOP_IMAGES_LIMIT: 6,
+  TOP_IMAGES_ROWS: 2,
   TOP_GENRES_LIMIT: 12,
 
   SHARE_TEXT_ARTISTS: ['My top artists', 'My top artists in the last 6 months', 'My top artists in the last month'],
