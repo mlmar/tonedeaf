@@ -92,6 +92,18 @@ label, p {
   flex-wrap: wrap;
 }
 
+.flex-middle {
+  align-items: center;
+}
+
+.flex-center {
+  justify-content: center;
+}
+
+.flex-space-between {
+  justify-content: space-between;
+}
+
 .flex-fill {
   flex: 1 1;
 }
@@ -307,6 +319,14 @@ label, p {
   background: white;
 }
 
+.options-panel .options button {
+  padding: .3rem;
+}
+
+.options-panel .options button img {
+  height: 100%;
+}
+
 .options-panel .options button:not(:last-child) {
   margin-right: .2rem;
 }
@@ -364,6 +384,7 @@ label, p {
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  border-radius: var(--border-radius);
 }
 
 .alert button {
@@ -505,11 +526,21 @@ label, p {
 
 /*** SUMMARY ***/
 
-.summary.page > :not(p.panel):not(label) {
-  margin-top: 0;
+.summary header {
+  margin: 1rem 0;
 }
 
-.summary {
+.summary > * {
+  background: var(--dark);
+  margin: 0 !important;
+}
+
+.summary > * > *:not(.float-images) {
+  margin-left: var(--side-padding);
+  margin-right: var(--side-padding);
+}
+
+.summary > * {
   padding-bottom: var(--side-padding);
 }
 

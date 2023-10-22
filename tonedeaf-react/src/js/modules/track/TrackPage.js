@@ -17,6 +17,7 @@ import DEFAULTS from '../../util/Defaults.js';
   Display user's top tracks from a selected time range
 */
 const TrackPage = () => {
+  const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
   const [timeFrameIndex, setTimeFrameIndex] = useState(DEFAULTS.TIME_FRAME_INDEX); // long term by default
   const [viewIndex, setViewIndex] = useState(DEFAULTS.VIEW_INDEX); // 0 = grid, 1 = list, 2 = stats
   const info = useTracksAndFeatures(timeFrameIndex);
@@ -26,15 +27,17 @@ const TrackPage = () => {
     if(index === 0) {
       shareImage(DEFAULTS.SHARE_TEXT_TRACKS[timeFrameIndex]);
     } else {
-      shareText(dataToTextList(info.tracks));
+      shareText(dataToTextList(info.tracks), () => {
+        setAlertText("Copied to clipboard");
+        setAlertVisible(true);
+      });
     }
   }
   
-  const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
   const handleCreatePlaylist = async () => {
     const id = cache["userInfo"]?.id;
     const response = await createPlaylist(id, "tonedeaf top tracks", info?.tracks);
-    if(response?.status === "demo") setAlertText("Sign in to use this feature")
+    if(response?.status === "demo") setAlertText("Sign in to use this feature");
     if(response) setAlertVisible(true);
   }
 

@@ -1,3 +1,6 @@
+import cameraIcon from '../../icons/camera-icon.svg';
+import copyFileIcon from '../../icons/copy-file-icon.svg';
+
 const DEFAULTS = {
   NAV_OPTIONS: ["Summary", "Artists", "Tracks", "Recent", "Scope", "Tuner"],
 
@@ -7,7 +10,10 @@ const DEFAULTS = {
   VIEW_INDEX: 0,
   VIEW_OPTIONS: ["Grid", "List"],
 
-  DOWNLOAD_OPTIONS: ["Screenshot", "Text"],
+  DOWNLOAD_OPTIONS: [
+    <img src={cameraIcon} alt="Screenshot" />,
+    <img src={copyFileIcon} alt="Text" />
+  ],
   
   TOP_IMAGES_LIMIT: 6,
   TOP_IMAGES_ROWS: 2,

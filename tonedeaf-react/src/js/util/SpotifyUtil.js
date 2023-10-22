@@ -264,8 +264,12 @@ export const createPlaylist = async (id, text, tracks, recent) => {
     console.log("Creating playlist for", text)
     const response = await spotifyWebApi.addTracksToPlaylist(playlist.id, uris);
     
-    if(DEV) console.log(response);
+    if(DEV) {
+      console.log(playlist);
+      console.log(response);
+    }
 
+    window.open(playlist.uri);
     return response;
   } catch(error) {
     console.error(error);

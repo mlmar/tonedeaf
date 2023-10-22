@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useArtistsAndGenres } from '../../hooks/SpotifyHooks.js';
+import { useAlert } from '../../hooks/AlertHooks.js';
 import { useDownload, dataToTextList } from '../../util/DownloadUtil.js';
 
 import Options from "../ui/Options.js";
@@ -15,6 +16,7 @@ import DEFAULTS from '../../util/Defaults.js';
   Displays list of users top artists from a selected time range
 */
 const ArtistPage = () => {
+  const { setAlertText, setAlertVisible, alertElement } = useAlert("Copied to clipboard");
   const [timeFrameIndex, setTimeFrameIndex] = useState(DEFAULTS.TIME_FRAME_INDEX); // long term by default
   const [viewIndex, setViewIndex] = useState(DEFAULTS.VIEW_INDEX); // 0 = grid, 1 = list, 2 = stats
 
@@ -31,7 +33,10 @@ const ArtistPage = () => {
     if(index === 0) {
       shareImage(DEFAULTS.SHARE_TEXT_ARTISTS[timeFrameIndex]);
     } else {
-      shareText(dataToTextList(filteredArtists));
+      shareText(dataToTextList(filteredArtists), () => {
+        setAlertText("Copied to clipboard");
+        setAlertVisible(true);
+      });
     }
   }
 
@@ -104,6 +109,7 @@ const ArtistPage = () => {
 
   return (
     <div className="page">
+      {alertElement}
       <div className="flex mobile-flex">
         <Options title="Your Top Artists" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>

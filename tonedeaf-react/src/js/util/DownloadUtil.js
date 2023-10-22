@@ -41,7 +41,7 @@ export const useDownload = () => {
     }
   }
 
-  const shareText = async (text) => {
+  const shareText = async (text, callback) => {
     text += '\n' + 'https://tonedeaf.vercel.app';
     if(isMobile && navigator.canShare) {
       const shareData = {
@@ -56,6 +56,9 @@ export const useDownload = () => {
       }
     } else if(navigator.clipboard) {
       navigator.clipboard.writeText(text);
+      if(callback) {
+        callback(text);
+      }
     }
   }
 
