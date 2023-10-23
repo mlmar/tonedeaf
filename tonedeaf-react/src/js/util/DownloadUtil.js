@@ -18,7 +18,10 @@ export const useDownload = () => {
     const el = exportRef?.current;
     if(!el) return;
 
-    const canvas = await html2canvas(el, { useCORS: true });
+    const canvas = await html2canvas(el, { 
+      useCORS: true,
+      letterRendering: true
+    });
     if(isMobile && navigator.canShare) {
       canvas.toBlob(async (blob) => {
         const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]

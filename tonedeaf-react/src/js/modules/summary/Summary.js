@@ -19,9 +19,9 @@ const Summary = ({ setNavIndex }) => {
   return (
     <div className="page summary flex-fill" >
       <div className="flex-col" ref={exportRef}>
-        <div class="flex mobile-flex">
-          <Options title="Your Summary" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex} data-html2canvas-ignore/>
-          <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,1)} onClick={handledownloadClick} data-html2canvas-ignore/>
+        <div className="flex mobile-flex" data-html2canvas-ignore>
+          <Options title="Your Summary" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
+          <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,1)} onClick={handledownloadClick}/>
         </div>
         <header className="flex flex-middle flex-space-between">
           <label className="large bold flex"> In&nbsp;the&nbsp;last&nbsp;{DEFAULTS.SUMMARY_TEXT[timeFrameIndex]}... </label>

@@ -526,8 +526,9 @@ label, p {
 
 /*** SUMMARY ***/
 
-.summary .mobile-flex {
-  margin: var(--side-padding) 0;
+.summary .mobile-flex,
+.summary .mobile-flex + * {
+  margin-top: var(--side-padding);
 }
 
 .summary > * {

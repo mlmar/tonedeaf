@@ -42,16 +42,16 @@ const TracksSummary = (props) => {
           <p className="large bold inactive"> the stats from your top 50 tracks </p>
           <div className="flex-wrap  stats">
               <label className="flex-col big bold">
-                <span className="flex"> beats per minute </span>
+                <span> beats per minute </span>
                 <span className="flex bold"> {averages.tempo.total} bpm </span>
               </label>
               <label className="flex-col big bold">
-                <span className="flex"> song length </span>
-                <span className="flex bold"> {averages.duration.total} s </span>
+                <span> song length </span>
+                <span className="bold"> {averages.duration.total} s </span>
               </label>
               <label className="flex-col big bold">
-                <span className="flex"> popularity </span>
-                <span className="flex bold"> {averages.popularity.total} / 100 </span>
+                <span> popularity </span>
+                <span className="bold"> {averages.popularity.total} / 100 </span>
               </label>
           </div>
           <Chart className="flex-fill" averages={averages} display={DEFAULTS.CHART_COLS}/>

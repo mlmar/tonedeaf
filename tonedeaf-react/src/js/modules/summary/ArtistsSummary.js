@@ -16,8 +16,8 @@ const ArtistSummary = (props) => {
         let item = artistsInfo.genres?.[i + 1];
         genres.push(
           <label className="flex-col big bold" key={i }> 
-            <span className="flex"> {item.genre} </span>
-            <span className="flex bold"> {(item.total / first.total * 100).toFixed(1)}% </span>
+            <span> {item.genre} </span>
+            <span className="bold"> {(item.total / first.total * 100).toFixed(1)}% </span>
           </label>
         );
       }
