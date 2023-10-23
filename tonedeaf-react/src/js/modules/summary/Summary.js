@@ -8,13 +8,16 @@ import DEFAULTS from '../../util/Defaults.js';
 
 const Summary = ({ setNavIndex }) => {
   const [exportRef, shareImage] = useDownload();
+  const handledownloadClick = () => {
+    shareImage();
+  }
 
   return (
     <div className="page summary flex-fill" >
       <div className="flex-col" ref={exportRef}>
         <header className="flex flex-middle flex-space-between">
           <label className="large bold flex"> In&nbsp;the&nbsp;last&nbsp;month... </label>
-          <Options options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,1)} onClick={shareImage} data-html2canvas-ignore/>
+          <Options options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,1)} onClick={handledownloadClick} data-html2canvas-ignore/>
         </header>
         <ArtistSummary onClick={() => setNavIndex(1)}/>
         <br></br>
