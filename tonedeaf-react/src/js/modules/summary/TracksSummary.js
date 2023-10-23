@@ -4,8 +4,8 @@ import DEFAULTS from '../../util/Defaults';
 import Chart from './Chart';
 
 const TracksSummary = (props) => {
-  const { onClick } = props;
-  const tracksInfo = useTracksAndFeatures(2);
+  const { index,onClick } = props;
+  const tracksInfo = useTracksAndFeatures(index);
 
   const topTracks = () => {
     let tracks = [];
@@ -39,18 +39,18 @@ const TracksSummary = (props) => {
     if(averages) {
       return (
         <div className="flex-col panel">
-          <p className="large bold inactive"> your top 50 tracks made for unique stats </p>
+          <p className="large bold inactive"> the stats from your top 50 tracks </p>
           <div className="flex-wrap  stats">
               <label className="flex-col big bold">
-                beats per minute
+                <span className="flex"> beats per minute </span>
                 <span className="flex bold"> {averages.tempo.total} bpm </span>
               </label>
               <label className="flex-col big bold">
-                song length
+                <span className="flex"> song length </span>
                 <span className="flex bold"> {averages.duration.total} s </span>
               </label>
               <label className="flex-col big bold">
-                popularity
+                <span className="flex"> popularity </span>
                 <span className="flex bold"> {averages.popularity.total} / 100 </span>
               </label>
           </div>

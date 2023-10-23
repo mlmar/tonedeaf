@@ -4,8 +4,8 @@ import DEFAULTS from '../../util/Defaults';
 import Load from '../ui/Load';
 
 const ArtistSummary = (props) => {
-  const { onClick } = props;
-  const artistsInfo = useArtistsAndGenres(2);
+  const { index, onClick } = props;
+  const artistsInfo = useArtistsAndGenres(index);
 
   const topGenres = () => {
     let genres = [];
@@ -16,7 +16,7 @@ const ArtistSummary = (props) => {
         let item = artistsInfo.genres?.[i + 1];
         genres.push(
           <label className="flex-col big bold" key={i }> 
-            {item.genre}
+            <span className="flex"> {item.genre} </span>
             <span className="flex bold"> {(item.total / first.total * 100).toFixed(1)}% </span>
           </label>
         );

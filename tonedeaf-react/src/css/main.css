@@ -565,7 +565,7 @@ label, p {
   margin-bottom: 1rem;
 }
 
-.summary .stats label span {
+.summary .stats label span:not(:first-child) {
   align-items: flex-end;
   color: var(--inactive);
   font-size: .75em;

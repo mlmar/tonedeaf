@@ -10,7 +10,7 @@
 */
 const Options = ({ title, description, options, onClick, col, index, children, className, ...props}) => {
   const handleClick = (event) => {
-    if(onClick) onClick(parseInt(event.target.id));
+    if(onClick) onClick(parseInt(event.currentTarget.id));
   }
 
   return (

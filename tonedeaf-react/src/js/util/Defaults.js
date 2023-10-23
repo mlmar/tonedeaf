@@ -23,6 +23,12 @@ const DEFAULTS = {
   SHARE_TEXT_TRACKS: ['My top tracks', 'My top tracks in the last 6 months', 'My top tracks in the last month'],
 
   CHART_COLS: ['acousticness', 'danceability', 'energy', 'valence'],
+
+  SUMMARY_TEXT: [
+    'year',
+    'six months',
+    'month'
+  ]
 }
 
 
