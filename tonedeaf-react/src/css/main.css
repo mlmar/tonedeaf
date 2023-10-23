@@ -571,6 +571,8 @@ label, p {
 .summary .stats > * {
   flex-basis: 33%;
   margin-bottom: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .summary .stats label span:not(:first-child) {
