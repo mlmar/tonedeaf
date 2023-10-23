@@ -222,7 +222,10 @@
   .hover-select:hover::after, .hover-deselect:hover::after {
     font-size: 5rem;
   }
-
+    
+  .summary .stats > * {
+    flex-basis: 50%;
+  }
 
   .plus-btn {
     font-size: .6em;
