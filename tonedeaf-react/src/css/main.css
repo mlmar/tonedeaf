@@ -526,7 +526,7 @@ label, p {
 
 /*** SUMMARY ***/
 
-.summary header {
+.summary header, .summary .mobile-flex {
   margin: 1rem 0;
 }
 
@@ -546,6 +546,10 @@ label, p {
 
 .summary .flex > .image-wrapper {
   flex-basis: 40%;
+}
+
+.summary .float-images:last-child {
+  margin-top: var(--side-padding);
 }
 
 .summary .float-images {

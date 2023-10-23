@@ -19,15 +19,14 @@ const Summary = ({ setNavIndex }) => {
   return (
     <div className="page summary flex-fill" >
       <div className="flex-col" ref={exportRef}>
+        <div class="flex mobile-flex">
+          <Options title="Your Summary" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex} data-html2canvas-ignore/>
+          <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,1)} onClick={handledownloadClick} data-html2canvas-ignore/>
+        </div>
         <header className="flex flex-middle flex-space-between">
           <label className="large bold flex"> In&nbsp;the&nbsp;last&nbsp;{DEFAULTS.SUMMARY_TEXT[timeFrameIndex]}... </label>
-          <div class="flex">
-            <Options options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex} data-html2canvas-ignore/>
-            <Options options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,1)} onClick={handledownloadClick} data-html2canvas-ignore/>
-          </div>
         </header>
         <ArtistSummary index={timeFrameIndex} onClick={() => setNavIndex(1)}/>
-        <br></br>
         <TracksSummary index={timeFrameIndex} onClick={() => setNavIndex(2)}/>
       </div>
     </div>
