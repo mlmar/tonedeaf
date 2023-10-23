@@ -269,7 +269,12 @@ export const createPlaylist = async (id, text, tracks, recent) => {
       console.log(response);
     }
 
-    window.open(playlist.uri);
+    // window.open is blocked in ios
+    const a = document.createElement('a')
+    a.setAttribute('href', playlist.uri)
+    a.click()
+    a.remove();
+
     return response;
   } catch(error) {
     console.error(error);
