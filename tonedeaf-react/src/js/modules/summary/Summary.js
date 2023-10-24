@@ -24,7 +24,7 @@ const Summary = ({ setNavIndex }) => {
           <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,1)} onClick={handledownloadClick}/>
         </div>
         <header className="flex flex-middle flex-space-between">
-          <label className="large bold flex"> In&nbsp;the&nbsp;last&nbsp;{DEFAULTS.SUMMARY_TEXT[timeFrameIndex]}... </label>
+          <label className="large bold"> In the last {DEFAULTS.SUMMARY_TEXT[timeFrameIndex]}... </label>
         </header>
         <ArtistSummary index={timeFrameIndex} onClick={() => setNavIndex(1)}/>
         <TracksSummary index={timeFrameIndex} onClick={() => setNavIndex(2)}/>

@@ -531,6 +531,7 @@ label, p {
   margin-top: var(--side-padding);
 }
 
+.summary,
 .summary > * {
   background: var(--dark);
   margin: 0 !important;
