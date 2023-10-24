@@ -18,11 +18,11 @@ const Summary = ({ setNavIndex }) => {
 
   return (
     <div className="page summary flex-fill" >
+      <div className="flex mobile-flex" data-html2canvas-ignore>
+        <Options title="Your Summary" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
+        <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,1)} onClick={handledownloadClick}/>
+      </div>
       <div className="flex-col" ref={exportRef}>
-        <div className="flex mobile-flex" data-html2canvas-ignore>
-          <Options title="Your Summary" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
-          <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,1)} onClick={handledownloadClick}/>
-        </div>
         <header className="flex flex-middle flex-space-between">
           <label className="large bold"> In the last {DEFAULTS.SUMMARY_TEXT[timeFrameIndex]}... </label>
         </header>
