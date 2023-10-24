@@ -19,7 +19,7 @@ const Options = ({ title, description, options, onClick, col, index, children, c
       { description && <p className="small"> {description} </p> }
       {children}
       <div className={"options " + (col ? "flex-col" : "")}>
-        { options?.map((option, i) => <button className={"gray-btn bold flex option" + (index === i ? "selected" : "")} onClick={handleClick} id={i} key={option+i}> {option} </button>)}
+        { options?.map((option, i) => <button className={"gray-btn bold flex option " + (index === i ? "selected" : "")} onClick={handleClick} id={i} key={option+i}> {option} </button>)}
       </div>
     </div>
   )
