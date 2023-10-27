@@ -13,7 +13,7 @@ const Summary = ({ setNavIndex }) => {
   const [exportRef, shareImage, downloadImage] = useDownload();
   const handledownloadClick = (index) => {
     if(index === 0) {
-      shareImage();
+      shareImage(true);
     } else {
       downloadImage()
     }
