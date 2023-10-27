@@ -40,18 +40,18 @@ export const useDownload = () => {
         } 
       });
     } else {
-      const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
-      const a = document.createElement('a')
-      a.setAttribute('download', 'tonedeaf.png')
-      a.setAttribute('href', image)
-      a.click()
-      a.remove();
-      canvas.remove();
+      await downloadImage();
     }
   }
 
   const downloadImage = async () => {
-    await shareImage(null);
+    const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
+    const a = document.createElement('a')
+    a.setAttribute('download', 'tonedeaf.png')
+    a.setAttribute('href', image)
+    a.click()
+    a.remove();
+    canvas.remove();
   }
 
   const shareText = async (text, callback) => {
