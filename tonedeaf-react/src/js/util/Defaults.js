@@ -12,7 +12,7 @@ const DEFAULTS = {
   VIEW_OPTIONS: ["Grid", "List"],
 
   DOWNLOAD_OPTIONS: [
-    <img src={arrowIcon} alt="Send" />,
+    <img src={arrowIcon} alt="Send"/>,
     <img src={cameraIcon} alt="Screenshot" />,
     <img src={copyFileIcon} alt="Text" />
   ],

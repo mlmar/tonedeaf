@@ -24,7 +24,7 @@ const Summary = ({ setNavIndex }) => {
     <div className="page summary flex-fill" >
       <div className="flex mobile-flex" data-html2canvas-ignore>
         <Options title="Your Summary" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
-        <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,2)} onClick={handledownloadClick}/>
+        <Options title="Share" className="mobile-share-options" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,2)} onClick={handledownloadClick}/>
       </div>
       <div className="flex-col" ref={exportRef}>
         <header className="flex flex-middle flex-space-between">

@@ -54,6 +54,10 @@ label, p {
   display: none !important;
 }
 
+.mobile-share-options button:first-child {
+  display: none;
+}
+
 /****************** SCROLLBAR ******************/
 
 ::-webkit-scrollbar {

@@ -230,6 +230,10 @@
   .plus-btn {
     font-size: .6em;
   }
+
+  .mobile-share-options button:first-child {
+    display: flex;
+  }
   
   @keyframes slide-left {
     0% { margin-right: -45vw; }
