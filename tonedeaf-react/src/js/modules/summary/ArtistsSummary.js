@@ -15,7 +15,7 @@ const ArtistSummary = (props) => {
       for(let i = 0; i < DEFAULTS.TOP_GENRES_LIMIT; i++) {
         let item = artistsInfo.genres?.[i + 1];
         genres.push(
-          <label className="flex-col big bold" key={i }> 
+          <label className="flex-col big bold" key={i+item.genre}> 
             <span> {item.genre} </span>
             <span className="bold"> {(item.total / first.total * 100).toFixed(1)}% </span>
           </label>
@@ -24,6 +24,11 @@ const ArtistSummary = (props) => {
 
       return (
         <div className="flex-col panel">
+          {/* <div className="stats flex-wrap">
+            {
+              artistsInfo.artists.slice(1,10).map((artist,i) => <label className="flex-col big bold" key={i+artist.name}> {i+2 + '. ' + artist.name} </label>)
+            }
+          </div> */}
           <p className="large bold inactive"> you listened to artists from <span className="white"> { artistsInfo?.genres?.length - 1} </span> genres &mdash; these were your favorites </p>
           <div className="stats flex-wrap"> {genres} </div>
         </div>

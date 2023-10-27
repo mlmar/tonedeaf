@@ -10,9 +10,13 @@ import DEFAULTS from '../../util/Defaults.js';
 const Summary = ({ setNavIndex }) => {
   const [timeFrameIndex, setTimeFrameIndex] = useState(DEFAULTS.TIME_FRAME_INDEX); // long term by default
 
-  const [exportRef, shareImage] = useDownload();
-  const handledownloadClick = () => {
-    shareImage();
+  const [exportRef, shareImage, downloadImage] = useDownload();
+  const handledownloadClick = (index) => {
+    if(index === 0) {
+      shareImage();
+    } else {
+      downloadImage()
+    }
   }
 
 
@@ -20,7 +24,7 @@ const Summary = ({ setNavIndex }) => {
     <div className="page summary flex-fill" >
       <div className="flex mobile-flex" data-html2canvas-ignore>
         <Options title="Your Summary" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
-        <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,1)} onClick={handledownloadClick}/>
+        <Options title="Share" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,2)} onClick={handledownloadClick}/>
       </div>
       <div className="flex-col" ref={exportRef}>
         <header className="flex flex-middle flex-space-between">

@@ -25,11 +25,13 @@ export const useDownload = () => {
     if(isMobile && navigator.canShare) {
       canvas.toBlob(async (blob) => {
         const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
-        text = text ? text + '\n' : '';
         const shareData = {
-          text: text + 'https://tonedeaf.vercel.app',
-          files,
+          files
         }
+        if(text) {
+          shareData.text = (text ? text + '\n' : '') + 'https://tonedeaf.vercel.app';
+        }
+
         if (navigator.canShare(shareData)) {
           try {
             await navigator.share(shareData)
@@ -49,8 +51,12 @@ export const useDownload = () => {
     }
   }
 
+  const downloadImage = async () => {
+    await shareImage(null);
+  }
+
   const shareText = async (text, callback) => {
-    text += '\n' + 'https://tonedeaf.vercel.app';
+    text += '\nhttps://tonedeaf.vercel.app';
     if(isMobile && navigator.canShare) {
       const shareData = {
         text: text
@@ -70,5 +76,5 @@ export const useDownload = () => {
     }
   }
 
-  return [exportRef, shareImage, shareText];
+  return [exportRef, downloadImage, shareImage, shareText];
 }

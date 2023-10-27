@@ -28,10 +28,12 @@ const ArtistPage = () => {
 
   const [overflowVisible, setOverflowVisible] = useState(false);
 
-  const [exportRef, shareImage, shareText] = useDownload();
+  const [exportRef, shareImage, downloadImage, shareText] = useDownload();
   const handledownloadClick = (index) => {
     if(index === 0) {
       shareImage(DEFAULTS.SHARE_TEXT_ARTISTS[timeFrameIndex]);
+    } else if(index === 1) {
+      downloadImage();
     } else {
       shareText(dataToTextList(filteredArtists), () => {
         setAlertText("Copied to clipboard");

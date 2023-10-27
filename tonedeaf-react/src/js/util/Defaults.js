@@ -1,3 +1,4 @@
+import arrowIcon from '../../icons/arrow-icon.svg';
 import cameraIcon from '../../icons/camera-icon.svg';
 import copyFileIcon from '../../icons/copy-file-icon.svg';
 
@@ -11,6 +12,7 @@ const DEFAULTS = {
   VIEW_OPTIONS: ["Grid", "List"],
 
   DOWNLOAD_OPTIONS: [
+    <img src={arrowIcon} alt="Send" />,
     <img src={cameraIcon} alt="Screenshot" />,
     <img src={copyFileIcon} alt="Text" />
   ],
