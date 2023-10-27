@@ -10,7 +10,7 @@ import DEFAULTS from '../../util/Defaults.js';
 const Summary = ({ setNavIndex }) => {
   const [timeFrameIndex, setTimeFrameIndex] = useState(DEFAULTS.TIME_FRAME_INDEX); // long term by default
 
-  const [exportRef, shareImage, downloadImage] = useDownload();
+  const { exportRef, shareImage, downloadImage } = useDownload();
   const handledownloadClick = (index) => {
     if(index === 0) {
       shareImage(true);

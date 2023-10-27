@@ -22,7 +22,7 @@ const TrackPage = () => {
   const [viewIndex, setViewIndex] = useState(DEFAULTS.VIEW_INDEX); // 0 = grid, 1 = list, 2 = stats
   const info = useTracksAndFeatures(timeFrameIndex);
 
-  const [exportRef, shareImage, downloadImage, shareText] = useDownload();
+  const { exportRef, shareImage, downloadImage, shareText } = useDownload();
   const handledownloadClick = (index) => {
     if(index === 0) {
       shareImage(DEFAULTS.SHARE_TEXT_TRACKS[timeFrameIndex]);

@@ -17,7 +17,6 @@ export const useDownload = () => {
   const shareImage = async (text) => {
     const el = exportRef?.current;
     if(!el) return;
-
     const canvas = await html2canvas(el, { 
       useCORS: true,
       letterRendering: true
@@ -29,7 +28,7 @@ export const useDownload = () => {
           files
         }
         if(text) {
-          shareData.text = (text ? text + '\n' : '') + 'https://tonedeaf.vercel.app';
+          shareData.text = (text.length ? text + '\n' : '') + 'https://tonedeaf.vercel.app';
         }
 
         if (navigator.canShare(shareData)) {
@@ -76,5 +75,5 @@ export const useDownload = () => {
     }
   }
 
-  return [exportRef, downloadImage, shareImage, shareText];
+  return { exportRef, shareImage, downloadImage, shareText }
 }
