@@ -15,11 +15,12 @@ export const useDownload = () => {
   const exportRef = useRef();
 
   const shareImage = async (text) => {
-    const canvas = await exportCanvas();
-    if(!canvas) {
-      return;
-    }
-
+    const el = exportRef?.current;
+    if(!el) return;
+    const canvas = await html2canvas(el, { 
+      useCORS: true,
+      letterRendering: true
+    });
     if(isMobile && navigator.canShare) {
       canvas.toBlob(async (blob) => {
         const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
@@ -39,32 +40,18 @@ export const useDownload = () => {
         } 
       });
     } else {
-      await downloadImage(canvas);
+      const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
+      const a = document.createElement('a')
+      a.setAttribute('download', 'tonedeaf.png')
+      a.setAttribute('href', image)
+      a.click()
+      a.remove();
+      canvas.remove();
     }
   }
 
-  const downloadImage = async (canvas) => {
-    canvas = canvas || await exportCanvas();
-    const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
-    const a = document.createElement('a')
-    a.setAttribute('download', 'tonedeaf.png')
-    a.setAttribute('href', image)
-    a.click()
-    a.remove();
-    canvas.remove();
-  }
-
-  const exportCanvas = async () => {
-    const el = exportRef?.current;
-    if(!el) {
-      return;
-    }
-
-    const canvas = await html2canvas(el, { 
-      useCORS: true,
-      letterRendering: true
-    });
-    return canvas;
+  const downloadImage = async () => {
+    await shareImage(null);
   }
 
   const shareText = async (text, callback) => {
