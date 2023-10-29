@@ -112,6 +112,10 @@ label, p {
   flex: 1 1;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .flex-reverse {
   flex-direction: column-reverse;
 }
@@ -453,18 +457,23 @@ label, p {
   padding: 0 1rem 0 1rem;
   border-radius: 2rem;
   text-decoration: none;
+  margin-bottom: .8rem;
 }
 
 .login .demo-btn {
   background: none;
   color: var(--fg);
   border: none;
-  margin-top: .8rem;
+  text-decoration: underline;
 }
 
 .login .login-btn:hover, .login .demo-btn:hover {
   color: var(--blue);
   transition: all 1s ease;
+}
+
+.login .spacer {
+  margin: 0 .5rem;
 }
 
 
@@ -600,6 +609,10 @@ label, p {
   margin-right: var(--side-padding)
 }
 
+.stats.genres > label {
+  cursor: pointer;
+}
+
 /*** CHART ***/
 
 .chart .row {
@@ -687,11 +700,15 @@ label, p {
   background: var(--dark);
 }
 
+.page header > * {
+  margin-top: var(--side-padding);
+}
+
 .page .flex .options-panel:not(:last-child) {
   margin-right: 2rem;
 }
 
-.page > * {
+.page > *:not(header) {
   margin-top: var(--side-padding);
 }
 

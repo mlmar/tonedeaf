@@ -57,22 +57,35 @@ app.use(demoEndpoints);
 
 
 
-
+// your application requests authorization
+const scope = 'user-read-private user-read-email user-read-playback-state user-follow-read user-library-read playlist-read-private playlist-read-collaborative user-top-read user-read-playback-position user-read-recently-played playlist-modify-private playlist-modify-public user-modify-playback-state';
 
 app.get('/login', function(req, res) {
-
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  // your application requests authorization
-  var scope = 'user-read-private user-read-email user-read-playback-state user-follow-read user-library-read playlist-read-private playlist-read-collaborative user-top-read user-read-playback-position user-read-recently-played playlist-modify-private playlist-modify-public user-modify-playback-state';
   res.redirect('https://accounts.spotify.com/authorize?' +
     new URLSearchParams({
       response_type: 'code',
       client_id: client_id,
       scope: scope,
       redirect_uri: redirect_uri,
-      state: state
+      state: state,
+    }));
+});
+
+app.get('/change_user', function(req, res) {
+  var state = generateRandomString(16);
+  res.cookie(stateKey, state);
+
+  res.redirect('https://accounts.spotify.com/authorize?' +
+    new URLSearchParams({
+      response_type: 'code',
+      client_id: client_id,
+      scope: scope,
+      redirect_uri: redirect_uri,
+      state: state,
+      show_dialog: true
     }));
 });
 
@@ -129,10 +142,7 @@ app.get('/callback', function(req, res) {
             refresh_token: refresh_token
           }));
       } else {
-        res.redirect('/#' +
-          new URLSearchParams({
-            error: 'invalid_token'
-          }));
+        res.redirect(home + '/#');
       }
     });
   }

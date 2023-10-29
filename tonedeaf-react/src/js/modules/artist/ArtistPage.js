@@ -15,13 +15,10 @@ import DEFAULTS from '../../util/Defaults.js';
 /*
   Displays list of users top artists from a selected time range
 */
-const ArtistPage = () => {
+const ArtistPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex, genre, setGenre }) => {
   const { setAlertText, setAlertVisible, alertElement } = useAlert("Copied to clipboard");
-  const [timeFrameIndex, setTimeFrameIndex] = useState(DEFAULTS.TIME_FRAME_INDEX); // long term by default
-  const [viewIndex, setViewIndex] = useState(DEFAULTS.VIEW_INDEX); // 0 = grid, 1 = list, 2 = stats
 
   const info = useArtistsAndGenres(timeFrameIndex);
-  const [genre, setGenre] = useState("all");
   const filteredArtists = useMemo(() => {
     return info?.artists.filter((artist) => genre === "all" || artist.genres.find((g) => (genre === g)));
   }, [info, genre])
@@ -112,11 +109,11 @@ const ArtistPage = () => {
   return (
     <div className="page">
       {alertElement}
-      <div className="flex mobile-flex">
+      <header className="flex flex-wrap mobile-flex">
         <Options title="Your Top Artists" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
         <Options title="Share" className="mobile-share-options" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
-      </div>
+      </header>
       { (viewIndex === 0 || viewIndex === 1) && 
         <Options title="Genres" className="genres-panel" description="Select any genre to filter artists:">
           <div className={"buttons overflow-" + overflowVisible}>

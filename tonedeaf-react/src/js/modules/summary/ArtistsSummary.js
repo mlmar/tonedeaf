@@ -4,23 +4,18 @@ import DEFAULTS from '../../util/Defaults';
 import Load from '../ui/Load';
 
 const ArtistSummary = (props) => {
-  const { index, onClick } = props;
+  const { index, onArtistClick, onGenreClick } = props;
   const artistsInfo = useArtistsAndGenres(index);
 
   const topGenres = () => {
-    let genres = [];
-    let first = artistsInfo?.genres?.[0];
-
-    if(first) {
-      for(let i = 0; i < DEFAULTS.TOP_GENRES_LIMIT; i++) {
-        let item = artistsInfo.genres?.[i + 1];
-        genres.push(
-          <label className="flex-col big bold" key={i+item.genre}> 
-            <span> {item.genre} </span>
-            <span className="bold"> {(item.total / first.total * 100).toFixed(1)}% </span>
-          </label>
-        );
-      }
+    if(artistsInfo?.genres?.length > 0) {
+      const first = artistsInfo?.genres[0];
+      const genres = artistsInfo?.genres.slice(1, DEFAULTS.TOP_GENRES_LIMIT + 1).map((item, i) =>
+        <label className="flex-col big bold" key={i+item.genre} onClick={() => onGenreClick(item.genre)}> 
+          <span> {item.genre} </span>
+          <span className="bold"> {(item.total / first.total * 100).toFixed(1)}% </span>
+        </label>
+      );
 
       return (
         <div className="flex-col panel">
@@ -30,7 +25,7 @@ const ArtistSummary = (props) => {
             }
           </div> */}
           <p className="large bold inactive"> you listened to artists from <span className="white"> { artistsInfo?.genres?.length - 1} </span> genres &mdash; these were your favorites </p>
-          <div className="stats flex-wrap"> {genres} </div>
+          <div className="stats flex-wrap genres"> {genres} </div>
         </div>
       );
     }
@@ -55,7 +50,7 @@ const ArtistSummary = (props) => {
     return (
       <>
         <p className="panel large bold inactive"> <span className="white"> {artist?.name} </span> was your number one artist </p>
-        <div className="flex-col float-images" onClick={onClick}>
+        <div className="flex-col float-images" onClick={onArtistClick}>
           <div className="flex">
             <ImageWrapper src={artist?.images?.[0].url}/>
             <div className="flex-wrap flex-fill"> {topArtists()} </div>

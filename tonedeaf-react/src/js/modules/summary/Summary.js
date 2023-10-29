@@ -7,9 +7,15 @@ import Options from '../ui/Options.js';
 
 import DEFAULTS from '../../util/Defaults.js';
 
-const Summary = ({ setNavIndex }) => {
-  const [timeFrameIndex, setTimeFrameIndex] = useState(DEFAULTS.TIME_FRAME_INDEX); // long term by default
-
+const Summary = (props) => {
+  const { 
+    setNavIndex, 
+    timeFrameIndex, 
+    setTimeFrameIndex, 
+    setArtistTimeFrameIndex, 
+    setArtistGenre, 
+    setTrackTimeFrameIndex 
+  } = props;
   const { exportRef, shareImage, downloadImage } = useDownload();
   const handledownloadClick = (index) => {
     if(index === 0) {
@@ -19,6 +25,22 @@ const Summary = ({ setNavIndex }) => {
     }
   }
 
+  const handleArtistClick = () => {
+    setNavIndex(1);
+    setArtistTimeFrameIndex(timeFrameIndex);
+  }
+
+  const handleArtistGenreClick = (genre) => {
+    setNavIndex(1);
+    setArtistGenre(genre);
+    setArtistTimeFrameIndex(timeFrameIndex);
+
+  }
+
+  const handleTrackClick = () => {
+    setNavIndex(2);
+    setTrackTimeFrameIndex(timeFrameIndex);
+  }
 
   return (
     <div className="page summary flex-fill" >
@@ -28,10 +50,10 @@ const Summary = ({ setNavIndex }) => {
       </div>
       <div className="flex-col" ref={exportRef}>
         <header className="flex flex-middle flex-space-between">
-          <label className="large bold"> In the last {DEFAULTS.SUMMARY_TEXT[timeFrameIndex]}... </label>
+          <label className="large bold"> In the {DEFAULTS.SUMMARY_TEXT[timeFrameIndex]}... </label>
         </header>
-        <ArtistSummary index={timeFrameIndex} onClick={() => setNavIndex(1)}/>
-        <TracksSummary index={timeFrameIndex} onClick={() => setNavIndex(2)}/>
+        <ArtistSummary index={timeFrameIndex} onArtistClick={handleArtistClick} onGenreClick={handleArtistGenreClick}/>
+        <TracksSummary index={timeFrameIndex} onClick={handleTrackClick}/>
       </div>
     </div>
   )

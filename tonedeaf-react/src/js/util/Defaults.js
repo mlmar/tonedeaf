@@ -27,10 +27,12 @@ const DEFAULTS = {
   CHART_COLS: ['acousticness', 'danceability', 'energy', 'valence'],
 
   SUMMARY_TEXT: [
-    'year',
-    'six months',
-    'month'
-  ]
+    'long term',
+    'last six months',
+    'last month'
+  ],
+
+  GENRE: 'all'
 }
 
 

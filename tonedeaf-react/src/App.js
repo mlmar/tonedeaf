@@ -2,6 +2,7 @@ import './css/main.css';
 import './css/mobile.css';
 
 import { useState, useEffect } from 'react';
+import { useSelections } from './js/hooks/SelectionHooks.js';
 import { getProfile } from './js/util/SpotifyUtil.js';
 import { cache } from './js/util/Session.js';
 
@@ -22,7 +23,7 @@ import TunerPage from './js/modules/tuner/TunerPage.js';
 
 import Load from './js/modules/ui/Load.js';
 
-import { HOME_URL, LOGIN_URL } from './js/util/System.js';
+import { HOME_URL, LOGIN_URL, CHANGE_USER_URL } from './js/util/System.js';
 import { getHashParams } from './js/util/HashUtil.js';
 
 import { setAccessToken } from './js/util/SpotifyUtil.js';
@@ -31,6 +32,21 @@ import DEFAULTS from './js/util/Defaults';
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [navIndex, setNavIndex] = useState(0); // current navigation index for Nav bar
+  const summaryPageProps = useSelections({
+    viewIndex: DEFAULTS.VIEW_INDEX,
+    timeFrameIndex: DEFAULTS.TIME_FRAME_INDEX
+  });
+
+  const artistPageProps = useSelections({
+    viewIndex: DEFAULTS.VIEW_INDEX,
+    timeFrameIndex: DEFAULTS.TIME_FRAME_INDEX
+  });
+  const [artistGenre, setArtistGenre] = useState(DEFAULTS.GENRE);
+
+  const trackPageProps = useSelections({
+    viewIndex: DEFAULTS.VIEW_INDEX,
+    timeFrameIndex: DEFAULTS.TIME_FRAME_INDEX
+  });
 
   /*
     - Get access token provided by spotify
@@ -75,9 +91,9 @@ const App = () => {
 
   const getContent = () => {
     switch(navIndex) {
-      case 0:  return <Summary setNavIndex={setNavIndex}/>
-      case 1:  return <ArtistPage/>
-      case 2:  return <TrackPage/>
+      case 0:  return <Summary setNavIndex={setNavIndex} {...summaryPageProps} setArtistTimeFrameIndex={artistPageProps.setTimeFrameIndex} setArtistGenre={setArtistGenre} setTrackTimeFrameIndex={artistPageProps.setTimeFrameIndex}/>
+      case 1:  return <ArtistPage {...artistPageProps} genre={artistGenre} setGenre={setArtistGenre}/>
+      case 2:  return <TrackPage {...trackPageProps}/>
       case 3:  return <RecentPage/>
       case 4:  return <ScopePage/>
       case 5:  return <TunerPage/>
@@ -90,7 +106,11 @@ const App = () => {
         { !loggedIn ? (
             <Login>
               <a href={LOGIN_URL} className="login-btn large"> sign in with Spotify </a>
-              <button className="demo-btn medium" onClick={handleDemo}> or try a demo </button>
+              <div className="flex flex-middle">
+                <a href={CHANGE_USER_URL} className="demo-btn medium"> change user </a>
+                <span className="spacer"> or </span>
+                <button className="demo-btn medium" onClick={handleDemo}> try a demo </button>
+              </div>
             </Login>
           ) : (
             <main className="main">
