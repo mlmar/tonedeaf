@@ -44,10 +44,10 @@ const Summary = (props) => {
 
   return (
     <div className="page summary flex-fill" >
-      <div className="flex flex-wrap mobile-flex" data-html2canvas-ignore>
+      <header className="flex flex-wrap mobile-flex" data-html2canvas-ignore>
         <Options title="Your Summary" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="Share" className="mobile-share-options" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,2)} onClick={handledownloadClick}/>
-      </div>
+      </header>
       <div className="flex-col" ref={exportRef}>
         <header className="flex flex-middle flex-space-between">
           <label className="large bold"> In the {DEFAULTS.SUMMARY_TEXT[timeFrameIndex]}... </label>

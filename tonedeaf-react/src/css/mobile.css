@@ -28,10 +28,6 @@
     flex-shrink: 0;
   }
 
-  .mobile-flex > *:not(:last-child) {
-    margin-bottom: var(--side-padding);
-  }
-
   .super {
     font-size: 20vw;
     font-weight: 500;

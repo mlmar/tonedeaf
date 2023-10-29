@@ -540,12 +540,7 @@ label, p {
 /*** SUMMARY ***/
 
 .summary .mobile-flex {
-  padding-top: var(--side-padding);
   padding-bottom: 0;
-}
-
-.summary header {
-  padding-top: var(--side-padding);
 }
 
 .summary,
