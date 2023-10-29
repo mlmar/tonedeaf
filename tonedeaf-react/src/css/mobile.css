@@ -20,7 +20,7 @@
   /*** NAV ***/
 
   .mobile-flex.flex-wrap {
-    flex-wrap: none;
+    flex-wrap: nowrap;
   }
 
   .mobile-flex, .genres-panel {
