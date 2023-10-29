@@ -544,12 +544,17 @@ label, p {
 }
 
 .summary,
-.summary > * {
+.summary.page > *:not(.cards):not(.images):not(.float-images):not(header) {
   background: var(--dark);
-  margin: 0 !important;
+  margin: 0;
 }
 
-.summary > * > *:not(.float-images) {
+.summary > *:not(header) > *:not(.float-images) {
+  margin-left: var(--side-padding);
+  margin-right: var(--side-padding);
+}
+
+.summary > header {
   margin-left: var(--side-padding);
   margin-right: var(--side-padding);
 }
