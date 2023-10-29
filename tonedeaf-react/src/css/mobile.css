@@ -19,6 +19,9 @@
 
   /*** NAV ***/
 
+  .mobile-flex.flex-wrap {
+    flex-wrap: none;
+  }
 
   .mobile-flex, .genres-panel {
     flex-direction: column !important;
