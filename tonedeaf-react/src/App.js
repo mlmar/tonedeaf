@@ -91,7 +91,7 @@ const App = () => {
 
   const getContent = () => {
     switch(navIndex) {
-      case 0:  return <Summary setNavIndex={setNavIndex} {...summaryPageProps} setArtistTimeFrameIndex={artistPageProps.setTimeFrameIndex} setArtistGenre={setArtistGenre} setTrackTimeFrameIndex={artistPageProps.setTimeFrameIndex}/>
+      case 0:  return <Summary setNavIndex={setNavIndex} {...summaryPageProps} setArtistTimeFrameIndex={artistPageProps.setTimeFrameIndex} setArtistGenre={setArtistGenre} setTrackTimeFrameIndex={trackPageProps.setTimeFrameIndex}/>
       case 1:  return <ArtistPage {...artistPageProps} genre={artistGenre} setGenre={setArtistGenre}/>
       case 2:  return <TrackPage {...trackPageProps}/>
       case 3:  return <RecentPage/>

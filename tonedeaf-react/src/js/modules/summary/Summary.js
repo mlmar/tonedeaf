@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useDownload } from '../../util/DownloadUtil.js';
 import ArtistSummary from './ArtistsSummary.js';
 import TracksSummary from './TracksSummary.js';
