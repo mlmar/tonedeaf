@@ -1,7 +1,15 @@
 import { cache } from './Session.js';
-import { getDemoNowPlaying, getDemoArtists, getDemoGenres, getDemoTracks, getDemoFeatures, getDemoAverages, getDemoRecent, getDemoSeeds } from '../service/DemoService.js';
+import { getDemo } from '../service/DemoService.js';
 import { getNowPlaying, getTopArtistsAndGenres, getTracksAndFeatures, getRecentTracks, getGenreSeeds } from './SpotifyUtil.js';
 import { createLookup } from './StatsUtil.js';
+
+export const fetchDemo = async () => {
+  const demoCache = await getDemo();
+  for(let prop in demoCache) {
+    cache[prop] = demoCache[prop];
+  }
+  return true;
+}
 
 /*
   - Caches all responses
@@ -9,6 +17,7 @@ import { createLookup } from './StatsUtil.js';
 */
 
 export const preFetch = async () => {
+  await fetchNowPlaying();
   await fetchArtistsAndGenres(0);
   await fetchArtistsAndGenres(1);
   await fetchArtistsAndGenres(2);
@@ -16,17 +25,21 @@ export const preFetch = async () => {
   await fetchTracksAndFeatures(0);
   await fetchTracksAndFeatures(1);
   await fetchTracksAndFeatures(2);
+  await fetchSeeds();
+  await fetchRecent();
   createLookup();
 
   return true;
 }
 
+window.preFetch = preFetch;
+
 export const fetchNowPlaying = async () => {
   if(cache["demo"]) {
-    const response = await getDemoNowPlaying();
-    return response;
+    return cache["nowPlaying"];
   } else {
     const response = await getNowPlaying();
+    cache["nowPlaying"] = response;
     return response;
   }
 }
@@ -37,18 +50,6 @@ export const fetchArtistsAndGenres = async (timeFrameIndex) => {
   if(artistsCache) { // search cache first
     console.log("Retrieving from cache");
     return { artists: artistsCache, genres: genresCache };
-  } else if(cache["demo"]) {
-    const demoArtists = await getDemoArtists(); // returns artists for all 3 time ranges
-    const demoGenres = await getDemoGenres();
-
-    console.log("Cacheing demo artists and genres")
-    cache["artists"] = demoArtists;
-    cache["genres"] = demoGenres;
-
-    return { 
-      artists : cache["artists"][timeFrameIndex], 
-      genres : cache["genres"][timeFrameIndex]
-    }
   } else { // signed in
     const { artists, genres } = await getTopArtistsAndGenres(timeFrameIndex);
 
@@ -67,21 +68,6 @@ export const fetchTracksAndFeatures = async (timeFrameIndex) => {
   if(tracksCache) { // search cache first
     console.log("Retrieving from cache");
     return { tracks : tracksCache, features: featuresCache, averages: averagesCache };
-  } else if(cache["demo"]) {
-    const demoTracks = await getDemoTracks();
-    const demoFeatures = await getDemoFeatures();
-    const demoverages = await getDemoAverages();
-
-    console.log("Cacheing demo tracks and features");
-    cache["tracks"] = demoTracks;
-    cache["features"] = demoFeatures;
-    cache["averages"] = demoverages;
-
-    return {
-      tracks: cache["tracks"][timeFrameIndex],
-      features: cache["features"][timeFrameIndex],
-      averages: cache["averages"][timeFrameIndex]
-    }
   } else { // signed in
     const { tracks, features, averages } = await getTracksAndFeatures(timeFrameIndex);
     
@@ -95,12 +81,17 @@ export const fetchTracksAndFeatures = async (timeFrameIndex) => {
 }
 
 export const fetchRecent = async () => {
-  if(cache["demo"]) {
+  const recentCache = cache["recent"];
+  if(recentCache) {
     console.log("Fetching demo recent tracks");
-    const demoRecent = await getDemoRecent();
-    return demoRecent;
+    return recentCache;
   } else {
+    cache["recent"] = null;
     const tracks = await getRecentTracks();
+
+    console.log("Cacheing recent");
+    cache["recent"] = tracks;
+
     return tracks;
   }
 }
@@ -109,11 +100,6 @@ export const fetchSeeds = async () => {
   const seedsCache = cache["genreSeeds"];
   if(seedsCache) {
     return seedsCache;
-  } else if(cache["demo"]) {
-    console.log("Cacheing demo seeds");
-    const demoSeeds = await getDemoSeeds();
-    cache["genreSeeds"] = demoSeeds;
-    return demoSeeds;
   } else {
     const seeds = await getGenreSeeds();
     console.log("Cacheing seeds");

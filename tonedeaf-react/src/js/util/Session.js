@@ -15,7 +15,12 @@ export const cache = {
 
   search : {},
 
-  demo : false,
+  lookup: null,
 
-  lookup: null
+  nowPlaying: null,
+  recent: null,
+
+  demo : false,
 }
+
+window.getCache = () => cache;

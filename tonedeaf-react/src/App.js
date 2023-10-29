@@ -11,10 +11,7 @@ import Boundary from './js/modules/Boundary';
 import Login from './js/modules/login/Login.js';
 import Nav from './js/modules/ui/Nav.js';
 
-// import Profile from './js/modules/user/Profile.js';
-// import PreFetch from './js/modules/PreFetchWrapper';
 import Summary from './js/modules/summary/Summary';
-// import NowPlaying from './js/modules/user/NowPlaying.js';
 import ArtistPage from './js/modules/artist/ArtistPage.js';
 import TrackPage from './js/modules/track/TrackPage.js';
 import RecentPage from './js/modules/track/RecentPage.js';
@@ -28,6 +25,7 @@ import { getHashParams } from './js/util/HashUtil.js';
 
 import { setAccessToken } from './js/util/SpotifyUtil.js';
 import DEFAULTS from './js/util/Defaults';
+import { fetchDemo } from './js/util/DataUtil';
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -80,9 +78,10 @@ const App = () => {
     login();
   }, []);
 
-  const handleDemo = () => {
-    setLoggedIn(true);
+  const handleDemo = async () => {
+    await fetchDemo();
     cache["demo"] = true;
+    setLoggedIn(true);
   }
 
   const Fallback = () => {
