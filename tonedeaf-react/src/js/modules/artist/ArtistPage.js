@@ -20,7 +20,9 @@ const ArtistPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex
 
   const info = useArtistsAndGenres(timeFrameIndex);
   const filteredArtists = useMemo(() => {
-    return info?.artists.filter((artist) => genre === "all" || artist.genres.find((g) => (genre === g)));
+    return info?.artists
+            .map((artist, i) => ({ ...artist, rank: i + 1}))
+            .filter((artist) => genre === "all" || artist.genres.find((g) => (genre === g)));
   }, [info, genre])
 
   const [overflowVisible, setOverflowVisible] = useState(false);
@@ -94,7 +96,7 @@ const ArtistPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex
       case 1: // display list view
         view = (
           <div className="cards" ref={exportRef}>
-            { filteredArtists?.map((artist,i) => <ArtistCard {...artist} rank={i+1} key={artist?.name + i}/>)}
+            { filteredArtists?.map((artist,i) => <ArtistCard {...artist} key={artist?.name + i}/>)}
           </div>
         )
         break;
