@@ -23,4 +23,10 @@ export const cache = {
   demo : false,
 }
 
-window.getCache = () => cache;
+window.getCacheForDemo = () => {
+  return {
+    ...cache,
+    userInfo: null,
+    demo: true
+  }
+};

@@ -80,7 +80,6 @@ const App = () => {
 
   const handleDemo = async () => {
     await fetchDemo();
-    cache["demo"] = true;
     setLoggedIn(true);
   }
 
