@@ -44,7 +44,7 @@ const Summary = (props) => {
 
   return (
     <div className="page summary flex-fill" >
-      <div className="flex mobile-flex" data-html2canvas-ignore>
+      <div className="flex flex-wrap mobile-flex" data-html2canvas-ignore>
         <Options title="Your Summary" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="Share" className="mobile-share-options" options={DEFAULTS.DOWNLOAD_OPTIONS.slice(0,2)} onClick={handledownloadClick}/>
       </div>
