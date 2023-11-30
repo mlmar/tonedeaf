@@ -1,6 +1,6 @@
 import arrowIcon from '../../icons/arrow-icon.svg';
 // import cameraIcon from '../../icons/camera-icon.svg';
-import copyFileIcon from '../../icons/copy-file-icon.svg';
+// import copyFileIcon from '../../icons/copy-file-icon.svg';
 
 const DEFAULTS = {
   NAV_OPTIONS: ["Summary", "Artists", "Tracks", "Recent", "Scope", "Tuner"],
@@ -13,7 +13,7 @@ const DEFAULTS = {
 
   DOWNLOAD_OPTIONS: [
     <img src={arrowIcon} alt="Send"/>,
-    <img src={copyFileIcon} alt="Text" />
+    // <img src={copyFileIcon} alt="Text" />
   ],
   
   TOP_IMAGES_LIMIT: 6,
