@@ -540,7 +540,7 @@ label, p {
 }
 
 .summary,
-.summary.page > *:not(.cards):not(.images):not(.float-images):not(header) {
+.summary.page > *:not(.cards):not(.images):not(.float-images):not(header):not(.alert) {
   background: var(--dark);
   margin: 0;
 }

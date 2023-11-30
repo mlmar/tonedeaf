@@ -23,14 +23,10 @@ export const useDownload = () => {
       backgroundColor: '#131313'
     });
     if(isMobile && navigator.canShare) {
+      let tab = window.open();
       canvas.toBlob(async (blob) => {
-        const image = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.setAttribute('href', image);
-        a.setAttribute('target', '_blank');
-        a.setAttribute('rel', 'noopener');
-        a.click();
-        a.remove();
+        const imageURL = URL.createObjectURL(blob);
+        tab.location.href = imageURL;
 
         const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
         const shareData = {
