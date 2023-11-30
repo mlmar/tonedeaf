@@ -26,8 +26,6 @@ export const useDownload = () => {
       const blob = await new Promise(resolve => canvas.toBlob(resolve));
       const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
 
-      window.location.replace(URL.createObjectURL(blob));
-
       const shareData = {
         files
       }

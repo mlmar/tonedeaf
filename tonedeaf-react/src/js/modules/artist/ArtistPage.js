@@ -30,7 +30,7 @@ const ArtistPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex
   const { exportRef, shareImage, copyImage } = useDownload();
   const handledownloadClick = (index) => {
     if(index === 0) {
-      shareImage(DEFAULTS.SHARE_TEXT_ARTISTS[timeFrameIndex]);
+      shareImage();
     } else {
       copyImage();
       setAlertText(DEFAULTS.STATUS_MESSAGE.CLIPBOARD);

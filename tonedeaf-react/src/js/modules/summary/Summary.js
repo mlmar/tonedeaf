@@ -22,7 +22,7 @@ const Summary = (props) => {
   const { exportRef, shareImage, copyImage } = useDownload();
   const handledownloadClick = (index) => {
     if(index === 0) {
-      shareImage(true);
+      shareImage();
     } else {
       copyImage();
       setAlertText(DEFAULTS.STATUS_MESSAGE.CLIPBOARD);
