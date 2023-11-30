@@ -23,27 +23,27 @@ export const useDownload = () => {
       backgroundColor: '#131313'
     });
     if(isMobile && navigator.canShare) {
+      const blob = await new Promise(resolve => canvas.toBlob(resolve));
+
       let tab = window.open();
-      canvas.toBlob(async (blob) => {
-        const imageURL = URL.createObjectURL(blob);
-        tab.location.href = imageURL;
+      const imageURL = URL.createObjectURL(blob);
+      tab.location.href = imageURL;
 
-        const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
-        const shareData = {
-          files
-        }
-        if(text) {
-          shareData.text = (text.length ? text + '\n' : '') + 'https://tonedeaf.vercel.app';
-        }
+      const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
+      const shareData = {
+        files
+      }
+      if(text) {
+        shareData.text = (text.length ? text + '\n' : '') + 'https://tonedeaf.vercel.app';
+      }
 
-        if(navigator.canShare(shareData)) {
-          try {
-            await navigator.share(shareData)
-          } catch (err) {
-            console.warn('Sharing not supported for this device.');
-          }
-        } 
-      });
+      if(navigator.canShare(shareData)) {
+        try {
+          await navigator.share(shareData)
+        } catch (err) {
+          console.warn('Sharing not supported for this device.');
+        }
+      } 
     } else {
       const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
       const a = document.createElement('a');
@@ -64,15 +64,14 @@ export const useDownload = () => {
       backgroundColor: '#131313'
     });
 
-    canvas.toBlob((blob) => {
-      if(navigator.clipboard) {
-        navigator.clipboard.write([
-          new ClipboardItem({
-              'image/png': blob
-          })
-        ]);
-      };
-    })
+    const blob = await new Promise(resolve => canvas.toBlob(resolve));
+    if(navigator.clipboard) {
+      navigator.clipboard.write([
+        new ClipboardItem({
+            'image/png': blob
+        })
+      ]);
+    }
   }
 
   const shareText = async (text, callback) => {
