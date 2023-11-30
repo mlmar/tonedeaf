@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { cache } from '../../util/Session.js';
 import { search, getSearchRecs, createPlaylist } from '../../util/SpotifyUtil.js';
-import { useAlert } from '../../hooks/AlertHooks.js';
 
 import Options from '../ui/Options.js';
 import ImageWrapper from '../ui/ImageWrapper.js';
@@ -25,7 +24,7 @@ const SEARCH_TIMEOUT = 500;
 /*
 Find song recommendations by choosing a combination of >5 artists/tracks
 */
-const Scope = () => {
+const Scope = ({ setAlertText }) => {
   const [viewIndex, setViewIndex] = useState(0);
   const [searchIndex, setSearchIndex] = useState(0);
   const [searchResults, setSearchResults] = useState(null);
@@ -37,7 +36,6 @@ const Scope = () => {
   const searchTimer = useRef(null);
   const nowPlayingTrack = useRef(null); // store currently playing track
   
-  const { setAlertText, alertElement } = useAlert(null);
   useEffect(() => {
     if(cache["demo"]) {
       setAlertText("Sign in to use this feature");
@@ -246,7 +244,6 @@ const Scope = () => {
 
   return (
     <div className="page">
-      {alertElement}
       <div className="flex mobile-flex">
         <Options title="View" options={selected.length ? VIEW_OPTIONS : VIEW_OPTIONS_TEMP} onClick={handleViewClick} index={viewIndex}/>
         { (viewIndex === 0) && <Options title="Search For" options={SEARCH_OPTIONS} onClick={handleSearchClick} index={searchIndex}/> }

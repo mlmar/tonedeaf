@@ -2,7 +2,6 @@ import { useState  } from 'react';
 import { cache } from '../../util/Session.js';
 import { useRecent } from '../../hooks/SpotifyHooks.js'
 import { createPlaylist } from '../../util/SpotifyUtil.js';
-import { useAlert } from '../../hooks/AlertHooks.js';
 
 import Options from "../ui/Options.js";
 import ImageWrapper from '../ui/ImageWrapper.js';
@@ -15,11 +14,9 @@ import DEFAULTS from '../../util/Defaults.js';
 /*
   Display users most recent 50 tracks
 */
-const RecentPage = () => {
+const RecentPage = ({ setAlertText }) => {
   const [viewIndex, setViewIndex] = useState(DEFAULTS.VIEW_INDEX); // 0 = grid, 1 = list
   const tracks = useRecent();
-
-  const { setAlertText, alertElement } = useAlert(null);
 
   const handleCreatePlaylist = async () => {
     const id = cache["userInfo"]?.id;
@@ -35,7 +32,6 @@ const RecentPage = () => {
 
   return (
     <div className="page">
-      {alertElement}
       <div className="flex mobile-flex">
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
         <Options title="Like These Tracks?" options={["Create Playlist"]} onClick={handleCreatePlaylist}/>

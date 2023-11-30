@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { cache } from '../../util/Session.js';
 import { fetchSeeds } from '../../util/DataUtil.js';
 import { getDefaultAttributes, getParamAttributes, getAttributeRecs, createPlaylist } from "../../util/SpotifyUtil.js";
-import { useAlert } from '../../hooks/AlertHooks.js';
 import { isEqual } from '../../util/ObjectUtil.js';
 
 import Options from '../ui/Options.js';
@@ -23,7 +22,7 @@ const DEFAULT_ATTRIBUTES = getDefaultAttributes();
 /*
   Users can select up to 5 genres and edit preferred track attributes to get song recommendations
 */
-const TunerPage = () => {
+const TunerPage = ({ setAlertText }) => {
   const [viewIndex, setViewIndex] = useState(0);
   const [genreSeeds, setGenreSeeds] = useState(null);
 
@@ -35,7 +34,6 @@ const TunerPage = () => {
   
   const [tracks, setTracks] = useState(null);
 
-  const { setAlertText, alertElement } = useAlert(null);
   // display demo message
   useEffect(() => {
     if(cache["demo"]) {
@@ -65,7 +63,6 @@ const TunerPage = () => {
     
     const equalSets = (selected?.size === prevSelected?.size) && ([...selected].every((elem) => prevSelected?.has(elem)));
     const equalAttributes = isEqual(attributes, prevAttributes);
-    console.warn(equalAttributes);
     if(index === 1 && (!equalSets || !equalAttributes)) {
       setPrevSelected(selected);
       setPrevAttributes(attributes);
@@ -135,21 +132,21 @@ const TunerPage = () => {
       default: // always show genres and attributes page by default
         view = (
           <>
-            <Options title="Choose up to 5 Genres" className="genres-panel">
-              <div className="buttons">
-                { genreSeeds?.map(getGenreButton)}
-              </div>
-            </Options>
+            <Options title="Choose up to 5 Genres" className="genres-panel" subtitle={
+                <div className="buttons">
+                  { genreSeeds?.map(getGenreButton)}
+                </div>
+            }/>
             <hr/>
-            <Options title="Edit your preferred song attributes" description="Choose the minimum and maximum ranges for specific attributes">
-              { DEFAULT_ATTRIBUTES?.map((attr) => 
-                <AttributeInput {...attr} 
-                  userMin={attributes["min_" + attr.id]} 
-                  userMax={attributes["max_" + attr.id]} 
-                  onChange={handleAttributeChange} 
-                  key={attr.id}/>
-              )}
-            </Options>
+            <Options title="Edit your preferred song attributes" description="Choose the minimum and maximum ranges for specific attributes" subtitle={
+              DEFAULT_ATTRIBUTES?.map((attr) => 
+              <AttributeInput {...attr} 
+                userMin={attributes["min_" + attr.id]} 
+                userMax={attributes["max_" + attr.id]} 
+                onChange={handleAttributeChange} 
+                key={attr.id}/>
+              )
+            }/>
           </>
         )
         break;
@@ -169,7 +166,6 @@ const TunerPage = () => {
 
   return (
     <div className="page">
-      {alertElement}
       <div className="flex mobile-flex">
         <Options title="View" options={selected.size ? VIEW_OPTIONS : VIEW_OPTIONS_TEMP} onClick={handleViewClick} index={viewIndex}/>
         { (tracks && viewIndex === 1) &&

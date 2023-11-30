@@ -14,7 +14,7 @@ export const dataToTextList = (list) => {
 export const useDownload = () => {
   const exportRef = useRef();
 
-  const shareImage = async (text) => {
+  const refreshImageURL = async () => {
     const el = exportRef?.current;
     if(!el) return;
     const canvas = await html2canvas(el, { 
@@ -22,8 +22,15 @@ export const useDownload = () => {
       letterRendering: true,
       backgroundColor: '#131313'
     });
+
+    const blob = await new Promise(resolve => canvas.toBlob(resolve));
+    return { canvas, blob }
+  }
+
+  const shareImage = async (text) => {
+    const { canvas, blob } = await refreshImageURL();
+
     if(isMobile && navigator.canShare) {
-      const blob = await new Promise(resolve => canvas.toBlob(resolve));
       const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
 
       const shareData = {
@@ -39,7 +46,7 @@ export const useDownload = () => {
         } catch (err) {
           console.warn('Sharing not supported for this device.');
         }
-      } 
+      }
     } else {
       const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
       const a = document.createElement('a');
@@ -48,19 +55,10 @@ export const useDownload = () => {
       a.click();
       a.remove();
     }
-    canvas.remove();
   }
 
   const copyImage = async () => {
-    const el = exportRef?.current;
-    if(!el) return;
-    const canvas = await html2canvas(el, { 
-      useCORS: true,
-      letterRendering: true,
-      backgroundColor: '#131313'
-    });
-
-    const blob = await new Promise(resolve => canvas.toBlob(resolve));
+    const { blob } = refreshImageURL();
     if(navigator.clipboard) {
       navigator.clipboard.write([
         new ClipboardItem({
@@ -91,5 +89,5 @@ export const useDownload = () => {
     }
   }
 
-  return { exportRef, shareImage, copyImage, shareText }
+  return { exportRef, refreshImageURL, shareImage, copyImage, shareText }
 }

@@ -1,7 +1,5 @@
 import { useState, useMemo } from 'react';
 import { useArtistsAndGenres } from '../../hooks/SpotifyHooks.js';
-import { useAlert } from '../../hooks/AlertHooks.js';
-import { useDownload } from '../../util/DownloadUtil.js';
 
 import Options from "../ui/Options.js";
 import ImageWrapper from '../ui/ImageWrapper.js';
@@ -15,9 +13,7 @@ import DEFAULTS from '../../util/Defaults.js';
 /*
   Displays list of users top artists from a selected time range
 */
-const ArtistPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex, genre, setGenre }) => {
-  const { setAlertText, alertElement } = useAlert(null);
-
+const ArtistPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex, genre, setGenre, onDownloadClick, exportRef }) => {
   const info = useArtistsAndGenres(timeFrameIndex);
   const filteredArtists = useMemo(() => {
     return info?.artists
@@ -26,16 +22,6 @@ const ArtistPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex
   }, [info, genre])
 
   const [overflowVisible, setOverflowVisible] = useState(false);
-
-  const { exportRef, shareImage, copyImage } = useDownload();
-  const handledownloadClick = (index) => {
-    if(index === 0) {
-      shareImage();
-    } else {
-      copyImage();
-      setAlertText(DEFAULTS.STATUS_MESSAGE.CLIPBOARD);
-    }
-  }
 
   // filter artists by user selected genre
   const handleGenreClick = (event) => {
@@ -104,21 +90,24 @@ const ArtistPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex
     return view
   }
 
+  const genreButtons = (
+    <>
+      <div className={"buttons overflow-" + overflowVisible}>
+        { info?.genres?.map(getGenreButton)}
+      </div>
+      {getOverflowButton()}
+    </>
+  );
+
   return (
     <div className="page">
-      {alertElement}
       <header className="flex flex-wrap mobile-flex">
         <Options title="Your Top Artists" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
-        <Options title="Share" className="mobile-share-options" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
+        { viewIndex === 0 && <Options title="Share" className="mobile-share-options" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={onDownloadClick}/> }
       </header>
       { (viewIndex === 0 || viewIndex === 1) && 
-        <Options title="Genres" className="genres-panel" description="Select any genre to filter artists:">
-          <div className={"buttons overflow-" + overflowVisible}>
-            { info?.genres?.map(getGenreButton)}
-          </div>
-          {getOverflowButton()}
-        </Options>
+        <Options title="Genres" className="genres-panel" description="Select any genre to filter artists:" subtitle={genreButtons}/>
       }
       { info ? (
           getView()

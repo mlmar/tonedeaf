@@ -1,5 +1,3 @@
-import { useDownload } from '../../util/DownloadUtil.js';
-import { useAlert } from '../../hooks/AlertHooks.js';
 import ArtistSummary from './ArtistsSummary.js';
 import TracksSummary from './TracksSummary.js';
 
@@ -14,20 +12,10 @@ const Summary = (props) => {
     setTimeFrameIndex, 
     setArtistTimeFrameIndex, 
     setArtistGenre, 
-    setTrackTimeFrameIndex 
+    setTrackTimeFrameIndex,
+    onDownloadClick,
+    exportRef,
   } = props;
-
-  const { setAlertText, alertElement } = useAlert(null);
-
-  const { exportRef, shareImage, copyImage } = useDownload();
-  const handledownloadClick = (index) => {
-    if(index === 0) {
-      shareImage();
-    } else {
-      copyImage();
-      setAlertText(DEFAULTS.STATUS_MESSAGE.CLIPBOARD);
-    }
-  }
 
   const handleArtistClick = () => {
     setNavIndex(1);
@@ -48,10 +36,9 @@ const Summary = (props) => {
 
   return (
     <div className="page summary flex-fill" >
-      {alertElement}
       <header className="flex flex-wrap mobile-flex" data-html2canvas-ignore>
         <Options title="Your Summary" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
-        <Options title="Share" className="mobile-share-options" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
+        <Options title="Share" className="mobile-share-options" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={onDownloadClick}/>
       </header>
       <div className="flex-col" ref={exportRef}>
         <header className="flex flex-middle flex-space-between">

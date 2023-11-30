@@ -1,8 +1,6 @@
 import { cache } from '../../util/Session.js';
 import { useTracksAndFeatures } from '../../hooks/SpotifyHooks.js';
 import { createPlaylist } from '../../util/SpotifyUtil.js';
-import { useAlert } from '../../hooks/AlertHooks.js';
-import { useDownload } from '../../util/DownloadUtil.js';
 
 import Options from '../ui/Options.js';
 import ImageWrapper from '../ui/ImageWrapper.js';
@@ -15,19 +13,8 @@ import DEFAULTS from '../../util/Defaults.js';
 /*
   Display user's top tracks from a selected time range
 */
-const TrackPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex }) => {
-  const { setAlertText, alertElement } = useAlert(null);
+const TrackPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex, onDownloadClick, exportRef, setAlertText }) => {
   const info = useTracksAndFeatures(timeFrameIndex);
-
-  const { exportRef, shareImage, copyImage } = useDownload();
-  const handledownloadClick = (index) => {
-    if(index === 0) {
-      shareImage();
-    } else {
-      copyImage();
-      setAlertText(DEFAULTS.STATUS_MESSAGE.CLIPBOARD);
-    }
-  }
   
   const handleCreatePlaylist = async () => {
     const id = cache["userInfo"]?.id;
@@ -76,11 +63,10 @@ const TrackPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex 
 
   return (
     <div className="page">
-      {alertElement}
       <header className="flex flex-wrap mobile-flex">
         <Options title="Your Top Tracks" options={DEFAULTS.TIME_OPTIONS} onClick={setTimeFrameIndex} index={timeFrameIndex}/>
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
-        <Options title="Share" className="mobile-share-options" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={handledownloadClick}/>
+        { viewIndex === 0 && <Options title="Share" className="mobile-share-options" options={DEFAULTS.DOWNLOAD_OPTIONS} onClick={onDownloadClick}/> }
         { (viewIndex === 0 || viewIndex === 1) &&
           <Options title="Like These Tracks?" options={["Create Playlist"]} onClick={handleCreatePlaylist}/>
         }

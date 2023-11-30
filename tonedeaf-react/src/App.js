@@ -6,6 +6,9 @@ import { useSelections } from './js/hooks/SelectionHooks.js';
 import { getProfile } from './js/util/SpotifyUtil.js';
 import { cache } from './js/util/Session.js';
 
+import { useAlert } from './js/hooks/AlertHooks.js';
+import { useDownload } from './js/util/DownloadUtil.js';
+
 import Boundary from './js/modules/Boundary';
 
 import Login from './js/modules/login/Login.js';
@@ -30,6 +33,19 @@ import { fetchDemo } from './js/util/DataUtil';
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [navIndex, setNavIndex] = useState(0); // current navigation index for Nav bar
+
+  const { setAlertText, alertElement } = useAlert(null);
+
+  const { exportRef, shareImage, copyImage } = useDownload();
+  const handledownloadClick = (index) => {
+    if(index === 0) {
+      shareImage();
+    } else {
+      copyImage();
+      setAlertText(DEFAULTS.STATUS_MESSAGE.CLIPBOARD);
+    }
+  }
+
   const summaryPageProps = useSelections({
     viewIndex: DEFAULTS.VIEW_INDEX,
     timeFrameIndex: DEFAULTS.TIME_FRAME_INDEX
@@ -89,18 +105,19 @@ const App = () => {
 
   const getContent = () => {
     switch(navIndex) {
-      case 0:  return <Summary setNavIndex={setNavIndex} {...summaryPageProps} setArtistTimeFrameIndex={artistPageProps.setTimeFrameIndex} setArtistGenre={setArtistGenre} setTrackTimeFrameIndex={trackPageProps.setTimeFrameIndex}/>
-      case 1:  return <ArtistPage {...artistPageProps} genre={artistGenre} setGenre={setArtistGenre}/>
-      case 2:  return <TrackPage {...trackPageProps}/>
-      case 3:  return <RecentPage/>
-      case 4:  return <ScopePage/>
-      case 5:  return <TunerPage/>
+      case 0:  return <Summary setNavIndex={setNavIndex} {...summaryPageProps} setArtistTimeFrameIndex={artistPageProps.setTimeFrameIndex} setArtistGenre={setArtistGenre} setTrackTimeFrameIndex={trackPageProps.setTimeFrameIndex} exportRef={exportRef} onDownloadClick={handledownloadClick} setAlertText={setAlertText}/>
+      case 1:  return <ArtistPage {...artistPageProps} genre={artistGenre} setGenre={setArtistGenre} exportRef={exportRef} onDownloadClick={handledownloadClick} setAlertText={setAlertText}/>
+      case 2:  return <TrackPage {...trackPageProps} exportRef={exportRef} onDownloadClick={handledownloadClick} setAlertText={setAlertText}/>
+      case 3:  return <RecentPage setAlertText={setAlertText}/>
+      case 4:  return <ScopePage setAlertText={setAlertText}/>
+      case 5:  return <TunerPage setAlertText={setAlertText}/>
       default: return <Load/>
     }
   }
 
   return (
     <div className="app">
+        {alertElement}
         { !loggedIn ? (
             <Login>
               <a href={LOGIN_URL} className="login-btn large"> sign in with Spotify </a>

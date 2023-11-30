@@ -323,15 +323,17 @@ label, p {
   background: white;
 }
 
-.options-panel .options button {
+.options-panel .options .option {
+  cursor: pointer;
   padding: .3rem;
+  font-size: .85rem;
 }
 
-.options-panel .options button img {
+.options-panel .options .option img {
   height: 100%;
 }
 
-.options-panel .options button:not(:last-child) {
+.options-panel .options .option:not(:last-child) {
   margin-right: .2rem;
 }
 
