@@ -19,13 +19,13 @@ const RecentPage = () => {
   const [viewIndex, setViewIndex] = useState(DEFAULTS.VIEW_INDEX); // 0 = grid, 1 = list
   const tracks = useRecent();
 
-  const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
+  const { setAlertText, alertElement } = useAlert(null);
 
   const handleCreatePlaylist = async () => {
     const id = cache["userInfo"]?.id;
     const response = await createPlaylist(id, "tonedeaf recent tracks", tracks, true);
     if(response?.status === "demo") setAlertText("Sign in to use this feature")
-    if(response) setAlertVisible(true);
+    if(response) setAlertText(DEFAULTS.STATUS_MESSAGE.PLAYLIST_CREATED);
   }
 
   // if an tracks's image is pressed in the grid view, display location of track in list view

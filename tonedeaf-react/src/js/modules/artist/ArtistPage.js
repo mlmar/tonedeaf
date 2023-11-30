@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useArtistsAndGenres } from '../../hooks/SpotifyHooks.js';
 import { useAlert } from '../../hooks/AlertHooks.js';
-import { useDownload, dataToTextList } from '../../util/DownloadUtil.js';
+import { useDownload } from '../../util/DownloadUtil.js';
 
 import Options from "../ui/Options.js";
 import ImageWrapper from '../ui/ImageWrapper.js';
@@ -16,7 +16,7 @@ import DEFAULTS from '../../util/Defaults.js';
   Displays list of users top artists from a selected time range
 */
 const ArtistPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex, genre, setGenre }) => {
-  const { setAlertText, setAlertVisible, alertElement } = useAlert("Copied to clipboard");
+  const { setAlertText, alertElement } = useAlert(null);
 
   const info = useArtistsAndGenres(timeFrameIndex);
   const filteredArtists = useMemo(() => {
@@ -27,17 +27,13 @@ const ArtistPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex
 
   const [overflowVisible, setOverflowVisible] = useState(false);
 
-  const { exportRef, shareImage, downloadImage, shareText } = useDownload();
+  const { exportRef, shareImage, copyImage } = useDownload();
   const handledownloadClick = (index) => {
     if(index === 0) {
       shareImage(DEFAULTS.SHARE_TEXT_ARTISTS[timeFrameIndex]);
-    } else if(index === 1) {
-      downloadImage();
     } else {
-      shareText(dataToTextList(filteredArtists), () => {
-        setAlertText("Copied to clipboard");
-        setAlertVisible(true);
-      });
+      copyImage();
+      setAlertText(DEFAULTS.STATUS_MESSAGE.CLIPBOARD);
     }
   }
 

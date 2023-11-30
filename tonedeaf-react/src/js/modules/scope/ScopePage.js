@@ -11,6 +11,8 @@ import NowPlaying from '../user/NowPlaying.js';
 
 import Load from '../ui/Load.js';
 
+import DEFAULTS from '../../util/Defaults.js';
+
 const VIEW_OPTIONS = ["Search", "Recommendations"];
 const VIEW_OPTIONS_TEMP = ["Search"];
 const SEARCH_OPTIONS = ["Artists", "Tracks"]
@@ -35,15 +37,14 @@ const Scope = () => {
   const searchTimer = useRef(null);
   const nowPlayingTrack = useRef(null); // store currently playing track
   
-  const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
+  const { setAlertText, alertElement } = useAlert(null);
   useEffect(() => {
     if(cache["demo"]) {
       setAlertText("Sign in to use this feature");
-      setAlertVisible(true);
       setSearchResults([]);
       return;
     }
-  }, [setAlertText, setAlertVisible]);
+  }, [setAlertText]);
   
   // When a search option is pressed, set the appropriate search type
   const handleSearchClick = (index) => {
@@ -62,7 +63,7 @@ const Scope = () => {
     if(index === 0) {
       const id = cache["userInfo"]?.id;
       const response = await createPlaylist(id, "tonedeaf scope tracks", tracks);
-      if(response) setAlertVisible(true);
+      if(response) setAlertText(DEFAULTS.STATUS_MESSAGE.PLAYLIST_CREATED);
     } else {
       getRecommendations();
     }

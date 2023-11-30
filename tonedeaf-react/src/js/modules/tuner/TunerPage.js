@@ -12,6 +12,8 @@ import TrackCard from '../track/TrackCard.js';
 import Load from '../ui/Load.js';
 import { CHECK } from '../../util/IconUtil.js';
 
+import DEFAULTS from '../../util/Defaults.js';
+
 const VIEW_OPTIONS = ["Attributes", "Recommendations"];
 const VIEW_OPTIONS_TEMP = ["Attributes"];
 const PLAYLIST_OPTIONS = ["Create Playlist", "Reroll"]
@@ -33,15 +35,14 @@ const TunerPage = () => {
   
   const [tracks, setTracks] = useState(null);
 
-  const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
+  const { setAlertText, alertElement } = useAlert(null);
   // display demo message
   useEffect(() => {
     if(cache["demo"]) {
       setAlertText("Sign in to use this feature");
-      setAlertVisible(true);
       return;
     }
-  }, [setAlertText, setAlertVisible]);
+  }, [setAlertText]);
   
   // get list of genres
   useEffect(() => {
@@ -56,7 +57,7 @@ const TunerPage = () => {
   // if user tries to view results, fetch them from Spotify
   const handleViewClick = (index) => {
     if(index === 1 && cache["demo"]) {
-      setAlertVisible(true);
+      setAlertText(DEFAULTS.STATUS_MESSAGE.PLAYLIST_CREATED);
       return;
     }
     
@@ -76,7 +77,7 @@ const TunerPage = () => {
     if(index === 0) {
       const id = cache["userInfo"]?.id;
       const response = await createPlaylist(id, "tonedeaf tuner tracks", tracks);
-      if(response) setAlertVisible(true);
+      if(response) setAlertText(DEFAULTS.STATUS_MESSAGE.PLAYLIST_CREATED);
     } else {
       getRecommendations();
     }

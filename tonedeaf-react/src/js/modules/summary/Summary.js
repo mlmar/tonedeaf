@@ -15,12 +15,12 @@ const Summary = (props) => {
     setArtistGenre, 
     setTrackTimeFrameIndex 
   } = props;
-  const { exportRef, shareImage, downloadImage } = useDownload();
+  const { exportRef, shareImage, copyImage } = useDownload();
   const handledownloadClick = (index) => {
     if(index === 0) {
       shareImage(true);
     } else {
-      downloadImage()
+      copyImage()
     }
   }
 

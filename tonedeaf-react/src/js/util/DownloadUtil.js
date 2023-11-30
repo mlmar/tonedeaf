@@ -24,7 +24,13 @@ export const useDownload = () => {
     });
     if(isMobile && navigator.canShare) {
       canvas.toBlob(async (blob) => {
-        window.open(URL.createObjectURL(blob), '_blank');
+        const image = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', image);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener');
+        a.click();
+        a.remove();
 
         const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
         const shareData = {
@@ -43,22 +49,34 @@ export const useDownload = () => {
         } 
       });
     } else {
-      canvas.toBlob(blob => {
-        window.open(URL.createObjectURL(blob), '_blank');
-      });
-
-      const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
-      const a = document.createElement('a')
-      a.setAttribute('download', 'tonedeaf.png')
-      a.setAttribute('href', image)
-      a.click()
+      const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+      const a = document.createElement('a');
+      a.setAttribute('download', 'tonedeaf.png');
+      a.setAttribute('href', image);
+      a.click();
       a.remove();
       canvas.remove();
     }
   }
 
-  const downloadImage = async () => {
-    await shareImage(null);
+  const copyImage = async () => {
+    const el = exportRef?.current;
+    if(!el) return;
+    const canvas = await html2canvas(el, { 
+      useCORS: true,
+      letterRendering: true,
+      backgroundColor: '#131313'
+    });
+
+    canvas.toBlob((blob) => {
+      if(navigator.clipboard) {
+        navigator.clipboard.write([
+          new ClipboardItem({
+              'image/png': blob
+          })
+        ]);
+      };
+    })
   }
 
   const shareText = async (text, callback) => {
@@ -82,5 +100,5 @@ export const useDownload = () => {
     }
   }
 
-  return { exportRef, shareImage, downloadImage, shareText }
+  return { exportRef, shareImage, copyImage, shareText }
 }

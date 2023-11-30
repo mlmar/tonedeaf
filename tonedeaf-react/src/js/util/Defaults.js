@@ -1,5 +1,5 @@
 import arrowIcon from '../../icons/arrow-icon.svg';
-import cameraIcon from '../../icons/camera-icon.svg';
+// import cameraIcon from '../../icons/camera-icon.svg';
 import copyFileIcon from '../../icons/copy-file-icon.svg';
 
 const DEFAULTS = {
@@ -31,7 +31,12 @@ const DEFAULTS = {
     'last month'
   ],
 
-  GENRE: 'all'
+  GENRE: 'all',
+
+  STATUS_MESSAGE: {
+    PLAYLIST_CREATED: 'Playlist Created',
+    CLIPBOARD: 'Copied to Clipboard'
+  }
 }
 
 

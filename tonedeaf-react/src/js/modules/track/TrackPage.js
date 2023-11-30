@@ -2,7 +2,7 @@ import { cache } from '../../util/Session.js';
 import { useTracksAndFeatures } from '../../hooks/SpotifyHooks.js';
 import { createPlaylist } from '../../util/SpotifyUtil.js';
 import { useAlert } from '../../hooks/AlertHooks.js';
-import { useDownload, dataToTextList } from '../../util/DownloadUtil.js';
+import { useDownload } from '../../util/DownloadUtil.js';
 
 import Options from '../ui/Options.js';
 import ImageWrapper from '../ui/ImageWrapper.js';
@@ -16,20 +16,16 @@ import DEFAULTS from '../../util/Defaults.js';
   Display user's top tracks from a selected time range
 */
 const TrackPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex }) => {
-  const { setAlertText, setAlertVisible, alertElement } = useAlert("Playlist Created");
+  const { setAlertText, alertElement } = useAlert(null);
   const info = useTracksAndFeatures(timeFrameIndex);
 
-  const { exportRef, shareImage, downloadImage, shareText } = useDownload();
+  const { exportRef, shareImage, copyImage } = useDownload();
   const handledownloadClick = (index) => {
     if(index === 0) {
       shareImage(DEFAULTS.SHARE_TEXT_TRACKS[timeFrameIndex]);
-    } else if(index === 1) {
-      downloadImage();
     } else {
-      shareText(dataToTextList(info.tracks), () => {
-        setAlertText("Copied to clipboard");
-        setAlertVisible(true);
-      });
+      copyImage();
+      setAlertText(DEFAULTS.STATUS_MESSAGE.CLIPBOARD);
     }
   }
   
@@ -37,7 +33,7 @@ const TrackPage = ({ viewIndex, setViewIndex, timeFrameIndex, setTimeFrameIndex 
     const id = cache["userInfo"]?.id;
     const response = await createPlaylist(id, "tonedeaf top tracks", info?.tracks);
     if(response?.status === "demo") setAlertText("Sign in to use this feature");
-    if(response) setAlertVisible(true);
+    if(response) setAlertText(DEFAULTS.STATUS_MESSAGE.PLAYLIST_CREATED);
   }
 
   // if an tracks's image is pressed in the grid view, display location of track in list view
