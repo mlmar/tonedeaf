@@ -19,10 +19,13 @@ export const useDownload = () => {
     if(!el) return;
     const canvas = await html2canvas(el, { 
       useCORS: true,
-      letterRendering: true
+      letterRendering: true,
+      backgroundColor: '#131313'
     });
     if(isMobile && navigator.canShare) {
       canvas.toBlob(async (blob) => {
+        window.open(URL.createObjectURL(blob), '_blank');
+
         const files = [new File([blob], 'tonedeaf.png', { type: blob.type })]
         const shareData = {
           files
@@ -31,7 +34,7 @@ export const useDownload = () => {
           shareData.text = (text.length ? text + '\n' : '') + 'https://tonedeaf.vercel.app';
         }
 
-        if (navigator.canShare(shareData)) {
+        if(navigator.canShare(shareData)) {
           try {
             await navigator.share(shareData)
           } catch (err) {
@@ -40,6 +43,10 @@ export const useDownload = () => {
         } 
       });
     } else {
+      canvas.toBlob(blob => {
+        window.open(URL.createObjectURL(blob), '_blank');
+      });
+
       const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
       const a = document.createElement('a')
       a.setAttribute('download', 'tonedeaf.png')

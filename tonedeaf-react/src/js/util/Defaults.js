@@ -13,7 +13,6 @@ const DEFAULTS = {
 
   DOWNLOAD_OPTIONS: [
     <img src={arrowIcon} alt="Send"/>,
-    <img src={cameraIcon} alt="Screenshot" />,
     <img src={copyFileIcon} alt="Text" />
   ],
   

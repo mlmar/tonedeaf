@@ -38,5 +38,7 @@ const reducer = (state, action) => {
       return { ...state, timeFrameIndex: payload };
     case SET_VIEW_INDEX:
       return { ...state, viewIndex: payload };
+    default:
+      return state;
   }
 }

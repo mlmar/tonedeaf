@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { cache } from '../../util/Session.js';
 import { useTracksAndFeatures } from '../../hooks/SpotifyHooks.js';
 import { createPlaylist } from '../../util/SpotifyUtil.js';
