@@ -1,6 +1,6 @@
 const DEV = process.env.REACT_APP_DEV;
 
-const local_site = "http://192.168.0.89:8888/";
+const local_site = "http://localhost:8888/";
 const deployed_site = "https://tonedeaf-auth.vercel.app/";
 
 export const HOME_URL = DEV ? "http://localhost:3000" : "https://tonedeaf.vercel.app";
