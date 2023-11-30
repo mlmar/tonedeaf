@@ -32,10 +32,10 @@ const RecentPage = ({ setAlertText }) => {
 
   return (
     <div className="page">
-      <div className="flex mobile-flex">
+      <header className="flex flex-wrap mobile-flex">
         <Options title="View" options={DEFAULTS.VIEW_OPTIONS} onClick={setViewIndex} index={viewIndex}/>
         <Options title="Like These Tracks?" options={["Create Playlist"]} onClick={handleCreatePlaylist}/>
-      </div>
+      </header>
       { tracks ? (
           viewIndex === 0 ? (
             <div className="images">
