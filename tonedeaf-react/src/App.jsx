@@ -6,29 +6,29 @@ import { useSelections } from './js/hooks/SelectionHooks.js';
 import { getProfile } from './js/util/SpotifyUtil.js';
 import { cache } from './js/util/Session.js';
 
-import { useAlert } from './js/hooks/AlertHooks.js';
+import { useAlert } from './js/hooks/AlertHooks.jsx';
 import { useDownload } from './js/util/DownloadUtil.js';
 
-import Boundary from './js/modules/Boundary';
+import Boundary from './js/modules/Boundary.jsx';
 
-import Login from './js/modules/login/Login.js';
-import Nav from './js/modules/ui/Nav.js';
+import Login from './js/modules/login/Login.jsx';
+import Nav from './js/modules/ui/Nav.jsx';
 
-import Summary from './js/modules/summary/Summary';
-import ArtistPage from './js/modules/artist/ArtistPage.js';
-import TrackPage from './js/modules/track/TrackPage.js';
-import RecentPage from './js/modules/track/RecentPage.js';
-import ScopePage from './js/modules/scope/ScopePage.js';
-import TunerPage from './js/modules/tuner/TunerPage.js';
+import Summary from './js/modules/summary/Summary.jsx';
+import ArtistPage from './js/modules/artist/ArtistPage.jsx';
+import TrackPage from './js/modules/track/TrackPage.jsx';
+import RecentPage from './js/modules/track/RecentPage.jsx';
+import ScopePage from './js/modules/scope/ScopePage.jsx';
+import TunerPage from './js/modules/tuner/TunerPage.jsx';
 
-import Load from './js/modules/ui/Load.js';
+import Load from './js/modules/ui/Load.jsx';
 
 import { HOME_URL, LOGIN_URL, CHANGE_USER_URL } from './js/util/System.js';
 import { getHashParams } from './js/util/HashUtil.js';
 
 import { setAccessToken } from './js/util/SpotifyUtil.js';
-import DEFAULTS from './js/util/Defaults';
-import { fetchDemo } from './js/util/DataUtil';
+import DEFAULTS from './js/util/Defaults.jsx';
+import { fetchDemo } from './js/util/DataUtil.js';
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);

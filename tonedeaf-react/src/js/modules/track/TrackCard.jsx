@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import ImageWrapper from '../ui/ImageWrapper.js';
+import ImageWrapper from '../ui/ImageWrapper.jsx';
 
 import ICON from "../../../icons/SpotifyGreen.png";
 

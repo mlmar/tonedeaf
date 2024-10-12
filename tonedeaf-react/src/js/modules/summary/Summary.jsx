@@ -1,9 +1,9 @@
-import ArtistSummary from './ArtistsSummary.js';
-import TracksSummary from './TracksSummary.js';
+import ArtistSummary from './ArtistsSummary.jsx';
+import TracksSummary from './TracksSummary.jsx';
 
-import Options from '../ui/Options.js';
+import Options from '../ui/Options.jsx';
 
-import DEFAULTS from '../../util/Defaults.js';
+import DEFAULTS from '../../util/Defaults.jsx';
 
 const Summary = (props) => {
   const { 

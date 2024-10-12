@@ -1,14 +1,14 @@
 import { useState, useMemo } from 'react';
 import { useArtistsAndGenres } from '../../hooks/SpotifyHooks.js';
 
-import Options from "../ui/Options.js";
-import ImageWrapper from '../ui/ImageWrapper.js';
-import ArtistCard from './ArtistCard.js';
+import Options from "../ui/Options.jsx";
+import ImageWrapper from '../ui/ImageWrapper.jsx';
+import ArtistCard from './ArtistCard.jsx';
 
-import Load from '../ui/Load.js';
-import { CHECK } from '../../util/IconUtil.js';
+import Load from '../ui/Load.jsx';
+import { CHECK } from '../../util/IconUtil.jsx';
 
-import DEFAULTS from '../../util/Defaults.js';
+import DEFAULTS from '../../util/Defaults.jsx';
 
 /*
   Displays list of users top artists from a selected time range

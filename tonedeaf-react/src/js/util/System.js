@@ -1,4 +1,4 @@
-const DEV = process.env.REACT_APP_DEV;
+const DEV = import.meta.env.REACT_APP_DEV;
 
 const local_site = "http://localhost:8888/";
 const deployed_site = "https://tonedeaf-auth.vercel.app/";

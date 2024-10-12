@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getProfile } from '../../util/SpotifyUtil.js';
 import { cache } from '../../util/Session.js';
 
-import ImageWrapper from '../ui/ImageWrapper.js';
+import ImageWrapper from '../ui/ImageWrapper.jsx';
 
 /*
   Displays user's picture and name

@@ -2,15 +2,15 @@ import { useState, useEffect, useRef } from 'react';
 import { cache } from '../../util/Session.js';
 import { search, getSearchRecs, createPlaylist } from '../../util/SpotifyUtil.js';
 
-import Options from '../ui/Options.js';
-import ImageWrapper from '../ui/ImageWrapper.js';
-import ArtistCard from '../artist/ArtistCard.js';
-import TrackCard from '../track/TrackCard.js';
-import NowPlaying from '../user/NowPlaying.js';
+import Options from '../ui/Options.jsx';
+import ImageWrapper from '../ui/ImageWrapper.jsx';
+import ArtistCard from '../artist/ArtistCard.jsx';
+import TrackCard from '../track/TrackCard.jsx';
+import NowPlaying from '../user/NowPlaying.jsx';
 
-import Load from '../ui/Load.js';
+import Load from '../ui/Load.jsx';
 
-import DEFAULTS from '../../util/Defaults.js';
+import DEFAULTS from '../../util/Defaults.jsx';
 
 const VIEW_OPTIONS = ["Search", "Recommendations"];
 const VIEW_OPTIONS_TEMP = ["Search"];

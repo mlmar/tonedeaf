@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 
 import { fetchNowPlaying } from '../../util/DataUtil.js';
-import ImageWrapper from '../ui/ImageWrapper.js';
-import Load from '../ui/Load.js';
+import ImageWrapper from '../ui/ImageWrapper.jsx';
+import Load from '../ui/Load.jsx';
 import ICON from '../../../icons/SpotifyGreen.png';
 
 const TIME = 10000;

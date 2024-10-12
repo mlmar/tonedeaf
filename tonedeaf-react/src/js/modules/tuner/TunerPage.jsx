@@ -4,14 +4,14 @@ import { fetchSeeds } from '../../util/DataUtil.js';
 import { getDefaultAttributes, getParamAttributes, getAttributeRecs, createPlaylist } from "../../util/SpotifyUtil.js";
 import { isEqual } from '../../util/ObjectUtil.js';
 
-import Options from '../ui/Options.js';
-import AttributeInput from './AttributeInput.js';
-import TrackCard from '../track/TrackCard.js';
+import Options from '../ui/Options.jsx';
+import AttributeInput from './AttributeInput.jsx';
+import TrackCard from '../track/TrackCard.jsx';
 
-import Load from '../ui/Load.js';
-import { CHECK } from '../../util/IconUtil.js';
+import Load from '../ui/Load.jsx';
+import { CHECK } from '../../util/IconUtil.jsx';
 
-import DEFAULTS from '../../util/Defaults.js';
+import DEFAULTS from '../../util/Defaults.jsx';
 
 const VIEW_OPTIONS = ["Attributes", "Recommendations"];
 const VIEW_OPTIONS_TEMP = ["Attributes"];

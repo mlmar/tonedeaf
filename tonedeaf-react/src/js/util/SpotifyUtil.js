@@ -9,7 +9,7 @@
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyWebApi = new SpotifyWebApi();
 
-const DEV = process.env.REACT_APP_DEV;
+const DEV = import.meta.env.REACT_APP_DEV;
 
 const RANGES = ["long_term", "medium_term", "short_term"];
 
