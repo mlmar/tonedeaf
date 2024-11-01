@@ -39,6 +39,11 @@ const TracksSummary = (props) => {
     if(averages) {
       return (
         <div className="flex-col panel">
+          <div className="stats flex-wrap">
+            {
+              tracksInfo?.tracks?.slice(0,6).map((track,i) => <label className="flex-col big bold" key={i+track.name}> {i + 1 + '. ' + track.name} </label>)
+            }
+          </div>
           <p className="large bold inactive"> the stats from your top 50 tracks </p>
           <div className="flex-wrap  stats">
               <label className="flex-col big bold">

@@ -18,7 +18,7 @@ const DEFAULTS = {
   
   TOP_IMAGES_LIMIT: 6,
   TOP_IMAGES_ROWS: 2,
-  TOP_GENRES_LIMIT: 12,
+  TOP_GENRES_LIMIT: 8,
 
   SHARE_TEXT_ARTISTS: ['My top artists', 'My top artists in the last 6 months', 'My top artists in the last month'],
   SHARE_TEXT_TRACKS: ['My top tracks', 'My top tracks in the last 6 months', 'My top tracks in the last month'],

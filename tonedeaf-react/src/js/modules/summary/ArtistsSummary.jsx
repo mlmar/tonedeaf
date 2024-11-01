@@ -19,11 +19,11 @@ const ArtistSummary = (props) => {
 
       return (
         <div className="flex-col panel">
-          {/* <div className="stats flex-wrap">
+          <div className="stats flex-wrap">
             {
-              artistsInfo.artists.slice(1,10).map((artist,i) => <label className="flex-col big bold" key={i+artist.name}> {i+2 + '. ' + artist.name} </label>)
+              artistsInfo.artists.slice(0,6).map((artist,i) => <label className="flex-col big bold" key={i+artist.name}> {i + 1 + '. ' + artist.name} </label>)
             }
-          </div> */}
+          </div>
           <p className="large bold inactive"> you listened to artists from <span className="white"> { artistsInfo?.genres?.length - 1} </span> genres &mdash; these were your favorites </p>
           <div className="stats flex-wrap genres"> {genres} </div>
         </div>

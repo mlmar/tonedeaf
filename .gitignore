@@ -5,3 +5,5 @@
 /tonedeaf-express/node_modules
 /tonedeaf-express/.gitignore
 /tonedeaf-express/.env
+
+/.vscode
