@@ -41,7 +41,9 @@ const TracksSummary = (props) => {
         <div className="flex-col panel">
           <div className="stats list">
             {
-              tracksInfo?.tracks?.slice(0,6).map((track,i) => <label className="flex big bold" onClick={onClick} key={i+track.name}> <span>{i + 1}.</span> {track.name} </label>)
+              tracksInfo?.tracks?.slice(0,6).map((track,i) => {
+                return <label className="flex big bold" onClick={onClick} key={i+track.name}> <span>{i + 1}.</span> <span>{track.name}</span></label>
+              })
             }
           </div>
           <p className="large bold inactive"> the stats from your top 50 tracks </p>

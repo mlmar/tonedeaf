@@ -21,7 +21,9 @@ const ArtistSummary = (props) => {
         <div className="flex-col panel">
           <div className="stats list flex-wrap">
             {
-              artistsInfo.artists.slice(0,6).map((artist,i) => <label className="flex big bold" onClick={onArtistClick} key={i+artist.name}> <span>{i + 1}.</span> {artist.name} </label>)
+              artistsInfo.artists.slice(0,6).map((artist,i) => {
+                return <label className="flex big bold" onClick={onArtistClick} key={i+artist.name}> <span>{i + 1}.</span> <span>{artist.name}</span> </label>
+              })
             }
           </div>
           <p className="large bold inactive"> you listened to artists from <span className="white"> { artistsInfo?.genres?.length - 1} </span> genres &mdash; these were your favorites </p>
