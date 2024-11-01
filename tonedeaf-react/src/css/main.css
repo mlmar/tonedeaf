@@ -589,6 +589,7 @@ label, p {
   flex-basis: 33%;
   margin-bottom: 1rem;
   text-overflow: ellipsis;
+  letter-spacing: 0.01px;
 }
 
 .summary .stats.list span:first-child {
