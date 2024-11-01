@@ -596,7 +596,7 @@ label, p {
   margin-right: .5em;
 }
 
-.summary .stats label span:not(:first-child) {
+.summary .stats:not(.list) label span:not(:first-child) {
   align-items: flex-end;
   color: var(--inactive);
   font-size: .75em;
