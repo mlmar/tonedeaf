@@ -1,0 +1,267 @@
+// Mobile-first responsive styles for screens 1000px and below
+
+@media only screen and (max-width: 1000px) {
+    /*** ROOT VARIABLES OVERRIDE ***/
+
+    :root {
+        --side-padding: 1.2rem;
+        --padding: 0.5rem;
+    }
+
+    /*** VISIBILITY TOGGLES ***/
+
+    .mobile {
+        display: inherit !important;
+    }
+
+    .desktop {
+        display: none !important;
+    }
+
+    /*** NAV ADJUSTMENTS ***/
+
+    .mobile-flex {
+        flex-direction: column !important;
+        flex-shrink: 0;
+
+        &.flex-wrap {
+            flex-wrap: nowrap;
+        }
+    }
+
+    .genres-panel {
+        flex-direction: column !important;
+        flex-shrink: 0;
+    }
+
+    /*** FONT SIZE ADJUSTMENTS ***/
+
+    .super {
+        font-size: 20vw;
+        font-weight: 500;
+    }
+
+    .large {
+        font-size: 1rem;
+    }
+
+    .big {
+        font-size: 1rem;
+    }
+
+    .medium {
+        font-size: 0.8rem;
+    }
+
+    .small {
+        font-size: 0.8rem;
+    }
+
+    .tiny {
+        font-size: 0.7rem;
+    }
+
+    /*** PAGE AND OPTIONS ***/
+
+    .page .flex .options-panel:not(:last-child) {
+        margin-right: 0 !important;
+    }
+
+    .options-panel .options {
+        flex: 1 1;
+        width: 100%;
+    }
+
+    .gray-btn {
+        flex: 1 1;
+
+        &:hover:not(.selected) {
+            background: var(--inactive);
+        }
+    }
+
+    /*** GENRES PANEL ***/
+
+    .genres-panel {
+        .buttons {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .overflow-false .overflow {
+            display: none;
+        }
+
+        > .overflow-btn {
+            margin: var(--side-padding) 0;
+        }
+    }
+
+    /*** MOBILE MENU ***/
+
+    .mobile-options {
+        z-index: 100;
+        flex-direction: column;
+        position: absolute;
+        top: 2.5rem;
+        width: 45%;
+        padding-right: 1rem;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        background: var(--dark);
+        animation: slide-left 0.3s ease forwards;
+
+        button {
+            justify-content: flex-end;
+            font-size: 1rem;
+            padding: 1rem 0;
+        }
+
+        .selected {
+            color: var(--active);
+        }
+
+        ~ .back {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 99;
+        }
+    }
+
+    .nav {
+        padding: 0 0.75rem;
+
+        button {
+            height: unset;
+        }
+    }
+
+    /*** GRID ***/
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    /*** CARDS ***/
+
+    .images {
+        margin-bottom: 2rem;
+
+        .image-wrapper {
+            flex-basis: 20%;
+        }
+    }
+
+    .cards {
+        > * {
+            flex-shrink: 0;
+        }
+
+        .description {
+            padding-left: var(--side-padding);
+
+            .large {
+                padding-bottom: 0.2rem;
+            }
+
+            .medium {
+                padding-bottom: 0.1rem;
+            }
+        }
+
+        .image-wrapper:not(.icon) {
+            width: 6rem;
+            height: 6rem;
+        }
+
+        .image-wrapper.icon {
+            margin-top: 0.1rem;
+            width: 3.5rem;
+        }
+    }
+
+    .track-card button {
+        margin-top: 0.5rem;
+        height: 1rem;
+        font-size: 0.8rem;
+    }
+
+    /*** NOW PLAYING ***/
+
+    .now-playing {
+        display: flex;
+        flex-direction: column;
+        padding: 0 var(--side-padding);
+        margin-top: var(--side-padding);
+
+        .image-wrapper {
+            max-width: 100%;
+        }
+
+        .description {
+            padding: var(--side-padding) 0;
+            flex: 1 1;
+
+            > *:first-child {
+                font-size: 2rem;
+            }
+
+            > *:not(:last-child) {
+                margin-bottom: 1rem;
+            }
+        }
+
+        .icon {
+            width: 6rem;
+        }
+    }
+
+    .now-playing-widget {
+        .image-wrapper:not(.icon) {
+            width: 6rem;
+        }
+
+        .icon {
+            width: 3.5rem;
+        }
+
+        .big {
+            padding-bottom: 0.2rem;
+        }
+    }
+
+    /*** HOVER EFFECTS ***/
+
+    .hover-select:hover::after,
+    .hover-deselect:hover::after {
+        font-size: 5rem;
+    }
+
+    /*** SUMMARY ***/
+
+    .summary .stats > * {
+        flex-basis: 50%;
+    }
+
+    /*** BUTTONS ***/
+
+    .plus-btn {
+        font-size: 0.6em;
+    }
+
+    /*** ANIMATIONS ***/
+
+    @keyframes slide-left {
+        0% {
+            margin-right: -45vw;
+        }
+
+        100% {
+            margin-right: 0vw;
+        }
+    }
+}
