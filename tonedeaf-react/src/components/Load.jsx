@@ -1,2 +1,1 @@
-const Load = () => <div className="load"></div>
-export default Load;
+export const Load = () => <div className='load'></div>;

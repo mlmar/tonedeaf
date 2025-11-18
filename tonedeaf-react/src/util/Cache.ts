@@ -1,24 +1,49 @@
-export const cache = {
-  // user
-  userInfo : null,
+import type { AudioFeatureAverages, GenreCount, getNowPlaying } from "~/util/SpotifyUtil"
 
-  // top artists
-  artists : { 0 : null, 1 : null, 2 : null },
-  genres : { 0 : null, 1 : null, 2 : null },
+type Cache = {
+    // user
+    userInfo: SpotifyApi.CurrentUsersProfileResponse | null,
 
-  // top tracks
-  tracks : { 0 : null, 1 : null, 2 : null },
-  features : { 0 : null, 1 : null, 2 : null },
-  averages : { 0 : null, 1 : null, 2 : null },
+    // top artists
+    artists: [SpotifyApi.ArtistObjectFull[] | null, SpotifyApi.ArtistObjectFull[] | null, SpotifyApi.ArtistObjectFull[] | null],
+    genres: [GenreCount | null, GenreCount | null, GenreCount | null],
 
-  genreSeeds : null,
+    // top tracks
+    tracks: [SpotifyApi.TrackObjectFull[] | null, SpotifyApi.TrackObjectFull[] | null, SpotifyApi.TrackObjectFull[] | null],
+    features: [SpotifyApi.AudioFeaturesObject[] | null, SpotifyApi.AudioFeaturesObject[] | null, SpotifyApi.AudioFeaturesObject[] | null],
+    averages: [AudioFeatureAverages | null, AudioFeatureAverages | null, AudioFeatureAverages | null],
 
-  search : {},
+    genreSeeds: string[] | null,
 
-  lookup: null,
+    search: {
+        [key: string]: SpotifyApi.ArtistObjectFull[] | SpotifyApi.TrackObjectFull[] | null
+    },
 
-  nowPlaying: null,
-  recent: null,
+    nowPlaying: Awaited<ReturnType<typeof getNowPlaying>>,
+    recent: SpotifyApi.PlayHistoryObject[] | null,
 
-  demo : false,
+    demo: boolean,
+}
+
+export const cache: Cache = {
+    // user
+    userInfo: null,
+
+    // top artists
+    artists: [null, null, null],
+    genres: [null, null, null],
+
+    // top tracks
+    tracks: [null, null, null],
+    features: [null, null, null],
+    averages: [null, null, null],
+
+    genreSeeds: null,
+
+    search: {},
+
+    nowPlaying: null,
+    recent: null,
+
+    demo: false,
 }

@@ -1,33 +1,33 @@
-import { useState, useEffect } from "react";
-import { cache } from "~/util/Cache.js";
-import { fetchSeeds } from "~/util/DataUtil.js";
-import {
-    getDefaultAttributes,
-    getParamAttributes,
-    getAttributeRecs,
-    createPlaylist,
-} from "~/util/SpotifyUtil.js";
-import { isEqual } from "~/util/ObjectUtil.js";
+import { useState, useEffect } from 'react';
+import { cache } from '~/util/Cache.js';
+import { fetchSeeds } from '~/util/DataUtil.js';
+import { getDefaultAttributes, getParamAttributes, getAttributeRecs, createPlaylist } from '~/util/SpotifyUtil.js';
+import { isEqual } from '~/util/ObjectUtil.js';
 
-import Options from "~/components/Options.jsx";
-import AttributeInput from "./AttributeInput.jsx";
-import TrackCard from "~/features/track/TrackCard.jsx";
+import { Options } from '~/components/Options.jsx';
+import { AttributeInput } from './AttributeInput.jsx';
+import { TrackCard } from '~/features/track/TrackCard.jsx';
 
-import Load from "~/components/Load.jsx";
-import { CHECK } from "~/util/IconUtil.jsx";
+import { Load } from '~/components/Load.jsx';
+import { CHECK } from '~/util/IconUtil.jsx';
 
-import DEFAULTS from "~/util/Defaults.js";
+import { Config } from '~/util/Config.js';
+import { useIsDemo } from '~/hooks/useIsDemo.ts';
+import { useTonedeafStore } from '~/hooks/useTonedeafStore.js';
 
-const VIEW_OPTIONS = ["Attributes", "Recommendations"];
-const VIEW_OPTIONS_TEMP = ["Attributes"];
-const PLAYLIST_OPTIONS = ["Create Playlist", "Reroll"];
+const VIEW_OPTIONS = ['Attributes', 'Recommendations'];
+const VIEW_OPTIONS_TEMP = ['Attributes'];
+const PLAYLIST_OPTIONS = ['Create Playlist', 'Reroll'];
 
 const DEFAULT_ATTRIBUTES = getDefaultAttributes();
 
 /*
   Users can select up to 5 genres and edit preferred track attributes to get song recommendations
 */
-const TunerPage = ({ setAlertText }) => {
+export const TunerPage = () => {
+    const { isDemo } = useIsDemo();
+    const setAlertText = useTonedeafStore((state) => state.setAlertText);
+
     const [viewIndex, setViewIndex] = useState(0);
     const [genreSeeds, setGenreSeeds] = useState(null);
 
@@ -51,16 +51,15 @@ const TunerPage = ({ setAlertText }) => {
 
     // if user tries to view results, fetch them from Spotify
     const handleViewClick = (index) => {
-        if (index === 1 && cache["demo"]) {
-            setAlertText(DEFAULTS.STATUS_MESSAGE.PLAYLIST_CREATED);
+        if (index === 1 && isDemo) {
+            setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
             return;
         }
 
         setViewIndex(index);
 
         const equalSets =
-            selected?.size === prevSelected?.size &&
-            [...selected].every((elem) => prevSelected?.has(elem));
+            selected?.size === prevSelected?.size && [...selected].every((elem) => prevSelected?.has(elem));
         const equalAttributes = isEqual(attributes, prevAttributes);
         if (index === 1 && (!equalSets || !equalAttributes)) {
             setPrevSelected(selected);
@@ -71,14 +70,9 @@ const TunerPage = ({ setAlertText }) => {
 
     const handlePlaylistOptions = async (index) => {
         if (index === 0) {
-            const id = cache["userInfo"]?.id;
-            const response = await createPlaylist(
-                id,
-                "tonedeaf tuner tracks",
-                tracks
-            );
-            if (response)
-                setAlertText(DEFAULTS.STATUS_MESSAGE.PLAYLIST_CREATED);
+            const id = cache['userInfo']?.id;
+            const response = await createPlaylist(id, 'tonedeaf tuner tracks', tracks);
+            if (response) setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
         } else {
             getRecommendations();
         }
@@ -117,11 +111,11 @@ const TunerPage = ({ setAlertText }) => {
     const handleAttributeChange = (id, value, type) => {
         setAttributes((prev) => {
             const temp = { ...prev };
-            if (type === "max") {
-                temp["max_" + id] = value;
+            if (type === 'max') {
+                temp['max_' + id] = value;
             }
-            if (type === "min" || temp["max_" + id] < temp["min_" + id]) {
-                temp["min_" + id] = value;
+            if (type === 'min' || temp['max_' + id] < temp['min_' + id]) {
+                temp['min_' + id] = value;
             }
             return temp;
         });
@@ -129,15 +123,13 @@ const TunerPage = ({ setAlertText }) => {
 
     const getGenreButton = (genre) => {
         const exists = selected?.has(genre);
-        let selectedClass = exists ? "selected" : "";
+        let selectedClass = exists ? 'selected' : '';
         let text = exists ? CHECK : null;
         return (
             <span onClick={handleGenreClick} id={genre} key={genre}>
-                {" "}
-                <button className={"text-btn bold " + selectedClass}>
-                    {" "}
-                    {genre} {text}{" "}
-                </button>{" "}
+                <button className={'text-btn bold ' + selectedClass}>
+                    {genre} {text}
+                </button>
             </span>
         );
     };
@@ -149,23 +141,19 @@ const TunerPage = ({ setAlertText }) => {
                 view = (
                     <>
                         <Options
-                            title="Choose up to 5 Genres"
-                            className="genres-panel"
-                            subtitle={
-                                <div className="buttons">
-                                    {genreSeeds?.map(getGenreButton)}
-                                </div>
-                            }
+                            title='Choose up to 5 Genres'
+                            className='genres-panel'
+                            subtitle={<div className='buttons'>{genreSeeds?.map(getGenreButton)}</div>}
                         />
                         <hr />
                         <Options
-                            title="Edit your preferred song attributes"
-                            description="Choose the minimum and maximum ranges for specific attributes"
+                            title='Edit your preferred song attributes'
+                            description='Choose the minimum and maximum ranges for specific attributes'
                             subtitle={DEFAULT_ATTRIBUTES?.map((attr) => (
                                 <AttributeInput
                                     {...attr}
-                                    userMin={attributes["min_" + attr.id]}
-                                    userMax={attributes["max_" + attr.id]}
+                                    userMin={attributes['min_' + attr.id]}
+                                    userMax={attributes['max_' + attr.id]}
                                     onChange={handleAttributeChange}
                                     key={attr.id}
                                 />
@@ -176,19 +164,13 @@ const TunerPage = ({ setAlertText }) => {
                 break;
             case 1: // show tracks result or no results message
                 view = tracks?.length ? (
-                    <div className="cards">
+                    <div className='cards'>
                         {tracks?.map((track, i) => (
-                            <TrackCard
-                                {...track}
-                                rank={i + 1}
-                                key={track?.name + i}
-                                norank
-                                nohover
-                            />
+                            <TrackCard {...track} rank={i + 1} key={track?.name + i} norank nohover />
                         ))}
                     </div>
                 ) : (
-                    <label className="medium bold"> No results found </label>
+                    <label className='medium bold'> No results found </label>
                 );
                 break;
         }
@@ -197,39 +179,27 @@ const TunerPage = ({ setAlertText }) => {
     };
 
     return (
-        <div className="page">
-            <div className="flex mobile-flex">
+        <div className='page'>
+            <div className='flex mobile-flex'>
                 <Options
-                    title="View"
+                    title='View'
                     options={selected.size ? VIEW_OPTIONS : VIEW_OPTIONS_TEMP}
                     onClick={handleViewClick}
                     index={viewIndex}
                 />
                 {tracks && viewIndex === 1 && (
-                    <Options
-                        title="Like These Tracks?"
-                        options={PLAYLIST_OPTIONS}
-                        onClick={handlePlaylistOptions}
-                    />
+                    <Options title='Like These Tracks?' options={PLAYLIST_OPTIONS} onClick={handlePlaylistOptions} />
                 )}
             </div>
             {viewIndex === 0 && (
                 <>
                     <hr />
-                    <label className="medium bold">
-                        {" "}
-                        Find song recommendations based on your preferred genres
-                        and song attributes.{" "}
+                    <label className='medium bold'>
+                        Find song recommendations based on your preferred genres and song attributes.
                     </label>
                 </>
             )}
-            {(viewIndex === 0 && genreSeeds) || (viewIndex === 1 && tracks) ? (
-                getView()
-            ) : (
-                <Load />
-            )}
+            {(viewIndex === 0 && genreSeeds) || (viewIndex === 1 && tracks) ? getView() : <Load />}
         </div>
     );
 };
-
-export default TunerPage;

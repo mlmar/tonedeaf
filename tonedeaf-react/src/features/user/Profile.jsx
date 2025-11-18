@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { getProfile } from "~/util/SpotifyUtil";
-import { cache } from "~/util/Cache.js";
+import { useState, useEffect } from 'react';
+import { getProfile } from '~/util/SpotifyUtil';
+import { cache } from '~/util/Cache.js';
 
-import ImageWrapper from "~/components/ImageWrapper.jsx";
+import { ImageWrapper } from '~/components/ImageWrapper.jsx';
 
 /*
   Displays user's picture and name
 */
-const Profile = () => {
+export const Profile = () => {
     const [userInfo, setUserInfo] = useState(null);
 
     /*
@@ -15,13 +15,13 @@ const Profile = () => {
   */
     useEffect(() => {
         const fetchProfile = async () => {
-            if (cache["userInfo"]) {
-                setUserInfo(cache["userInfo"]);
-                console.log("Retrieving user info from cache");
+            if (cache['userInfo']) {
+                setUserInfo(cache['userInfo']);
+                console.log('Retrieving user info from cache');
             } else {
                 const info = await getProfile();
-                cache["userInfo"] = info;
-                console.log("Cacheing user info");
+                cache['userInfo'] = info;
+                console.log('Cacheing user info');
                 setUserInfo(info);
             }
         };
@@ -30,23 +30,19 @@ const Profile = () => {
     }, []);
 
     return (
-        <div className="profile">
+        <div className='profile'>
             {userInfo && (
                 <>
                     <ImageWrapper
                         src={userInfo.images?.[0]?.url}
-                        alt="Profile"
+                        alt='Profile'
                         nohover
                     />
-                    <div className="description flex-col">
-                        <label className="large">
-                            {" "}
-                            {userInfo.display_name}{" "}
-                        </label>
-                        <label className="medium">
-                            {" "}
-                            {userInfo.country}, {userInfo.followers?.total}{" "}
-                            followers{" "}
+                    <div className='description flex-col'>
+                        <label className='large'>{userInfo.display_name}</label>
+                        <label className='medium'>
+                            {userInfo.country}, {userInfo.followers?.total}
+                            followers
                         </label>
                     </div>
                 </>
@@ -54,5 +50,3 @@ const Profile = () => {
         </div>
     );
 };
-
-export default Profile;

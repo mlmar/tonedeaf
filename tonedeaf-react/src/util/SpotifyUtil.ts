@@ -40,7 +40,7 @@ interface NowPlayingTrack {
 /**
  * Average audio features object
  */
-interface AudioFeatureAverages {
+export interface AudioFeatureAverages {
     [key: string]: {
         name: string;
         total: number;
@@ -50,7 +50,7 @@ interface AudioFeatureAverages {
 /**
  * Genre count object
  */
-interface GenreCount {
+export interface GenreCount {
     genre: string;
     total: number;
 }
@@ -231,7 +231,7 @@ const getIDS = (tracks: SpotifyApi.TrackObjectFull[]): string[] => {
  * @param {SpotifyApi.AudioFeaturesObject[]} features - Array of audio feature objects from Spotify API
  * @returns {AudioFeatureAverages} Object mapping audio feature names to their average values
  */
-const getAverages = (tracks: SpotifyApi.TrackObjectFull[], features: SpotifyApi.AudioFeaturesObject[]): AudioFeatureAverages => {
+const getAudioFeaturesAverages = (tracks: SpotifyApi.TrackObjectFull[], features: SpotifyApi.AudioFeaturesObject[]): AudioFeatureAverages => {
     const length = features.length;
 
     const averages: AudioFeatureAverages = {
@@ -313,7 +313,7 @@ export const getTracksAndFeatures = async (
     try {
         const tracks = await getTopTracks(rangeIndex);
         const features = await getFeatures(tracks ?? []);
-        const averages = getAverages(tracks ?? [], features ?? []);
+        const averages = getAudioFeaturesAverages(tracks ?? [], features ?? []);
         return { tracks, features, averages };
     } catch (error) {
         console.error(error);
@@ -399,26 +399,24 @@ const getDate = (): string => {
 /**
  * Creates a new playlist on the user's Spotify account and adds tracks to it
  * @async
- * @param {string|null} id - User's Spotify ID; if falsy, returns demo status
+ * @param {string} id - User's Spotify ID; if falsy, returns demo status
  * @param {string} text - Name for the new playlist
  * @param {Track[]} tracks - Array of track objects to add to the playlist
  * @param {boolean} recent - Whether tracks are from recently played format
  * @returns {Promise<SpotifyApi.AddTracksToPlaylistResponse>} Response object from addTracksToPlaylist or {status: 'demo'} or null on error
  */
 export const createPlaylist = async (
-    id: string | null,
+    id: string,
     text: string,
     tracks: SpotifyApi.TrackObjectFull[],
     recent: boolean
-): Promise<Partial<SpotifyApi.AddTracksToPlaylistResponse> | { status: string } | null> => {
+): Promise<Partial<SpotifyApi.AddTracksToPlaylistResponse> | null> => {
     const params = {
         name: text,
         public: true,
         collaborative: false,
         description: "tonedeaf.vercel.app @ " + getDate(),
     };
-
-    if (!id) return { status: "demo" };
 
     try {
         const playlist = await spotifyWebApi.createPlaylist(id, params);

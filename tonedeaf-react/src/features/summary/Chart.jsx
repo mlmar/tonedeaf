@@ -1,8 +1,8 @@
-const Chart = (props) => {
+export const Chart = (props) => {
     const { display, averages, className } = props;
 
     return (
-        <div className={"chart flex-col " + (className || "")}>
+        <div className={'chart flex-col ' + (className || '')}>
             {Object.keys(averages)
                 .sort()
                 .map((key) => {
@@ -10,23 +10,21 @@ const Chart = (props) => {
                     if (display.includes(key)) {
                         return (
                             <div
-                                className="flex row flex-fill medium "
+                                className='flex row flex-fill medium '
                                 key={key}
                             >
-                                <label className="flex bold">
-                                    {" "}
-                                    {attr.name?.toLowerCase()}{" "}
+                                <label className='flex bold'>
+                                    {attr.name?.toLowerCase()}
                                 </label>
-                                <span className="flex bar flex-fill">
+                                <span className='flex bar flex-fill'>
                                     <span
-                                        className="flex color"
+                                        className='flex color'
                                         style={{
-                                            width: (attr.total / 1) * 100 + "%",
+                                            width: (attr.total / 1) * 100 + '%',
                                         }}
                                     ></span>
-                                    <span className="flex inactive">
-                                        {" "}
-                                        {attr.total}{" "}
+                                    <span className='flex inactive'>
+                                        {attr.total}
                                     </span>
                                 </span>
                             </div>
@@ -38,5 +36,3 @@ const Chart = (props) => {
         </div>
     );
 };
-
-export default Chart;

@@ -1,0 +1,49 @@
+import arrowIcon from '~/icons/arrow-icon.svg';
+// import cameraIcon from '~/icons/camera-icon.svg';
+// import copyFileIcon from '~/icons/copy-file-icon.svg';
+
+export const Config = {
+    NAV_OPTIONS: ["Summary", "Artists", "Tracks", "Recent", "Scope", "Tuner"],
+    NAV_INDEX: {
+        SUMMARY: 0,
+        ARTISTS: 1,
+        TRACKS: 2,
+        RECENT: 3,
+        SCOPE: 4,
+        TUNER: 5
+    },
+
+    TIME_FRAME_INDEX: 2,
+    TIME_OPTIONS: ["Long Term", "6 Months", "1 Month"],
+
+    VIEW_INDEX: 0,
+    VIEW_OPTIONS: ["Grid", "List"],
+
+    DOWNLOAD_OPTIONS: [
+        { icon: arrowIcon, text: 'Send' },
+        // <img src={copyFileIcon} alt="Text" />
+    ],
+
+    TOP_IMAGES_LIMIT: 6,
+    TOP_IMAGES_ROWS: 2,
+    TOP_GENRES_LIMIT: 8,
+
+    SHARE_TEXT_ARTISTS: ['My top artists', 'My top artists in the last 6 months', 'My top artists in the last month'],
+    SHARE_TEXT_TRACKS: ['My top tracks', 'My top tracks in the last 6 months', 'My top tracks in the last month'],
+
+    CHART_COLS: ['acousticness', 'danceability', 'energy', 'valence'],
+
+    SUMMARY_TEXT: [
+        'long term',
+        'last six months',
+        'last month'
+    ],
+
+    GENRE: 'all',
+
+    STATUS_MESSAGE: {
+        PLAYLIST_CREATED: 'Playlist Created',
+        CLIPBOARD: 'Copied to Clipboard',
+        SIGN_IN: 'Sign in to use this feature'
+    }
+}

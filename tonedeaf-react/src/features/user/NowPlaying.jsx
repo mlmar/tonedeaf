@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 
-import { fetchNowPlaying } from "~/util/DataUtil.js";
-import ImageWrapper from "~/components/ImageWrapper.jsx";
-import Load from "~/components/Load.jsx";
-import ICON from "~/icons/SpotifyGreen.png";
+import { fetchNowPlaying } from '~/util/DataUtil.js';
+import { ImageWrapper } from '~/components/ImageWrapper.jsx';
+import { Load } from '~/components/Load.jsx';
+import ICON from '~/icons/SpotifyGreen.png';
 
 const TIME = 10000;
 
@@ -13,7 +13,7 @@ const TIME = 10000;
   widget    :   compact widget for scope page
   onChange  :   on track change, the track is passed as argument
 */
-const NowPlaying = ({ widget, onChange, children }) => {
+export const NowPlaying = ({ widget, onChange, children }) => {
     const [track, setTrack] = useState(null);
     const fetchInterval = useRef(null);
 
@@ -42,28 +42,26 @@ const NowPlaying = ({ widget, onChange, children }) => {
 
     if (!widget) {
         return track ? (
-            <div className="now-playing">
+            <div className='now-playing'>
                 <ImageWrapper
                     src={track?.image}
                     alt={track?.title}
                     title={track?.title}
                     nohover
                 />
-                <div className="description flex-col">
-                    <label className="large bold"> {track?.title} </label>
-                    <label className="big bold">
-                        {" "}
-                        {track?.artists?.join(", ")}{" "}
+                <div className='description flex-col'>
+                    <label className='large bold'> {track?.title} </label>
+                    <label className='big bold'>
+                        {track?.artists?.join(', ')}
                     </label>
-                    <div className="flex-col flex-fill flex-reverse">
-                        {" "}
+                    <div className='flex-col flex-fill flex-reverse'>
                         <ImageWrapper
-                            className="icon"
+                            className='icon'
                             src={ICON}
                             title={`Open ${track?.name} in Spotify`}
                             url={track?.url}
                             nohover
-                        />{" "}
+                        />
                     </div>
                 </div>
             </div>
@@ -72,31 +70,29 @@ const NowPlaying = ({ widget, onChange, children }) => {
         );
     } else {
         return track?.playing === true ? (
-            <div className="now-playing-widget flex-col">
-                <label className="bold medium title"> Now Playing </label>
+            <div className='now-playing-widget flex-col'>
+                <label className='bold medium title'> Now Playing </label>
                 <span>{children}</span>
-                <div className="flex">
+                <div className='flex'>
                     <ImageWrapper
                         src={track?.image}
                         alt={track?.title}
                         title={track?.title}
                         nohover
                     />
-                    <div className="description flex-col">
-                        <label className="big bold"> {track?.title} </label>
-                        <label className="medium">
-                            {" "}
-                            {track?.artists?.join(", ")}{" "}
+                    <div className='description flex-col'>
+                        <label className='big bold'> {track?.title} </label>
+                        <label className='medium'>
+                            {track?.artists?.join(', ')}
                         </label>
-                        <div className="flex-col flex-fill flex-reverse">
-                            {" "}
+                        <div className='flex-col flex-fill flex-reverse'>
                             <ImageWrapper
-                                className="icon"
+                                className='icon'
                                 src={ICON}
                                 title={`Open ${track?.name} in Spotify`}
                                 url={track?.url}
                                 nohover
-                            />{" "}
+                            />
                         </div>
                     </div>
                 </div>
@@ -104,5 +100,3 @@ const NowPlaying = ({ widget, onChange, children }) => {
         ) : null;
     }
 };
-
-export default NowPlaying;

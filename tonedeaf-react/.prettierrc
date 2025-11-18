@@ -3,5 +3,7 @@
     "useTabs": false,
     "singleQuote": true,
     "jsxSingleQuote": true,
-    "semi": true
+    "semi": true,
+    "htmlWhitespaceSensitivity": "strict",
+    "printWidth": 120
 }
