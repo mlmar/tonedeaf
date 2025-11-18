@@ -1,9 +1,11 @@
-/tonedeaf-react/node_modules
-/tonedeaf-react/.gitignore
-/tonedeaf-react/.env
+node_modules
+.gitignore
+.env
 
 /tonedeaf-express/node_modules
 /tonedeaf-express/.gitignore
 /tonedeaf-express/.env
 
 /.vscode
+
+.DS_Store
