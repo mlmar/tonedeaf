@@ -9,11 +9,11 @@ import { useState } from 'react';
   setIndex  :   callback to parent to set currently selected index
 
 */
-export const Nav = ({ index, setIndex, options, text, onLogout }) => {
+export const Nav = ({ index, onChange, options, text, onLogout }) => {
     const [mobileButtonsVisible, setMobileButtonsVisible] = useState(false);
 
     const setNavIndex = (event) => {
-        if (setIndex) setIndex(parseInt(event.target.id));
+        if (onChange) onChange(parseInt(event.target.id));
         setMobileButtonsVisible(false);
     };
 
@@ -27,9 +27,7 @@ export const Nav = ({ index, setIndex, options, text, onLogout }) => {
                 <span className='options'>
                     {options?.map((option, i) => (
                         <button
-                            className={
-                                index === i ? 'selected desktop' : 'desktop'
-                            }
+                            className={index === i ? 'selected desktop' : 'desktop'}
                             onClick={setNavIndex}
                             id={i}
                             key={i}
@@ -50,12 +48,7 @@ export const Nav = ({ index, setIndex, options, text, onLogout }) => {
             <>
                 <div className='mobile mobile-options'>
                     {options?.map((option, i) => (
-                        <button
-                            className={index === i ? 'selected' : ''}
-                            onClick={setNavIndex}
-                            id={i}
-                            key={i}
-                        >
+                        <button className={index === i ? 'selected' : ''} onClick={setNavIndex} id={i} key={i}>
                             {option}
                         </button>
                     ))}
@@ -76,10 +69,7 @@ export const Nav = ({ index, setIndex, options, text, onLogout }) => {
             <span className='title'>
                 <label> {text} </label>
                 {getButtons()}
-                <button
-                    className='burger-btn mobile'
-                    onClick={handleBurgerButton}
-                >
+                <button className='burger-btn mobile' onClick={handleBurgerButton}>
                     &#9776;
                 </button>
                 {mobileButtonsVisible && getMobileButtons()}

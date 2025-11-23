@@ -1,5 +1,4 @@
-import { cache } from '~/util/Cache.js';
-import { useRecent } from '~/hooks/SpotifyHooks.ts';
+import { useRecent, useUserInfo } from '~/hooks/SpotifyHooks.ts';
 import { createPlaylist } from '~/util/SpotifyUtil.js';
 
 import { Options } from '~/components/Options.jsx';
@@ -18,6 +17,7 @@ import { useRecentViewState } from '~/hooks/useRecentViewState.js';
 */
 export const RecentPage = () => {
     const { isDemo } = useIsDemo();
+    const userInfo = useUserInfo();
     const setAlertText = useTonedeafStore((state) => state.setAlertText);
 
     const { recentViewIndex: viewIndex, setRecentViewIndex: setViewIndex } = useRecentViewState();
@@ -29,7 +29,7 @@ export const RecentPage = () => {
             return;
         }
 
-        const id = cache['userInfo']?.id;
+        const id = userInfo.id;
         const response = await createPlaylist(id, 'tonedeaf recent tracks', tracks, true);
         if (response) {
             setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
@@ -50,7 +50,7 @@ export const RecentPage = () => {
             {tracks ? (
                 viewIndex === 0 ? (
                     <div className='images'>
-                        {tracks?.map((track, i) => (
+                        {tracks.map((track, i) => (
                             <ImageWrapper
                                 src={track?.track?.album?.images?.[0]?.url}
                                 title={i + 1 + '. ' + track?.track?.name}
@@ -62,7 +62,7 @@ export const RecentPage = () => {
                     </div>
                 ) : (
                     <div className='cards'>
-                        {tracks?.map((track, i) => (
+                        {tracks.map((track, i) => (
                             <TrackCard {...track?.track} rank={i + 1} key={track?.track?.name + i} norank>
                                 <label className='medium inactive'>
                                     Played on

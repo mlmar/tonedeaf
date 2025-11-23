@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useIsDemo } from "~/hooks/useIsDemo.ts";
-import { cache } from "~/util/Cache";
-import { fetchDemo } from "~/util/DataUtil";
 import { getHashParams } from "~/util/HashUtil";
-import { getProfile, setAccessToken } from "~/util/SpotifyUtil";
+import { setAccessToken } from "~/util/SpotifyUtil";
 import { HOME_URL } from "~/util/System";
 
 /**
@@ -17,7 +15,6 @@ export function useLogin(): boolean {
         queryKey: [isDemo],
         queryFn: async () => {
             if (isDemo) { // If this is a demo, then do not login
-                await fetchDemo();
                 return true;
             }
 
@@ -29,9 +26,6 @@ export function useLogin(): boolean {
             setAccessToken(token); // If successful, set access token
 
             if (token) {
-                const info = await getProfile();
-                cache['userInfo'] = info;
-
                 try {
                     window.history.replaceState(null, 'tonedeaf', HOME_URL);
                 } catch (error) {

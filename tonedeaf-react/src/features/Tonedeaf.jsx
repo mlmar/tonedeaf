@@ -20,8 +20,10 @@ import { HOME_URL } from '~/util/System.js';
 import { Config } from '~/util/Config.ts';
 import { useLogin } from '~/hooks/useLogin';
 import { useTonedeafStore } from '~/hooks/useTonedeafStore';
+import { useIsDemo } from '~/hooks/useIsDemo';
 
 export const Tonedeaf = () => {
+    const { setIsDemo } = useIsDemo();
     const loggedIn = useLogin();
 
     const navIndex = useTonedeafStore((state) => state.navIndex);
@@ -68,9 +70,12 @@ export const Tonedeaf = () => {
                     <Nav
                         text='tonedeaf'
                         index={navIndex}
-                        setIndex={setNavIndex}
+                        onChange={setNavIndex}
                         options={Config.NAV_OPTIONS}
-                        onLogout={() => window.location.replace(HOME_URL)}
+                        onLogout={() => {
+                            window.location.replace(HOME_URL);
+                            setIsDemo(false);
+                        }}
                     />
                     <Boundary fallback={<label className='large bold'>Something went wrong!</label>}>
                         {getContent()}

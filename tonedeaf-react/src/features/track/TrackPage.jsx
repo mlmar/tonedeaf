@@ -1,5 +1,4 @@
-import { cache } from '~/util/Cache.js';
-import { useTracksAndFeatures } from '~/hooks/SpotifyHooks.ts';
+import { useTracksAndFeatures, useUserInfo } from '~/hooks/SpotifyHooks.ts';
 import { createPlaylist } from '~/util/SpotifyUtil.js';
 
 import { Options } from '~/components/Options.jsx';
@@ -18,6 +17,7 @@ import { useTonedeafStore } from '~/hooks/useTonedeafStore.js';
 */
 export const TrackPage = ({ onDownloadClick, exportRef }) => {
     const { isDemo } = useIsDemo();
+    const userInfo = useUserInfo();
     const setAlertText = useTonedeafStore((state) => state.setAlertText);
 
     const {
@@ -34,7 +34,7 @@ export const TrackPage = ({ onDownloadClick, exportRef }) => {
             return;
         }
 
-        const id = cache['userInfo']?.id;
+        const id = userInfo.id;
         const response = await createPlaylist(id, 'tonedeaf top tracks', info?.tracks);
         if (response) {
             setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);

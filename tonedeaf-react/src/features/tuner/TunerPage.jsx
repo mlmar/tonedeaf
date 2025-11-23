@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-import { cache } from '~/util/Cache.js';
-import { fetchSeeds } from '~/util/DataUtil.js';
+import { useState } from 'react';
 import { getDefaultAttributes, getParamAttributes, getAttributeRecs, createPlaylist } from '~/util/SpotifyUtil.js';
 import { isEqual } from '~/util/ObjectUtil.js';
 
@@ -14,6 +12,7 @@ import { CHECK } from '~/util/IconUtil.jsx';
 import { Config } from '~/util/Config.js';
 import { useIsDemo } from '~/hooks/useIsDemo.ts';
 import { useTonedeafStore } from '~/hooks/useTonedeafStore.js';
+import { useGenreSeeds, useUserInfo } from '~/hooks/SpotifyHooks.js';
 
 const VIEW_OPTIONS = ['Attributes', 'Recommendations'];
 const VIEW_OPTIONS_TEMP = ['Attributes'];
@@ -26,10 +25,11 @@ const DEFAULT_ATTRIBUTES = getDefaultAttributes();
 */
 export const TunerPage = () => {
     const { isDemo } = useIsDemo();
+    const userInfo = useUserInfo();
     const setAlertText = useTonedeafStore((state) => state.setAlertText);
 
     const [viewIndex, setViewIndex] = useState(0);
-    const [genreSeeds, setGenreSeeds] = useState(null);
+    const genreSeeds = useGenreSeeds();
 
     const [attributes, setAttributes] = useState(getParamAttributes());
     const [prevAttributes, setPrevAttributes] = useState(null);
@@ -38,16 +38,6 @@ export const TunerPage = () => {
     const [prevSelected, setPrevSelected] = useState(null);
 
     const [tracks, setTracks] = useState(null);
-
-    // get list of genres
-    useEffect(() => {
-        const fetch = async () => {
-            const seeds = await fetchSeeds();
-            setGenreSeeds(seeds);
-        };
-
-        fetch();
-    }, []);
 
     // if user tries to view results, fetch them from Spotify
     const handleViewClick = (index) => {
@@ -70,7 +60,7 @@ export const TunerPage = () => {
 
     const handlePlaylistOptions = async (index) => {
         if (index === 0) {
-            const id = cache['userInfo']?.id;
+            const id = userInfo.id;
             const response = await createPlaylist(id, 'tonedeaf tuner tracks', tracks);
             if (response) setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
         } else {

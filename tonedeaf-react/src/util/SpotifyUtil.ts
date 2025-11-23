@@ -25,7 +25,7 @@ const RANGES = ["long_term", "medium_term", "short_term"] as const;
 /**
  * NowPlayingTrack object structure returned by getNowPlaying
  */
-interface NowPlayingTrack {
+export interface NowPlayingTrack {
     title: string | null;
     artists: string[] | null;
     image: string | null;
@@ -79,15 +79,15 @@ export const setAccessToken = (token: string): void => {
 /**
  * Retrieves the authenticated user's Spotify profile information
  * @async
- * @returns {Promise<Object|null>} User profile object or null on error
+ * @returns {Promise<Object>} User profile object or null on error
  */
-export const getProfile = async (): Promise<SpotifyApi.CurrentUsersProfileResponse | null> => {
+export const getProfile = async (): Promise<SpotifyApi.CurrentUsersProfileResponse> => {
     try {
         const response = await spotifyWebApi.getMe();
         return response;
     } catch (error) {
         console.error(error);
-        return null;
+        throw new Error('Failed to fetch user profile');
     }
 };
 
@@ -96,7 +96,7 @@ export const getProfile = async (): Promise<SpotifyApi.CurrentUsersProfileRespon
  * @async
  * @returns {Promise<NowPlayingTrack>} NowPlayingTrack object with properties: title, artists, image, duration, progress, url, playing, artistID, trackID
  */
-export const getNowPlaying = async (): Promise<NowPlayingTrack | null> => {
+export const getNowPlaying = async (): Promise<NowPlayingTrack> => {
     const track: NowPlayingTrack = {
         title: null,
         artists: null,
@@ -144,10 +144,10 @@ export const getNowPlaying = async (): Promise<NowPlayingTrack | null> => {
                 return track;
             }
         }
-        return null;
+        return track;
     } catch (error) {
         console.error(error);
-        return track;
+        throw new Error('Failed to fetch recent tracks');
     }
 };
 
@@ -155,11 +155,11 @@ export const getNowPlaying = async (): Promise<NowPlayingTrack | null> => {
  * Retrieves the user's top artists within a specified time range
  * @async
  * @param {number} rangeIndex - Index into RANGES array (0='long_term', 1='medium_term', 2='short_term')
- * @returns {Promise<SpotifyApi.ArtistObjectFull[] | null>} Array of top artist objects or null on error
+ * @returns {Promise<SpotifyApi.ArtistObjectFull[]>} Array of top artist objects or null on error
  */
 export const getTopArtists = async (
     rangeIndex: number
-): Promise<SpotifyApi.ArtistObjectFull[] | null> => {
+): Promise<SpotifyApi.ArtistObjectFull[]> => {
     try {
         const params = { time_range: RANGES[rangeIndex], limit: 50 };
         const artists = await spotifyWebApi.getMyTopArtists(params);
@@ -169,7 +169,7 @@ export const getTopArtists = async (
         return artists?.items;
     } catch (error) {
         console.error(error);
-        return null;
+        throw new Error('Failed to fetch top artists');
     }
 };
 
@@ -177,11 +177,11 @@ export const getTopArtists = async (
  * Retrieves the user's top tracks within a specified time range
  * @async
  * @param {number} rangeIndex - Index into RANGES array (0='long_term', 1='medium_term', 2='short_term')
- * @returns {Promise<SpotifyApi.TrackObjectFull[] | null>} Array of top track objects or null on error
+ * @returns {Promise<SpotifyApi.TrackObjectFull[]>} Array of top track objects or null on error
  */
 export const getTopTracks = async (
     rangeIndex: number
-): Promise<SpotifyApi.TrackObjectFull[] | null> => {
+): Promise<SpotifyApi.TrackObjectFull[]> => {
     try {
         const params = { time_range: RANGES[rangeIndex], limit: 50 };
         const tracks = await spotifyWebApi.getMyTopTracks(params);
@@ -191,18 +191,16 @@ export const getTopTracks = async (
         return tracks?.items;
     } catch (error) {
         console.error(error);
-        return null;
+        throw new Error('Failed to fetch top tracks');
     }
 };
 
 /**
  * Retrieves the user's recently played tracks
  * @async
- * @returns {Promise<SpotifyApi.PlayHistoryObject[]|null>} Array of recently played track objects or null on error
+ * @returns {Promise<SpotifyApi.PlayHistoryObject[]>} Array of recently played track objects or null on error
  */
-export const getRecentTracks = async (): Promise<
-    SpotifyApi.PlayHistoryObject[] | null
-> => {
+export const getRecentTracks = async (): Promise<SpotifyApi.PlayHistoryObject[]> => {
     try {
         const params = { limit: 50 };
         const tracks = await spotifyWebApi.getMyRecentlyPlayedTracks(params);
@@ -212,7 +210,7 @@ export const getRecentTracks = async (): Promise<
         return tracks?.items;
     } catch (error) {
         console.error(error);
-        return null;
+        throw new Error('Failed to get recently played tracks');
     }
 };
 
@@ -280,9 +278,9 @@ const getAudioFeaturesAverages = (tracks: SpotifyApi.TrackObjectFull[], features
  * Retrieves audio features for multiple tracks
  * @async
  * @param {SpotifyApi.TrackObjectFull[]} tracks - Array of track objects
- * @returns {Promise<SpotifyApi.AudioFeaturesObject[] | null>} Array of audio feature objects or null on error
+ * @returns {Promise<SpotifyApi.AudioFeaturesObject[]>} Array of audio feature objects or null on error
  */
-export const getFeatures = async (tracks: SpotifyApi.TrackObjectFull[]): Promise<SpotifyApi.AudioFeaturesObject[] | null> => {
+export const getFeatures = async (tracks: SpotifyApi.TrackObjectFull[]): Promise<SpotifyApi.AudioFeaturesObject[]> => {
     try {
         const features = await spotifyWebApi.getAudioFeaturesForTracks(
             getIDS(tracks)
@@ -290,10 +288,10 @@ export const getFeatures = async (tracks: SpotifyApi.TrackObjectFull[]): Promise
 
         if (DEV) console.log(features?.audio_features);
 
-        return features?.audio_features;
+        return features.audio_features;
     } catch (error) {
         console.error(error);
-        return null;
+        throw new Error('Failed to fetch audio features');
     }
 };
 
@@ -301,15 +299,15 @@ export const getFeatures = async (tracks: SpotifyApi.TrackObjectFull[]): Promise
  * Retrieves top tracks along with their audio features and calculated averages
  * @async
  * @param {number} rangeIndex - Index into RANGES array for time range selection
- * @returns {Promise<Object|null>} Object containing tracks, features, and averages; or null on error
+ * @returns {Promise<Object>} Object containing tracks, features, and averages; or null on error
  */
 export const getTracksAndFeatures = async (
     rangeIndex: number
 ): Promise<{
-    tracks: SpotifyApi.TrackObjectFull[] | null;
-    features: SpotifyApi.AudioFeaturesObject[] | null;
+    tracks: SpotifyApi.TrackObjectFull[];
+    features: SpotifyApi.AudioFeaturesObject[];
     averages: AudioFeatureAverages;
-} | null> => {
+}> => {
     try {
         const tracks = await getTopTracks(rangeIndex);
         const features = await getFeatures(tracks ?? []);
@@ -317,7 +315,7 @@ export const getTracksAndFeatures = async (
         return { tracks, features, averages };
     } catch (error) {
         console.error(error);
-        return null;
+        throw new Error('Failed to fetch tracks and features');
     }
 };
 
@@ -326,7 +324,7 @@ export const getTracksAndFeatures = async (
  * @param {SpotifyApi.ArtistObjectFull[]} artists - Array of artist objects
  * @returns {GenreCount[]} Sorted array of genre count objects with 'genre' and 'total' properties
  */
-const countGenres = (artists: SpotifyApi.ArtistObjectFull[]): GenreCount[] => {
+export const countGenres = (artists: SpotifyApi.ArtistObjectFull[]): GenreCount[] => {
     const counts: { [key: string]: number } = { all: 0 };
     artists?.forEach((artist: SpotifyApi.ArtistObjectFull) => {
         artist?.genres?.forEach((genre: string) => {
@@ -351,18 +349,18 @@ const countGenres = (artists: SpotifyApi.ArtistObjectFull[]): GenreCount[] => {
  * Retrieves top artists and counts their genres
  * @async
  * @param {number} rangeIndex - Index into RANGES array for time range selection
- * @returns {Promise<{artists: any[] | null; genres: GenreCount[]}|null>} Object containing artists array and genres array; or null on error
+ * @returns {Promise<{artists: any[]; genres: GenreCount[]}>} Object containing artists array and genres array; or null on error
  */
 export const getTopArtistsAndGenres = async (
     rangeIndex: number
-): Promise<{ artists: SpotifyApi.ArtistObjectFull[] | null; genres: GenreCount[] } | null> => {
+): Promise<{ artists: SpotifyApi.ArtistObjectFull[]; genres: GenreCount[] }> => {
     try {
         const artists = await getTopArtists(rangeIndex);
         const genres = countGenres(artists ?? []);
         return { artists, genres };
     } catch (error) {
         console.error(error);
-        return null;
+        throw (error);
     }
 };
 
@@ -410,7 +408,7 @@ export const createPlaylist = async (
     text: string,
     tracks: SpotifyApi.TrackObjectFull[],
     recent: boolean
-): Promise<Partial<SpotifyApi.AddTracksToPlaylistResponse> | null> => {
+): Promise<Partial<SpotifyApi.AddTracksToPlaylistResponse>> => {
     const params = {
         name: text,
         public: true,
@@ -442,7 +440,7 @@ export const createPlaylist = async (
         return response;
     } catch (error) {
         console.error(error);
-        return null;
+        throw new Error('Failed to create playlist');
     }
 };
 
@@ -510,9 +508,9 @@ export const getParamAttributes = (): { [key: string]: number } => {
 /**
  * Retrieves all available genres that can be used as seeds for recommendations
  * @async
- * @returns {Promise<Array|null>} Array of genre strings or null on error
+ * @returns {Promise<Array>} Array of genre strings or null on error
  */
-export const getGenreSeeds = async (): Promise<string[] | null> => {
+export const getGenreSeeds = async (): Promise<string[]> => {
     try {
         const genres = await spotifyWebApi.getAvailableGenreSeeds();
 
@@ -521,7 +519,7 @@ export const getGenreSeeds = async (): Promise<string[] | null> => {
         return genres?.genres;
     } catch (error) {
         console.error(error);
-        return null;
+        throw (error);
     }
 };
 
@@ -530,22 +528,22 @@ export const getGenreSeeds = async (): Promise<string[] | null> => {
  * @async
  * @param {Array<string>} genres - Array of genre seeds for recommendations
  * @param {Object} attributes - Audio attribute parameters (min_/max_ prefixed)
- * @returns {Promise<Array|null>} Array of recommended track objects or null on error
+ * @returns {Promise<Array>} Array of recommended track objects or null on error
  */
 export const getAttributeRecs = async (
     genres: string[],
     attributes: { [key: string]: number }
-): Promise<SpotifyApi.TrackObjectSimplified[] | null> => {
+): Promise<SpotifyApi.TrackObjectSimplified[]> => {
     try {
         const params = { limit: 50, seed_genres: genres.join(), ...attributes };
         const response = await spotifyWebApi.getRecommendations(params);
 
-        if (DEV) console.log(response?.tracks);
+        if (DEV) console.log(response.tracks);
 
-        return response?.tracks;
+        return response.tracks;
     } catch (error) {
         console.error(error);
-        return null;
+        throw new Error('Failed to fetch attribute reccomendations');
     }
 };
 
@@ -557,29 +555,28 @@ const SEARCH_TYPES = ['artist', 'track'] as const;
  * @async
  * @param {string} value - Search query string
  * @param {number} searchIndex - 0 for artist search, 1 for track search
- * @returns {Promise<Array|null>} Array of matching artist/track objects or null on error
+ * @returns {Promise<Array>} Array of matching artist/track objects or null on error
  */
 export const search = async (
     value: string,
     searchIndex: number
-): Promise<SpotifyApi.ArtistObjectFull[] | SpotifyApi.TrackObjectFull[] | null> => {
+): Promise<SpotifyApi.ArtistObjectFull[] | SpotifyApi.TrackObjectFull[]> => {
     const query = value.replace(" ", "+");
     const types = SEARCH_TYPES[searchIndex];
     const params = { limit: 50 };
 
     try {
         const response = await spotifyWebApi.search(query, [types], params);
-        const items =
-            (searchIndex === 0
-                ? response?.artists?.items
-                : response?.tracks?.items) ?? null;
-
-        if (DEV) console.log(items);
-
-        return items;
+        if (response.artists) {
+            return response.artists.items
+        } else if (response.tracks) {
+            return response.tracks.items
+        } else {
+            throw new Error('Failed to search artists and tracks');
+        }
     } catch (error) {
         console.error(error);
-        return null;
+        throw new Error('Failed to search artists and tracks');
     }
 };
 
@@ -588,12 +585,12 @@ export const search = async (
  * @async
  * @param {string} artistIDS - Comma-separated artist IDs to use as seeds
  * @param {string} trackIDS - Comma-separated track IDs to use as seeds
- * @returns {Promise<SpotifyApi.TrackObjectSimplified[] | null>} Array of recommended track objects or null on error
+ * @returns {Promise<SpotifyApi.TrackObjectSimplified[]>} Array of recommended track objects or null on error
  */
 export const getSearchRecs = async (
     artistIDS: string,
     trackIDS: string
-): Promise<SpotifyApi.TrackObjectSimplified[] | null> => {
+): Promise<SpotifyApi.TrackObjectSimplified[]> => {
     try {
         const params = {
             seed_artists: artistIDS,
@@ -607,6 +604,6 @@ export const getSearchRecs = async (
         return response?.tracks;
     } catch (error) {
         console.error(error);
-        return null;
+        throw new Error('Failed to fetch search recommendations')
     }
 };

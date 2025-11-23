@@ -1,6 +1,5 @@
-import { useState, useRef } from 'react';
-import { cache } from '~/util/Cache.js';
-import { search, getSearchRecs, createPlaylist } from '~/util/SpotifyUtil';
+import { useState } from 'react';
+import { getSearchRecs, createPlaylist } from '~/util/SpotifyUtil';
 
 import { Options } from '~/components/Options.jsx';
 import { ImageWrapper } from '~/components/ImageWrapper.jsx';
@@ -12,6 +11,8 @@ import { Load } from '~/components/Load.jsx';
 
 import { Config } from '~/util/Config';
 import { useIsDemo } from '~/hooks/useIsDemo.ts';
+import { useNowPlaying, useUserInfo } from '~/hooks/SpotifyHooks';
+import { useSearch } from '~/hooks/useSearch';
 
 const VIEW_OPTIONS = ['Search', 'Recommendations'];
 const VIEW_OPTIONS_TEMP = ['Search'];
@@ -20,32 +21,22 @@ const SEARCH_OPTIONS = ['Artists', 'Tracks'];
 const PLAYLIST_OPTIONS = ['Create Playlist', 'Reroll'];
 const PLAYLIST_OPTIONS_TEMP = ['Create Playlist'];
 
-const SEARCH_TIMEOUT = 500;
-
 /*
 Find song recommendations by choosing a combination of >5 artists/tracks
 */
 export const ScopePage = ({ setAlertText }) => {
     const { isDemo } = useIsDemo();
+    const userInfo = useUserInfo();
     const [viewIndex, setViewIndex] = useState(0);
     const [searchIndex, setSearchIndex] = useState(0);
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchInput, setSearchInput] = useState('');
+
     const [selected, setSelected] = useState([]);
     const [prevSeleected, setPrevSelected] = useState(null);
     const [tracks, setTracks] = useState(null);
 
-    const [searchInput, setSearchInput] = useState('');
-    const searchTimer = useRef(null);
-    const nowPlayingTrack = useRef(null); // store currently playing track
-
-    // When a search option is pressed, set the appropriate search type
-    const handleSearchClick = (index) => {
-        if (searchIndex < 2) {
-            setSearchResults(null);
-            getSearchResults(searchInput);
-        }
-        setSearchIndex(index);
-    };
+    const { data: searchResults, isLoading } = useSearch(searchInput, searchIndex);
+    const nowPlayingTrack = useNowPlaying();
 
     const handleViewClick = (index) => {
         setViewIndex(index);
@@ -57,7 +48,7 @@ export const ScopePage = ({ setAlertText }) => {
 
     const handlePlaylistOptions = async (index) => {
         if (index === 0) {
-            const id = cache['userInfo']?.id;
+            const id = userInfo.id;
             const response = await createPlaylist(id, 'tonedeaf scope tracks', tracks);
             if (response) setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
         } else {
@@ -65,17 +56,13 @@ export const ScopePage = ({ setAlertText }) => {
         }
     };
 
-    const handleNowPlaying = (track) => {
-        nowPlayingTrack.current = { ...track, type: 'track' };
-    };
-
     const handleFindMore = async () => {
         if (isDemo) return;
 
-        const artistIDS = [nowPlayingTrack.current?.artistID];
-        const trackIDS = [nowPlayingTrack.current?.trackID];
+        const artistIds = [nowPlayingTrack.artistID];
+        const trackIds = [nowPlayingTrack.trackID];
 
-        const _tracks = await getSearchRecs(artistIDS, trackIDS);
+        const _tracks = await getSearchRecs(artistIds, trackIds);
         setTracks(_tracks);
         setViewIndex(1);
         setSelected([]);
@@ -90,51 +77,21 @@ export const ScopePage = ({ setAlertText }) => {
     const getRecommendations = async () => {
         setViewIndex(1);
 
-        let artistIDS = [];
-        let trackIDS = [];
+        let artistIds = [];
+        let trackIds = [];
 
         selected.forEach((sel) => {
-            if (sel?.type === 'artist') artistIDS.push(sel?.id);
-            if (sel?.type === 'track') trackIDS.push(sel?.id);
+            if (sel?.type === 'artist') artistIds.push(sel?.id);
+            if (sel?.type === 'track') trackIds.push(sel?.id);
         });
 
-        const _tracks = await getSearchRecs(artistIDS, trackIDS);
+        const _tracks = await getSearchRecs(artistIds, trackIds);
         setTracks(_tracks);
-    };
-
-    const getSearchResults = (value) => {
-        if (isDemo) {
-            setAlertText(Config.STATUS_MESSAGE.SIGN_IN);
-            return;
-        }
-
-        if (searchTimer.current) clearTimeout(searchTimer.current);
-
-        // abort empty searches
-        if (value?.length === 0) {
-            setSearchResults([]);
-            return;
-        }
-
-        const searchCache = cache['search'][value + searchIndex];
-
-        if (searchCache) {
-            console.log('Returning cached search');
-            setSearchResults(searchCache);
-        } else {
-            searchTimer.current = setTimeout(async () => {
-                const _searchResults = await search(value, searchIndex);
-                cache['search'][value + searchIndex] = _searchResults;
-                setSearchResults(_searchResults);
-                console.log('Cacheing search');
-            }, SEARCH_TIMEOUT);
-        }
     };
 
     // let the input bar be controlled so we can save the value
     const handleSearchChange = (event) => {
         const value = event.target.value;
-        getSearchResults(value);
         setSearchInput(value);
     };
 
@@ -201,14 +158,17 @@ export const ScopePage = ({ setAlertText }) => {
 
     // show search results
     const getSearchCards = () => {
-        if (!searchResults)
+        if (isLoading) {
             return (
                 <div className='cards'>
                     <Load />
                 </div>
             );
-        if (searchResults.length === 0 && searchInput.length)
+        }
+
+        if (searchResults?.length === 0 && searchInput.length) {
             return <label className='medium bold'> No results found </label>;
+        }
 
         let res = null;
         if (searchIndex === 0) {
@@ -241,7 +201,7 @@ export const ScopePage = ({ setAlertText }) => {
 
         return (
             <div className='cards'>
-                {searchResults.length > 0 && (
+                {searchResults?.length > 0 && (
                     <p className='medium bold directions'>
                         Search Results &mdash; Select
                         {SEARCH_OPTIONS[searchIndex].toLocaleLowerCase()} by pressing on their card.
@@ -259,7 +219,7 @@ export const ScopePage = ({ setAlertText }) => {
             default: // display now playing widget and search bar
                 view = (
                     <>
-                        <NowPlaying onChange={handleNowPlaying} widget>
+                        <NowPlaying widget>
                             <button className='gray-btn bold round' onClick={handleFindMore}>
                                 Find More Like This
                             </button>
@@ -318,12 +278,7 @@ export const ScopePage = ({ setAlertText }) => {
                     index={viewIndex}
                 />
                 {viewIndex === 0 && (
-                    <Options
-                        title='Search For'
-                        options={SEARCH_OPTIONS}
-                        onClick={handleSearchClick}
-                        index={searchIndex}
-                    />
+                    <Options title='Search For' options={SEARCH_OPTIONS} onClick={setSearchIndex} index={searchIndex} />
                 )}
                 {tracks && viewIndex === 1 && (
                     <Options
