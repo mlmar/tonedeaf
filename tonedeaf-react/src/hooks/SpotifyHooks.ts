@@ -51,21 +51,17 @@ export const useArtistsAndGenres = (timeFrameIndex: number, genre: string = Conf
     const { isDemo } = useIsDemo();
     const { data } = useQuery({
         ...QUERY_CONFIG,
-        queryKey: [isDemo, timeFrameIndex, genre, 'artists'],
-        queryFn: async () => isDemo ? await getDemoArtists(timeFrameIndex) : await getTopArtists(timeFrameIndex),
-        select: (data: Awaited<ReturnType<typeof getTopArtists>>) => {
-            const artists = data
-                .map((artist, i) => ({ ...artist, rank: i + 1 })) // Add artist rank
-                .filter((artist) => genre === Config.GENRE || artist.genres.some((g: string) => genre === g)); // Or filter artist by genre
-
-            return {
-                genres: countGenres(artists),
-                artists
-            }
-        }
+        queryKey: [isDemo, timeFrameIndex, 'artists'],
+        queryFn: async () => isDemo ? await getDemoArtists(timeFrameIndex) : await getTopArtists(timeFrameIndex)
     });
 
-    return data;
+    const artists = data?.map((artist: SpotifyApi.ArtistObjectFull, i: number) => ({ ...artist, rank: i + 1 })) // Add artist rank
+        .filter((artist: SpotifyApi.ArtistObjectFull) => genre === Config.GENRE || artist.genres.some((g: string) => genre === g)); // Or filter artist by genre
+
+    return {
+        artists,
+        genres: data ? countGenres(data) : []
+    };
 };
 
 /**
