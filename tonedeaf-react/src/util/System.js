@@ -1,7 +1,7 @@
 const DEV = import.meta.env.DEV;
 
 const local_site = 'http://localhost:8888/';
-const deployed_site = 'https://tonedeaf-auth.vercel.app/';
+const deployed_site = 'https://tonedeaf.vercel.app/';
 
 export const HOME_URL = DEV ? 'http://localhost:3000' : 'https://tonedeaf.vercel.app';
 export const SERVICE_URL = DEV ? local_site : deployed_site;

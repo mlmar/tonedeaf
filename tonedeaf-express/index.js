@@ -9,6 +9,7 @@
 
 var express = require("express"); // Express web server framework
 var request = require("request"); // "Request" library
+var path = require("path");
 var cors = require("cors");
 var cookieParser = require("cookie-parser");
 
@@ -18,7 +19,7 @@ var client_id = process.env.CLIENT_ID; // Your client id
 var client_secret = process.env.CLIENT_S; // Your secret
 var redirect_uri = process.env.DEV
   ? "http://localhost:8888/callback"
-  : "https://tonedeaf-auth.vercel.app/callback"; // Your redirect uri
+  : "https://tonedeaf.vercel.app/callback"; // Your redirect uri
 var home = process.env.DEV
   ? "http://localhost:3000"
   : "http://tonedeaf.vercel.app";
@@ -58,6 +59,12 @@ app.use(demoEndpoints);
 // your application requests authorization
 const scope =
   "user-read-private user-read-email user-read-playback-state user-follow-read user-library-read playlist-read-private playlist-read-collaborative user-top-read user-read-playback-position user-read-recently-played playlist-modify-private playlist-modify-public user-modify-playback-state";
+
+const REACT_DIRECTORY = "../tonedeaf-react/dist";
+app.use(express.static(path.join(__dirname, REACT_DIRECTORY)));
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, REACT_DIRECTORY, "index.html"));
+});
 
 app.get("/login", function (req, res) {
   var state = generateRandomString(16);
