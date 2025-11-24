@@ -137,7 +137,7 @@ export const ArtistPage = ({ onDownloadClick, exportRef }) => {
                     subtitle={genreButtons}
                 />
             )}
-            {info ? getView() : <Load />}
+            {info?.artists ? getView() : <Load />}
         </div>
     );
 };

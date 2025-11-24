@@ -73,7 +73,7 @@ export const ArtistSummary = (props) => {
         );
     };
 
-    return artistsInfo ? (
+    return artistsInfo?.artists ? (
         <>
             {topArtist()}
             {topGenres()}
