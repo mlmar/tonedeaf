@@ -25,12 +25,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
       - name: Install dependencies
         run: npm install --prefix ./tonedeaf-react
       - name: Run build script
         run: npm run build --prefix ./tonedeaf-react
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v3
         with:
+          name: tonedeaf-build
           path: ./tonedeaf-react/dist # Not found

@@ -6,6 +6,4 @@ node_modules
 /tonedeaf-express/.gitignore
 /tonedeaf-express/.env
 
-/.vscode
-
 .DS_Store
