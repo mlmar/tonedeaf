@@ -73,7 +73,7 @@ export const ArtistPage = ({ onDownloadClick, exportRef }) => {
         switch (viewIndex) {
             default: // display grid view by default
                 view = (
-                    <div className='images' ref={exportRef}>
+                    <div className='images' ref={exportRef} data-testid='grid'>
                         {info?.artists?.map((artist, i) => (
                             <ImageWrapper
                                 src={artist?.images?.[0]?.url}
@@ -88,7 +88,7 @@ export const ArtistPage = ({ onDownloadClick, exportRef }) => {
                 break;
             case 1: // display list view
                 view = (
-                    <div className='cards' ref={exportRef}>
+                    <div className='cards' ref={exportRef} data-testid='list'>
                         {info?.artists?.map((artist, i) => (
                             <ArtistCard {...artist} key={artist?.name + i} />
                         ))}
@@ -105,7 +105,9 @@ export const ArtistPage = ({ onDownloadClick, exportRef }) => {
 
     const genreButtons = (
         <>
-            <div className={'buttons overflow-' + overflowVisible}>{info?.genres?.map(getGenreButton)}</div>
+            <div className={'buttons overflow-' + overflowVisible} data-testid='genre-buttons'>
+                {info?.genres?.map(getGenreButton)}
+            </div>
             {getOverflowButton()}
         </>
     );

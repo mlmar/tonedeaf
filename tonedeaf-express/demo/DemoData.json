@@ -1,6 +1,6 @@
 {
-  "artists": {
-    "0": [
+  "artists": [
+    [
       {
         "external_urls": {
           "spotify": "https://open.spotify.com/artist/4T8NIfZmVY6TJFqVzN6X49"
@@ -1712,7 +1712,7 @@
         "uri": "spotify:artist:4IVAbR2w4JJNJDDRFP3E83"
       }
     ],
-    "1": [
+    [
       {
         "external_urls": {
           "spotify": "https://open.spotify.com/artist/4T8NIfZmVY6TJFqVzN6X49"
@@ -3426,7 +3426,7 @@
         "uri": "spotify:artist:4xRYI6VqpkE3UwrDrAZL8L"
       }
     ],
-    "2": [
+    [
       {
         "external_urls": {
           "spotify": "https://open.spotify.com/artist/6USv9qhCn6zfxlBQIYJ9qs"
@@ -4573,9 +4573,9 @@
         "uri": "spotify:artist:5MJREYwNVcTl1ohELWlciR"
       }
     ]
-  },
-  "genres": {
-    "0": [
+  ],
+  "genres": [
+    [
       {
         "genre": "all",
         "total": 128
@@ -4793,7 +4793,7 @@
         "total": 1
       }
     ],
-    "1": [
+    [
       {
         "genre": "all",
         "total": 135
@@ -5015,7 +5015,7 @@
         "total": 1
       }
     ],
-    "2": [
+    [
       {
         "genre": "all",
         "total": 89
@@ -5221,9 +5221,9 @@
         "total": 1
       }
     ]
-  },
-  "tracks": {
-    "0": [
+  ],
+  "tracks": [
+    [
       {
         "album": {
           "album_type": "ALBUM",
@@ -16995,7 +16995,7 @@
         "uri": "spotify:track:0jwFSZF80LGhOyBQtD0mK6"
       }
     ],
-    "1": [
+    [
       {
         "album": {
           "album_type": "SINGLE",
@@ -28841,7 +28841,7 @@
         "uri": "spotify:track:2mz9mssxUxuUdBBiMWXdIF"
       }
     ],
-    "2": [
+    [
       {
         "album": {
           "album_type": "SINGLE",
@@ -40529,9 +40529,9 @@
         "uri": "spotify:track:59mmKoHbCWc10mlWwwTYxn"
       }
     ]
-  },
-  "features": {
-    "0": [
+  ],
+  "features": [
+    [
       {
         "danceability": 0.701,
         "energy": 0.782,
@@ -41533,7 +41533,7 @@
         "time_signature": 4
       }
     ],
-    "1": [
+    [
       {
         "danceability": 0.686,
         "energy": 0.621,
@@ -42535,7 +42535,7 @@
         "time_signature": 4
       }
     ],
-    "2": [
+    [
       {
         "danceability": 0.686,
         "energy": 0.621,
@@ -43537,9 +43537,9 @@
         "time_signature": 3
       }
     ]
-  },
-  "averages": {
-    "0": {
+  ],
+  "averages": [
+    {
       "acousticness": {
         "name": "Acousticness",
         "total": 0.28
@@ -43593,7 +43593,7 @@
         "total": 53.7
       }
     },
-    "1": {
+    {
       "acousticness": {
         "name": "Acousticness",
         "total": 0.26
@@ -43647,7 +43647,7 @@
         "total": 50.56
       }
     },
-    "2": {
+    {
       "acousticness": {
         "name": "Acousticness",
         "total": 0.24
@@ -43701,7 +43701,7 @@
         "total": 52.62
       }
     }
-  },
+  ],
   "genreSeeds": [
     "acoustic",
     "afrobeat",
