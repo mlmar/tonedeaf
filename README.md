@@ -18,6 +18,7 @@
 - [**TanStack Query**](https://tanstack.com/query/latest) for data retrieval and cacheing
 - Uses Node express server for auth flow [provided by Spotify](https://developer.spotify.com/documentation/web-api/quick-start/)
 - Uses Spotify Web Api JS [by Jose Perez](https://github.com/JMPerez/spotify-web-api-js/)
+- Unit Testing with [vitest](https://vitest.dev/) and [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/)
 - Hosted through Vercel at https://tonedeaf.vercel.app
 
 ## Installation
