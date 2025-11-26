@@ -3,8 +3,8 @@ import { getSearchRecs, createPlaylist } from '~/util/SpotifyUtil';
 
 import { Options } from '~/components/Options.jsx';
 import { ImageWrapper } from '~/components/ImageWrapper.jsx';
-import { ArtistCard } from '~/features/artist/ArtistCard.jsx';
-import { TrackCard } from '~/features/track/TrackCard.jsx';
+import { ArtistCard } from '~/features/artist/ArtistCard';
+import { TrackCard } from '~/features/track/TrackCard';
 import { NowPlaying } from '~/features/user/NowPlaying.jsx';
 
 import { Load } from '~/components/Load.jsx';
@@ -175,12 +175,11 @@ export const ScopePage = ({ setAlertText }) => {
             res = searchResults?.map((artist, i) =>
                 selected.find((item) => item.id === artist.id) ? null : (
                     <ArtistCard
-                        {...artist}
+                        artist={artist}
                         className='hover-select'
                         onClick={handleSelect}
                         rank={i + 1}
                         key={artist?.name + i}
-                        norank
                     />
                 )
             );
@@ -188,12 +187,10 @@ export const ScopePage = ({ setAlertText }) => {
             res = searchResults?.map((track, i) =>
                 selected.find((item) => item.id === track.id) ? null : (
                     <TrackCard
-                        {...track}
+                        track={{ ...track, rank: i + 1 }}
                         className='hover-select'
                         onClick={handleSelect}
-                        rank={i + 1}
                         key={track?.name + i}
-                        norank
                     />
                 )
             );
@@ -249,7 +246,7 @@ export const ScopePage = ({ setAlertText }) => {
                     view = (
                         <div className='cards'>
                             {tracks?.map((track, i) => (
-                                <TrackCard {...track} rank={i + 1} key={track?.name + i} norank imageClick={null} />
+                                <TrackCard track={{ ...track, rank: i + 1 }} key={track?.name + i} imageClick={null} />
                             ))}
                         </div>
                     );

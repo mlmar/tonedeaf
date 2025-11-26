@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest';
-import { act } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import { getDemoData, renderWithProviders } from '~/test/testUtils';
 import { ArtistPage } from '~/features/artist/ArtistPage';
 import { Config } from '~/util/Config';
@@ -11,38 +11,31 @@ const demoData = getDemoData();
  * items and that toggling the time-range control (for example from 'All Time'
  * to '6 Months') does not change the number of rendered artist items.
  */
-test('Artist page loads artist grid by default', async () => {
-    const { getByTestId } = renderWithProviders(<ArtistPage onDownloadClick={() => {}} exportRef={null} />);
+test('Artist page loads Artist grid by default (1 month)', async () => {
+    const screen = renderWithProviders(<ArtistPage />);
 
-    const grid = getByTestId('grid');
+    const timeFrameIndex = Config.TIME_FRAME_INDEX;
+    const grid = await screen.findByTestId(`grid-${timeFrameIndex}`);
     expect(grid).toBeInTheDocument();
-    expect(grid.childNodes.length).toBe(demoData.artists[Config.TIME_FRAME_INDEX].length);
+    expect(grid.childNodes.length).toBe(demoData.artists[timeFrameIndex].length);
 });
 
-test('Artist page loads artist grid at 6 months', async () => {
-    const { getByText, getByTestId } = renderWithProviders(<ArtistPage onDownloadClick={() => {}} exportRef={null} />);
+test('Artist page loads Artist grid for 6 months', async () => {
+    const screen = renderWithProviders(<ArtistPage />);
 
-    await act(async () => {
-        const timeRangeButton = getByText(Config.TIME_OPTIONS[0]);
-        timeRangeButton.click();
-    });
-
-    const grid = getByTestId('grid');
-    expect(grid).toBeInTheDocument();
-    expect(grid.childNodes.length).toBe(demoData.artists[0].length);
+    const timeFrameIndex = 1;
+    fireEvent.click(screen.getByText(Config.TIME_OPTIONS[timeFrameIndex]));
+    const grid = await screen.findByTestId(`grid-${timeFrameIndex}`);
+    expect(grid.childNodes.length).toBe(demoData.artists[timeFrameIndex].length);
 });
 
-test('Artist page loads artist grid at long term', async () => {
-    const { getByText, getByTestId } = renderWithProviders(<ArtistPage onDownloadClick={() => {}} exportRef={null} />);
+test('Artist page loads Artist grid for long term', async () => {
+    const screen = renderWithProviders(<ArtistPage />);
 
-    await act(async () => {
-        const timeRangeButton = getByText(Config.TIME_OPTIONS[1]);
-        timeRangeButton.click();
-    });
-
-    const grid = getByTestId('grid');
-    expect(grid).toBeInTheDocument();
-    expect(grid.childNodes.length).toBe(demoData.artists[1].length);
+    const timeFrameIndex = 0;
+    fireEvent.click(screen.getByText(Config.TIME_OPTIONS[timeFrameIndex]));
+    const grid = await screen.findByTestId(`grid-${timeFrameIndex}`);
+    expect(grid.childNodes.length).toBe(demoData.artists[timeFrameIndex].length);
 });
 
 /**
@@ -50,47 +43,37 @@ test('Artist page loads artist grid at long term', async () => {
  * control) and keeps the same number of items before and after changing the
  * time-range.
  */
-test('Artist page loads artist list by default', async () => {
-    const { getByText, getByTestId } = renderWithProviders(<ArtistPage onDownloadClick={() => {}} exportRef={null} />);
+test('Artist page loads Artist list for default', async () => {
+    const screen = renderWithProviders(<ArtistPage />);
 
-    await act(async () => {
-        const listButton = getByText('List');
-        listButton.click();
-        const timeRangeButton = getByText(Config.TIME_OPTIONS[Config.TIME_FRAME_INDEX]);
-        timeRangeButton.click();
-    });
-
-    const list = getByTestId('list');
+    const timeFrameIndex = Config.TIME_FRAME_INDEX;
+    fireEvent.click(screen.getByText(Config.VIEW_OPTIONS[1]));
+    fireEvent.click(screen.getByText(Config.TIME_OPTIONS[timeFrameIndex]));
+    const list = await screen.findByTestId(`list-${timeFrameIndex}`);
     expect(list).toBeInTheDocument();
-    expect(list.childNodes.length).toBe(demoData.artists[Config.TIME_FRAME_INDEX].length);
+    expect(list.childNodes.length).toBe(demoData.artists[timeFrameIndex].length);
 });
 
-test('Artist page loads artist list at 6 months', async () => {
-    const { getByText, getByTestId } = renderWithProviders(<ArtistPage onDownloadClick={() => {}} exportRef={null} />);
+test('Artist page loads Artist list for 6 months', async () => {
+    const screen = renderWithProviders(<ArtistPage />);
 
-    await act(async () => {
-        const listButton = getByText('List');
-        listButton.click();
-        const timeRangeButton = getByText(Config.TIME_OPTIONS[0]);
-        timeRangeButton.click();
-    });
-
-    const list = getByTestId('list');
+    const timeFrameIndex = 1;
+    fireEvent.click(screen.getByText(Config.VIEW_OPTIONS[1]));
+    fireEvent.click(screen.getByText(Config.TIME_OPTIONS[timeFrameIndex]));
+    const list = await screen.findByTestId(`list-${timeFrameIndex}`);
     expect(list).toBeInTheDocument();
-    expect(list.childNodes.length).toBe(demoData.artists[0].length);
+    expect(list.childNodes.length).toBe(demoData.artists[timeFrameIndex].length);
 });
 
-test('Artist page loads artist list at long term', async () => {
-    const { getByText, getByTestId } = renderWithProviders(<ArtistPage onDownloadClick={() => {}} exportRef={null} />);
+test('Artist page loads Artist list for long term', async () => {
+    const screen = renderWithProviders(<ArtistPage />);
 
-    await act(async () => {
-        const timeRangeButton = getByText(Config.TIME_OPTIONS[1]);
-        timeRangeButton.click();
-    });
-
-    const list = getByTestId('list');
+    const timeFrameIndex = 0;
+    fireEvent.click(screen.getByText(Config.VIEW_OPTIONS[1]));
+    fireEvent.click(screen.getByText(Config.TIME_OPTIONS[timeFrameIndex]));
+    const list = await screen.findByTestId(`list-${timeFrameIndex}`);
     expect(list).toBeInTheDocument();
-    expect(list.childNodes.length).toBe(demoData.artists[1].length);
+    expect(list.childNodes.length).toBe(demoData.artists[timeFrameIndex].length);
 });
 
 /**
@@ -98,19 +81,34 @@ test('Artist page loads artist list at long term', async () => {
  * genre button. This ensures the UI provides genre filters and that they
  * persist after changing the time-range.
  */
-test('Artist page loads genres', async () => {
-    const { getByText, getByTestId } = renderWithProviders(<ArtistPage onDownloadClick={() => {}} exportRef={null} />);
+test('Artist page loads Genres by default (1 month)', async () => {
+    const screen = renderWithProviders(<ArtistPage />);
 
-    let genres = getByTestId('genre-buttons');
+    const timeFrameIndex = Config.TIME_FRAME_INDEX;
+    await screen.findByTestId(`grid-${timeFrameIndex}`);
+    const genres = await screen.findByTestId(`genres-${timeFrameIndex}`);
     expect(genres).toBeInTheDocument();
-    expect(genres.childNodes.length).toBe(demoData.genres[1].length);
+    expect(genres.childNodes.length).toBe(demoData.genres[timeFrameIndex].length);
+});
 
-    await act(async () => {
-        const timeRangeButton = getByText('6 Months');
-        timeRangeButton.click();
-    });
+test('Artist page loads Genres for 6 months', async () => {
+    const screen = renderWithProviders(<ArtistPage />);
 
-    genres = getByTestId('genre-buttons');
+    const timeFrameIndex = 1;
+    fireEvent.click(screen.getByText(Config.TIME_OPTIONS[timeFrameIndex]));
+    await screen.findByTestId(`grid-${timeFrameIndex}`);
+    const genres = await screen.findByTestId(`genres-${timeFrameIndex}`);
     expect(genres).toBeInTheDocument();
-    expect(genres.childNodes.length).toBe(demoData.genres[1].length);
+    expect(genres.childNodes.length).toBe(demoData.genres[timeFrameIndex].length);
+});
+
+test('Artist page loads Genres for long term', async () => {
+    const screen = renderWithProviders(<ArtistPage />);
+
+    const timeFrameIndex = 0;
+    fireEvent.click(screen.getByText(Config.TIME_OPTIONS[timeFrameIndex]));
+    await screen.findByTestId(`grid-${timeFrameIndex}`);
+    const genres = await screen.findByTestId(`genres-${timeFrameIndex}`);
+    expect(genres).toBeInTheDocument();
+    expect(genres.childNodes.length).toBe(demoData.genres[timeFrameIndex].length);
 });

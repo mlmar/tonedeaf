@@ -24,18 +24,22 @@ export type TonedeafState = {
     setAlertText: (alertText: string | null) => void
 }
 
+export const INITIAL_TONEDEAF_STATE = {
+    isDemo: false,
+    navIndex: 0,
+    summaryTimeFrameIndex: 0,
+    artistGenre: Config.GENRE,
+    artistViewIndex: Config.VIEW_INDEX,
+    artistTimeFrameIndex: Config.TIME_FRAME_INDEX,
+    trackViewIndex: Config.VIEW_INDEX,
+    trackTimeFrameIndex: Config.TIME_FRAME_INDEX,
+    recentViewIndex: Config.VIEW_INDEX,
+    alertText: null,
+}
+
 export const useTonedeafStore = create<TonedeafState>((set) => {
     return {
-        isDemo: false,
-        navIndex: 0,
-        summaryTimeFrameIndex: 0,
-        artistGenre: Config.GENRE,
-        artistViewIndex: Config.VIEW_INDEX,
-        artistTimeFrameIndex: Config.TIME_FRAME_INDEX,
-        trackViewIndex: Config.VIEW_INDEX,
-        trackTimeFrameIndex: Config.TIME_FRAME_INDEX,
-        recentViewIndex: Config.VIEW_INDEX,
-        alertText: null,
+        ...INITIAL_TONEDEAF_STATE,
         setIsDemo: (isDemo: boolean) => set({ isDemo }),
         setNavIndex: (navIndex: number) => set((state) => {
             return {
@@ -50,7 +54,10 @@ export const useTonedeafStore = create<TonedeafState>((set) => {
         setTrackViewIndex: (trackViewIndex: number) => set({ trackViewIndex }),
         setTrackTimeFrameIndex: (trackTimeFrameIndex: number) => set({ trackTimeFrameIndex }),
         setRecentViewIndex: (recentViewIndex: number) => set({ recentViewIndex }),
-        setAlertText: (alertText: string | null) => set({ alertText })
+        setAlertText: (alertText: string | null) => set({ alertText }),
+        reset: () => {
+            return INITIAL_TONEDEAF_STATE
+        }
     }
 });
 

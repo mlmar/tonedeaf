@@ -1,4 +1,4 @@
-import { ImageWrapper } from '~/components/ImageWrapper.jsx';
+import { ImageWrapper } from '~/components/ImageWrapper';
 import { Load } from '~/components/Load.jsx';
 import { useNowPlaying } from '~/hooks/SpotifyHooks';
 import ICON from '~/icons/SpotifyGreen.png';

@@ -2,8 +2,8 @@ import { useTracksAndFeatures, useUserInfo } from '~/hooks/SpotifyHooks.ts';
 import { createPlaylist } from '~/util/SpotifyUtil.js';
 
 import { Options } from '~/components/Options.jsx';
-import { ImageWrapper } from '~/components/ImageWrapper.jsx';
-import { TrackCard } from './TrackCard.jsx';
+import { ImageWrapper } from '~/components/ImageWrapper';
+import { TrackCard } from './TrackCard';
 
 import { Load } from '~/components/Load.jsx';
 
@@ -15,7 +15,7 @@ import { useTonedeafStore } from '~/hooks/useTonedeafStore.js';
 /*
   Display user's top tracks from a selected time range
 */
-export const TrackPage = ({ onDownloadClick, exportRef }) => {
+export const TrackPage = ({ onDownloadClick = null, exportRef = null }) => {
     const { isDemo } = useIsDemo();
     const userInfo = useUserInfo();
     const setAlertText = useTonedeafStore((state) => state.setAlertText);
@@ -47,11 +47,10 @@ export const TrackPage = ({ onDownloadClick, exportRef }) => {
     };
 
     const getView = () => {
-        let view = null;
         switch (viewIndex) {
             default: // display grid view by default
-                view = (
-                    <div className='images' ref={exportRef}>
+                return (
+                    <div className='images' ref={exportRef} data-testid={`grid-${timeFrameIndex}`}>
                         {info?.tracks?.map((track, i) => (
                             <ImageWrapper
                                 src={track?.album?.images?.[0]?.url}
@@ -63,22 +62,21 @@ export const TrackPage = ({ onDownloadClick, exportRef }) => {
                         ))}
                     </div>
                 );
-                break;
             case 1: // display list view
-                view = (
-                    <div className='cards' ref={exportRef}>
+                return (
+                    <div className='cards' ref={exportRef} data-testid={`list-${timeFrameIndex}`}>
                         {info?.tracks?.map((track, i) => (
-                            <TrackCard {...track} features={info.features?.[i]} rank={i + 1} key={track?.name + i} />
+                            <TrackCard
+                                track={{ ...track, rank: i + 1 }}
+                                features={info.features?.[i]}
+                                key={track?.name + i}
+                            />
                         ))}
                     </div>
                 );
-                break;
             case 2: // display stats
-                view = <></>;
-                break;
+                return <></>;
         }
-
-        return view;
     };
 
     return (

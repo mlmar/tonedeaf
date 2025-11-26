@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useArtistsAndGenres } from '~/hooks/SpotifyHooks.ts';
 
 import { Options } from '~/components/Options.jsx';
-import { ImageWrapper } from '~/components/ImageWrapper.jsx';
-import { ArtistCard } from './ArtistCard.jsx';
+import { ImageWrapper } from '~/components/ImageWrapper';
+import { ArtistCard } from './ArtistCard';
 
 import { Load } from '~/components/Load.jsx';
 import { CHECK } from '~/util/IconUtil.jsx';
@@ -15,7 +15,7 @@ import { useArtistGenre } from '~/hooks/useArtistGenre.js';
 /*
   Displays list of users top artists from a selected time range
 */
-export const ArtistPage = ({ onDownloadClick, exportRef }) => {
+export const ArtistPage = ({ onDownloadClick = null, exportRef = null }) => {
     const { artistGenre, setArtistGenre } = useArtistGenre();
     const {
         artistTimeFrameIndex: timeFrameIndex,
@@ -69,11 +69,10 @@ export const ArtistPage = ({ onDownloadClick, exportRef }) => {
     };
 
     const getView = () => {
-        let view = null;
         switch (viewIndex) {
             default: // display grid view by default
-                view = (
-                    <div className='images' ref={exportRef} data-testid='grid'>
+                return (
+                    <div className='images' ref={exportRef} data-testid={`grid-${timeFrameIndex}`}>
                         {info?.artists?.map((artist, i) => (
                             <ImageWrapper
                                 src={artist?.images?.[0]?.url}
@@ -85,27 +84,22 @@ export const ArtistPage = ({ onDownloadClick, exportRef }) => {
                         ))}
                     </div>
                 );
-                break;
             case 1: // display list view
-                view = (
-                    <div className='cards' ref={exportRef} data-testid='list'>
+                return (
+                    <div className='cards' ref={exportRef} data-testid={`list-${timeFrameIndex}`}>
                         {info?.artists?.map((artist, i) => (
-                            <ArtistCard {...artist} key={artist?.name + i} />
+                            <ArtistCard artist={artist} key={artist?.name + i} />
                         ))}
                     </div>
                 );
-                break;
             case 2: // display stats
-                view = <></>;
-                break;
+                return <></>;
         }
-
-        return view;
     };
 
     const genreButtons = (
         <>
-            <div className={'buttons overflow-' + overflowVisible} data-testid='genre-buttons'>
+            <div className={'buttons overflow-' + overflowVisible} data-testid={`genres-${timeFrameIndex}`}>
                 {info?.genres?.map(getGenreButton)}
             </div>
             {getOverflowButton()}

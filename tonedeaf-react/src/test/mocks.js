@@ -1,47 +1,34 @@
 import { vi } from 'vitest';
-import { countGenres } from '~/util/SpotifyUtil';
-import { Config } from '~/util/Config';
 import { getDemoData } from '~/test/testUtils';
 
 const demoData = getDemoData();
 
 /**
- * Mock data retrieval hooks by returning demo data json stored in the express directory
+ * Mock SpotifyUtil directly in case components import util services.
+ * This prevents any network requests to the Spotiy API during unit tests and
+ * ensures deterministic results.
  */
-vi.mock('~/hooks/SpotifyHooks.ts', async () => {
+vi.mock('~/util/SpotifyUtil', async (importOriginal) => {
+    const original = await importOriginal();
     return {
-        useUserInfo: vi.fn(() => {
-            return null;
-        }),
-        useArtistsAndGenres: vi.fn((timeFrameIndex, genre) => {
-            let artists = demoData.artists[timeFrameIndex];
-            const filteredArtists = artists
-                ?.map((artist, i) => ({ ...artist, rank: i + 1 })) // Add artist rank
-                .filter((artist) => genre === Config.GENRE || artist.genres.some((g) => genre === g)); // Or filter artist by genre
-
-            return {
-                artists: filteredArtists,
-                genres: countGenres(artists),
-            };
-        }),
-        useTracksAndFeatures: vi.fn((timeFrameIndex) => {
+        ...original,
+        getProfile: vi.fn(async () => null),
+        getTopArtists: vi.fn(async (timeFrameIndex) => demoData.artists[timeFrameIndex]),
+        getTracksAndFeatures: vi.fn(async (timeFrameIndex) => {
             return {
                 tracks: demoData.tracks[timeFrameIndex],
                 features: demoData.features[timeFrameIndex],
                 averages: demoData.averages[timeFrameIndex],
             };
         }),
-        useRecent: vi.fn(() => {
-            return demoData.recent;
-        }),
-        useGenreSeeds: vi.fn(() => {
-            return demoData.genreSeeds;
-        }),
+        getGenreSeeds: vi.fn(async () => demoData.genreSeeds),
+        getNowPlaying: vi.fn(async () => demoData.nowPlaying),
+        getRecentTracks: vi.fn(async () => demoData.recent),
     };
 });
 
 /**
- * Also mock DemoService directly in case components import demo services
+ * Mock DemoService directly in case components import demo services
  * directly rather than through hooks. This prevents any network requests
  * to the demo express server during unit tests and ensures deterministic
  * results.

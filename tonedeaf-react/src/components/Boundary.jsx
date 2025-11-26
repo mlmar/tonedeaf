@@ -11,6 +11,7 @@ export class Boundary extends React.Component {
 
     componentDidCatch(error, info) {
         this.setState({ error: true });
+        console.error(error);
         if (this.props.onCatch) this.props.onCatch(error, info);
     }
 

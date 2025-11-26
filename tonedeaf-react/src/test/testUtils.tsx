@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, type RenderResult } from '@testing-library/react';
 import { TonedeafQueryClientProvider } from '~/contexts/TonedeafQueryClientProvider';
 import demoData from '../../../tonedeaf-express/demo/DemoData.json';
 
@@ -8,7 +8,7 @@ import demoData from '../../../tonedeaf-express/demo/DemoData.json';
  * Wraps components with React Query provider so components using React Query
  * work in tests without bootstrapping the whole app.
  */
-export function renderWithProviders(ui: React.ReactElement) {
+export function renderWithProviders(ui: React.ReactElement): RenderResult {
     const Wrapper = ({ children }: { children: React.ReactNode }) => (
         <TonedeafQueryClientProvider>{children}</TonedeafQueryClientProvider>
     );

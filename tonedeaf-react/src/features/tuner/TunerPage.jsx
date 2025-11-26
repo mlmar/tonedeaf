@@ -4,7 +4,7 @@ import { isEqual } from '~/util/ObjectUtil.js';
 
 import { Options } from '~/components/Options.jsx';
 import { AttributeInput } from './AttributeInput.jsx';
-import { TrackCard } from '~/features/track/TrackCard.jsx';
+import { TrackCard } from '~/features/track/TrackCard';
 
 import { Load } from '~/components/Load.jsx';
 import { CHECK } from '~/util/IconUtil.jsx';
@@ -156,7 +156,7 @@ export const TunerPage = () => {
                 view = tracks?.length ? (
                     <div className='cards'>
                         {tracks?.map((track, i) => (
-                            <TrackCard {...track} rank={i + 1} key={track?.name + i} norank nohover />
+                            <TrackCard track={{ ...track, rank: i + 1 }} key={track?.name + i} norank nohover />
                         ))}
                     </div>
                 ) : (

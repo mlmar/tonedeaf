@@ -2,8 +2,8 @@ import { useRecent, useUserInfo } from '~/hooks/SpotifyHooks.ts';
 import { createPlaylist } from '~/util/SpotifyUtil.js';
 
 import { Options } from '~/components/Options.jsx';
-import { ImageWrapper } from '~/components/ImageWrapper.jsx';
-import { TrackCard } from './TrackCard.jsx';
+import { ImageWrapper } from '~/components/ImageWrapper';
+import { TrackCard } from './TrackCard';
 
 import { Load } from '~/components/Load.jsx';
 
@@ -63,7 +63,7 @@ export const RecentPage = () => {
                 ) : (
                     <div className='cards'>
                         {tracks.map((track, i) => (
-                            <TrackCard {...track?.track} rank={i + 1} key={track?.track?.name + i} norank>
+                            <TrackCard track={{ ...track?.track, rank: i + 1 }} key={track?.track?.name + i}>
                                 <label className='medium inactive'>
                                     Played on
                                     {new Date(track?.played_at).toDateString()}
