@@ -873,10 +873,14 @@ p {
     }
 
     .slider-label {
-        flex-basis: 3%;
+        display: flex;
+        min-width: 3em;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        align-items: center;
 
         &:first-child {
-            text-align: right;
+            justify-content: end;
         }
     }
 
