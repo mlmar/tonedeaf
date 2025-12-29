@@ -8,6 +8,7 @@
  */
 
 const express = require("express"); // Express web server framework
+const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -29,6 +30,12 @@ app.use("/api", demoEndpoints);
 */
 const authEndpoints = require("./auth/endpoints.js");
 app.use("/api", authEndpoints);
+
+const staticDirecory = "/dist";
+app.use(express.static(path.join(__dirname, staticDirecory)));
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, staticDirecory, "index.html"));
+});
 
 if (process.env.DEV) {
     console.log("Listening on 8888");
