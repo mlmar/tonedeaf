@@ -1,8 +1,7 @@
 import type { NowPlayingTrack } from "~/util/SpotifyUtil.js";
 import { get } from "./HTTPService.js";
 
-const DEMO = 'demo';
-
+const DEMO = '/demo';
 export const getDemoArtists = async (timeFrameIndex: number) => {
     try {
         const response = await get(DEMO + '/artists');
