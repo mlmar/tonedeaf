@@ -140,7 +140,7 @@ const FEATURES_LIST = [
     ['speechiness', 'Speechiness'],
     ['tempo', 'Tempo'],
     ['time_signature', 'Time Signature'],
-    ['valence', 'Danceability'],
+    ['valence', 'Valence'],
 ] as const;
 
 TrackCard.FEATURES_LIST = FEATURES_LIST;
