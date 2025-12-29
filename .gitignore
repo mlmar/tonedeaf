@@ -2,6 +2,7 @@ node_modules
 .gitignore
 .env
 
+/tonedeaf-react/dist
 /tonedeaf-express/node_modules
 /tonedeaf-express/.gitignore
 /tonedeaf-express/.env
