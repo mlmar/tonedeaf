@@ -19,4 +19,8 @@ export default defineConfig({
         globals: true, // Enables global access to Vitest APIs like `describe`, `it`, `expect`
         setupFiles: ['./src/test/setupTests.js', './src/test/mocks.js'],
     },
+    build: {
+        outDir: '../tonedeaf-express/dist',
+        emptyOutDir: true,
+    },
 });
