@@ -37,7 +37,5 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, staticDirecory, "index.html"));
 });
 
-if (process.env.DEV) {
-    console.log("Listening on 8888");
-    app.listen(8888);
-}
+console.log("Listening on 8888");
+app.listen(8888);
