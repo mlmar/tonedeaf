@@ -8,7 +8,6 @@
  */
 
 const express = require("express"); // Express web server framework
-const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -17,9 +16,7 @@ console.log("Development =", process.env.DEV);
 
 const app = express();
 
-app.use(express.static(__dirname + "/public"))
-    .use(cors())
-    .use(cookieParser());
+app.use(cors()).use(cookieParser());
 
 /*
   ENDPOINTS FOR DEMO SERVICE
@@ -33,5 +30,7 @@ app.use("/api", demoEndpoints);
 const authEndpoints = require("./auth/endpoints.js");
 app.use("/api", authEndpoints);
 
-console.log("Listening on 8888");
-app.listen(8888);
+if (process.env.DEV) {
+    console.log("Listening on 8888");
+    app.listen(8888);
+}
