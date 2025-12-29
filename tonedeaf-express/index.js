@@ -33,11 +33,5 @@ app.use("/api", demoEndpoints);
 const authEndpoints = require("./auth/endpoints.js");
 app.use("/api", authEndpoints);
 
-const REACT_DIRECTORY = "../tonedeaf-react/dist";
-app.use(express.static(path.join(__dirname, REACT_DIRECTORY)));
-app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, REACT_DIRECTORY, "index.html"));
-});
-
 console.log("Listening on 8888");
 app.listen(8888);
