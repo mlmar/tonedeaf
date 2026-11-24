@@ -1,6 +1,12 @@
-export const Chart = (props) => {
-    const { display, averages, className } = props;
+import type { AudioFeatureAverages } from '~/util/SpotifyUtil';
 
+type ChartProps = {
+    display: readonly string[];
+    averages: AudioFeatureAverages;
+    className?: string;
+};
+
+export const Chart = ({ display, averages, className }: ChartProps) => {
     return (
         <div className={'chart flex-col ' + (className || '')}>
             {Object.keys(averages)

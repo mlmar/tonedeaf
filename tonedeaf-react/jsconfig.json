@@ -5,5 +5,5 @@
             "~/*": ["src/*"]
         }
     },
-    "include": ["src", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.less", "**/*.css", "src/test"]
+    "include": ["src", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.less", "**/*.css", "src/test"]
 }

@@ -55,10 +55,34 @@ export interface GenreCount {
     total: number;
 }
 
+export type TrackDetails = {
+    name: string;
+    artists: { name: string | null }[];
+    album?: {
+        images?: { url: string | null }[];
+        release_date?: string | null;
+        uri?: string | null;
+    };
+    popularity?: number;
+};
+
+type PlaylistTrack = Pick<SpotifyApi.TrackObjectSimplified, 'uri'>;
+type PlaylistHistoryEntry = { track: PlaylistTrack };
+type PlaylistEntries =
+    | [tracks: readonly PlaylistTrack[], recent?: false]
+    | [tracks: readonly PlaylistHistoryEntry[], recent: true];
+
+export type RecentTrack = {
+    played_at: string;
+    track: Omit<TrackDetails, 'artists'> & PlaylistTrack & {
+        artists: { name: string }[];
+    };
+};
+
 /**
  * Audio attribute configuration
  */
-interface AttributeConfig {
+export interface AttributeConfig {
     name: string;
     id: string;
     min: number;
@@ -130,12 +154,11 @@ export const getNowPlaying = async (): Promise<NowPlayingTrack> => {
             return track;
         } else {
             const recentTracks = await getRecentTracks();
-            if (recentTracks) {
-                const recentTrack = recentTracks[0].track; // get the most recently played track
+            const recentTrack = recentTracks?.[0]?.track;
+
+            if (recentTrack) {
                 track.title = recentTrack.name;
-                track.artists = recentTrack.artists.map(
-                    (artist: SpotifyApi.ArtistObjectSimplified) => artist.name
-                );
+                track.artists = recentTrack.artists.map((artist) => artist.name);
                 // track.image = recentTrack.album?.images?.[0]?.url;
                 // track.url = recentTrack.album?.uri;
 
@@ -198,9 +221,9 @@ export const getTopTracks = async (
 /**
  * Retrieves the user's recently played tracks
  * @async
- * @returns {Promise<SpotifyApi.PlayHistoryObject[]>} Array of recently played track objects or null on error
+ * @returns {Promise<RecentTrack[]>} Recently played track entries
  */
-export const getRecentTracks = async (): Promise<SpotifyApi.PlayHistoryObject[]> => {
+export const getRecentTracks = async (): Promise<RecentTrack[]> => {
     try {
         const params = { limit: 50 };
         const tracks = await spotifyWebApi.getMyRecentlyPlayedTracks(params);
@@ -216,7 +239,7 @@ export const getRecentTracks = async (): Promise<SpotifyApi.PlayHistoryObject[]>
 
 /**
  * Extracts and formats track IDs into a comma-separated string
- * @param {any[]} tracks - Array of track objects
+ * @param {SpotifyApi.TrackObjectFull[]} tracks - Array of track objects
  * @returns {string[]} Array of track IDs
  */
 const getIDS = (tracks: SpotifyApi.TrackObjectFull[]): string[] => {
@@ -321,12 +344,11 @@ export const getTracksAndFeatures = async (
 
 /**
  * Counts genre occurrences across an array of artists
- * @param {SpotifyApi.ArtistObjectFull[]} artists - Array of artist objects
  * @returns {GenreCount[]} Sorted array of genre count objects with 'genre' and 'total' properties
  */
-export const countGenres = (artists: SpotifyApi.ArtistObjectFull[]): GenreCount[] => {
+export const countGenres = (artists: readonly Pick<SpotifyApi.ArtistObjectFull, 'genres'>[]): GenreCount[] => {
     const counts: { [key: string]: number } = { all: 0 };
-    artists?.forEach((artist: SpotifyApi.ArtistObjectFull) => {
+    artists?.forEach((artist) => {
         artist?.genres?.forEach((genre: string) => {
             counts[genre] = (counts[genre] || 0) + 1;
             counts["all"]++;
@@ -349,7 +371,7 @@ export const countGenres = (artists: SpotifyApi.ArtistObjectFull[]): GenreCount[
  * Retrieves top artists and counts their genres
  * @async
  * @param {number} rangeIndex - Index into RANGES array for time range selection
- * @returns {Promise<{artists: any[]; genres: GenreCount[]}>} Object containing artists array and genres array; or null on error
+ * @returns {Promise<{artists: SpotifyApi.ArtistObjectFull[]; genres: GenreCount[]}>} Top artists and genre counts
  */
 export const getTopArtistsAndGenres = async (
     rangeIndex: number
@@ -366,19 +388,14 @@ export const getTopArtistsAndGenres = async (
 
 /**
  * Extracts Spotify URIs from tracks, handling both recent and regular track formats
- * @param {any[]} tracks - Array of track objects
- * @param {boolean} recent - If true, expects track format from recently played API; if false, expects standard track format
- * @returns {string[]} Array of Spotify URIs, reversed if recent is true
+ * Recent plays arrive newest first, so add them to the playlist in reverse order.
  */
-export const getUris = (tracks: SpotifyApi.PlayHistoryObject[] | SpotifyApi.TrackObjectFull[], recent: boolean): string[] => {
-    const uris = tracks.map((track: SpotifyApi.PlayHistoryObject | SpotifyApi.TrackObjectFull) => {
-        if (recent) {
-            return (track as SpotifyApi.PlayHistoryObject)?.track?.uri;
-        } else {
-            return (track as SpotifyApi.TrackObjectFull)?.uri;
-        }
-    });
-    return recent ? uris.reverse() : uris;
+export const getUris = (...[tracks, recent]: PlaylistEntries): string[] => {
+    if (recent) {
+        return tracks.map(({ track }) => track.uri).reverse();
+    }
+
+    return tracks.map((track) => track.uri);
 };
 
 /**
@@ -397,17 +414,14 @@ const getDate = (): string => {
 /**
  * Creates a new playlist on the user's Spotify account and adds tracks to it
  * @async
- * @param {string} id - User's Spotify ID; if falsy, returns demo status
+ * @param {string} id - User's Spotify ID
  * @param {string} text - Name for the new playlist
- * @param {Track[]} tracks - Array of track objects to add to the playlist
- * @param {boolean} recent - Whether tracks are from recently played format
- * @returns {Promise<SpotifyApi.AddTracksToPlaylistResponse>} Response object from addTracksToPlaylist or {status: 'demo'} or null on error
+ * @param {PlaylistEntries} entries - Track entries and an optional recent-history flag
  */
 export const createPlaylist = async (
     id: string,
     text: string,
-    tracks: SpotifyApi.TrackObjectFull[],
-    recent: boolean
+    ...entries: PlaylistEntries
 ): Promise<Partial<SpotifyApi.AddTracksToPlaylistResponse>> => {
     const params = {
         name: text,
@@ -418,7 +432,7 @@ export const createPlaylist = async (
 
     try {
         const playlist = await spotifyWebApi.createPlaylist(id, params);
-        const uris = getUris(tracks, recent);
+        const uris = getUris(...entries);
 
         console.log("Creating playlist for", text);
         const response = await spotifyWebApi.addTracksToPlaylist(
@@ -583,18 +597,18 @@ export const search = async (
 /**
  * Gets track recommendations based on seed artists and tracks
  * @async
- * @param {string} artistIDS - Comma-separated artist IDs to use as seeds
- * @param {string} trackIDS - Comma-separated track IDs to use as seeds
+ * @param {readonly string[]} artistIds - Artist IDs to use as seeds
+ * @param {readonly string[]} trackIds - Track IDs to use as seeds
  * @returns {Promise<SpotifyApi.TrackObjectSimplified[]>} Array of recommended track objects or null on error
  */
 export const getSearchRecs = async (
-    artistIDS: string,
-    trackIDS: string
+    artistIds: readonly string[],
+    trackIds: readonly string[],
 ): Promise<SpotifyApi.TrackObjectSimplified[]> => {
     try {
         const params = {
-            seed_artists: artistIDS,
-            seed_tracks: trackIDS,
+            seed_artists: artistIds.join(','),
+            seed_tracks: trackIds.join(','),
             limit: 50,
         };
         const response = await spotifyWebApi.getRecommendations(params);

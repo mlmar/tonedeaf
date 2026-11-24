@@ -17,25 +17,20 @@ export function useUserInfo(): Awaited<ReturnType<typeof getProfile>> | undefine
     const { data } = useQuery({
         ...QUERY_CONFIG,
         queryKey: [isDemo, 'user-info'],
-        queryFn: async () => {
-            if (isDemo) {
-                return undefined;
-            }
-            return await getProfile()
-        }
+        enabled: !isDemo,
+        queryFn: getProfile,
     })
     return data;
 }
 
 /**
- * If session is demo returns true
- * @returns {Awaited<ReturnType<typeof getNowPlaying>>}
+ * Polls for playback data from Spotify or the demo endpoint.
  */
 export function useNowPlaying(interval: number = 10000): Awaited<ReturnType<typeof getNowPlaying>> | undefined {
     const { isDemo } = useIsDemo();
 
     const { data } = useQuery({
-        queryKey: [isDemo],
+        queryKey: [isDemo, 'now-playing'],
         queryFn: () => isDemo ? getDemoNowPlaying() : getNowPlaying(),
         refetchInterval: interval
     })
@@ -45,9 +40,9 @@ export function useNowPlaying(interval: number = 10000): Awaited<ReturnType<type
 /**
  * Fetches artists and genres
  * @param {number} timeFrameIndex 
- * @param {string} genre 
+ * @param {string | null} genre
  */
-export const useArtistsAndGenres = (timeFrameIndex: number, genre: string = Config.GENRE) => {
+export const useArtistsAndGenres = (timeFrameIndex: number, genre: string | null = Config.GENRE) => {
     const { isDemo } = useIsDemo();
     const { data } = useQuery({
         ...QUERY_CONFIG,
@@ -55,8 +50,9 @@ export const useArtistsAndGenres = (timeFrameIndex: number, genre: string = Conf
         queryFn: async () => isDemo ? await getDemoArtists(timeFrameIndex) : await getTopArtists(timeFrameIndex)
     });
 
-    const artists = data?.map((artist: SpotifyApi.ArtistObjectFull, i: number) => ({ ...artist, rank: i + 1 })) // Add artist rank
-        .filter((artist: SpotifyApi.ArtistObjectFull) => genre === Config.GENRE || artist.genres.some((g: string) => genre === g)); // Or filter artist by genre
+    // Rank before filtering to keep each artist's original position in the list.
+    const artists = data?.map((artist, i) => ({ ...artist, rank: i + 1 }))
+        .filter((artist) => genre !== null && (genre === Config.GENRE || artist.genres.includes(genre)));
 
     return {
         artists,

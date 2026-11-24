@@ -18,6 +18,11 @@ export const post = async (endpoint, data) => {
     }
 };
 
+/**
+ * @template T
+ * @param {string} endpoint
+ * @returns {Promise<T | null>}
+ */
 export const get = async (endpoint) => {
     try {
         const response = await fetch(SERVICE_URL + endpoint, {

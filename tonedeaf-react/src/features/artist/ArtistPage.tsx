@@ -1,21 +1,23 @@
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import { useArtistsAndGenres } from '~/hooks/SpotifyHooks.ts';
 
-import { Options } from '~/components/Options.jsx';
+import { Options } from '~/components/Options';
 import { ImageWrapper } from '~/components/ImageWrapper';
 import { ArtistCard } from './ArtistCard';
 
-import { Load } from '~/components/Load.jsx';
-import { CHECK } from '~/util/IconUtil.jsx';
+import { Load } from '~/components/Load';
+import { CHECK } from '~/util/IconUtil';
 
 import { Config } from '~/util/Config.js';
+import type { GenreCount } from '~/util/SpotifyUtil';
 import { useArtistViewState } from '~/hooks/useArtistViewState.js';
 import { useArtistGenre } from '~/hooks/useArtistGenre.js';
+import type { ImageExportProps } from '~/hooks/useDownload';
 
 /*
   Displays list of users top artists from a selected time range
 */
-export const ArtistPage = ({ onDownloadClick = null, exportRef = null }) => {
+export const ArtistPage = ({ onDownloadClick = null, exportRef = null }: ImageExportProps) => {
     const { artistGenre, setArtistGenre } = useArtistGenre();
     const {
         artistTimeFrameIndex: timeFrameIndex,
@@ -27,7 +29,7 @@ export const ArtistPage = ({ onDownloadClick = null, exportRef = null }) => {
     const [overflowVisible, setOverflowVisible] = useState(false);
 
     // filter artists by user selected genre
-    const handleGenreClick = (event) => {
+    const handleGenreClick = (event: MouseEvent<HTMLSpanElement>) => {
         setArtistGenre(event.currentTarget.id);
     };
 
@@ -36,7 +38,7 @@ export const ArtistPage = ({ onDownloadClick = null, exportRef = null }) => {
         setViewIndex(1);
     };
 
-    const getGenreButton = (option, i) => {
+    const getGenreButton = (option: GenreCount, i: number) => {
         const equal = option.genre === artistGenre;
         const overflow = i >= 20 ? 'overflow' : '';
         const selected = equal ? 'selected' : '';

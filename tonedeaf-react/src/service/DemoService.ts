@@ -1,104 +1,52 @@
-import type { NowPlayingTrack } from "~/util/SpotifyUtil.js";
-import { get } from "./HTTPService.js";
+import type demoData from '../../../tonedeaf-express/demo/DemoData.json';
+import type { NowPlayingTrack, RecentTrack } from '~/util/SpotifyUtil';
+import { get } from './HTTPService.js';
 
-const DEMO = '/demo';
-export const getDemoArtists = async (timeFrameIndex: number) => {
-    try {
-        const response = await get(DEMO + '/artists');
-        return response[timeFrameIndex];
-    } catch (error) {
-        console.warn("Error getting demo");
-        console.error(error);
-        throw new Error('failed to fetch demo artists data');
+type TimedDemoEndpoint = 'artists' | 'genres' | 'tracks' | 'features' | 'averages';
+
+type DemoResponses = Pick<typeof demoData, TimedDemoEndpoint | 'recent'> & {
+    'genre-seeds': typeof demoData.genreSeeds;
+    'now-playing': typeof demoData.nowPlaying;
+};
+
+// Express serves these fixtures directly from the demo endpoints.
+async function getDemoData<Endpoint extends keyof DemoResponses>(endpoint: Endpoint): Promise<DemoResponses[Endpoint]> {
+    const response = await get<DemoResponses[Endpoint]>('/demo/' + endpoint);
+
+    if (response === null) {
+        throw new Error('Failed to fetch demo data for ' + endpoint);
     }
+
+    return response;
 }
 
-export const getDemoGenres = async (timeFrameIndex: number) => {
-    try {
-        const response = await get(DEMO + '/genres');
-        return response[timeFrameIndex];
-    } catch (error) {
-        console.warn("Error getting demo");
-        console.error(error);
-        throw new Error('failed to fetch demo genres data');
+async function getDemoTimeFrame<Endpoint extends TimedDemoEndpoint>(
+    endpoint: Endpoint,
+    timeFrameIndex: number,
+): Promise<DemoResponses[Endpoint][number]> {
+    const timeFrames = await getDemoData<Endpoint>(endpoint);
+    const data = timeFrames[timeFrameIndex];
+
+    if (data === undefined) {
+        throw new Error('Missing demo time frame for ' + endpoint);
     }
+
+    return data;
 }
 
-export const getDemoTracks = async (timeFrameIndex: number) => {
-    try {
-        const response = await get(DEMO + '/tracks');
-        return response[timeFrameIndex];
-    } catch (error) {
-        console.warn("Error getting demo");
-        console.error(error);
-        throw new Error('failed to fetch demo tracks data');
-    }
-}
-
-export const getDemoFeatures = async (timeFrameIndex: number) => {
-    try {
-        const response = await get(DEMO + '/features');
-        return response[timeFrameIndex];
-    } catch (error) {
-        console.warn("Error getting demo");
-        console.error(error);
-        throw new Error('failed to fetch demo features data');
-    }
-}
-
-export const getDemoAverages = async (timeFrameIndex: number) => {
-    try {
-        const response = await get(DEMO + '/averages');
-        return response[timeFrameIndex];
-    } catch (error) {
-        console.warn("Error getting demo");
-        console.error(error);
-        throw new Error('failed to fetch demo averages data');
-    }
-}
+export const getDemoArtists = (timeFrameIndex: number) => getDemoTimeFrame('artists', timeFrameIndex);
+export const getDemoGenres = (timeFrameIndex: number) => getDemoTimeFrame('genres', timeFrameIndex);
+export const getDemoTracks = (timeFrameIndex: number) => getDemoTimeFrame('tracks', timeFrameIndex);
+export const getDemoFeatures = (timeFrameIndex: number) => getDemoTimeFrame('features', timeFrameIndex);
+export const getDemoAverages = (timeFrameIndex: number) => getDemoTimeFrame('averages', timeFrameIndex);
 
 export const getDemoTracksAndFeatures = async (timeFrameIndex: number) => {
-    try {
-        const tracks = await getDemoTracks(timeFrameIndex);
-        const features = await getDemoFeatures(timeFrameIndex);
-        const averages = await getDemoAverages(timeFrameIndex);
-        return { tracks, features, averages }
-    } catch (error) {
-        console.warn("Error getting demo");
-        console.error(error);
-        throw new Error('failed to fetch demo tracks and features data');
-    }
-}
+    const tracks = await getDemoTracks(timeFrameIndex);
+    const features = await getDemoFeatures(timeFrameIndex);
+    const averages = await getDemoAverages(timeFrameIndex);
+    return { tracks, features, averages };
+};
 
-export const getDemoGenreSeeds = async (): Promise<string[]> => {
-    try {
-        const response = await get(DEMO + '/genre-seeds');
-        return response;
-    } catch (error) {
-        console.warn("Error getting demo");
-        console.error(error);
-        throw new Error('failed to fetch demo genre seeds data');
-    }
-}
-
-export const getDemoNowPlaying = async (): Promise<NowPlayingTrack> => {
-    try {
-        const response = await get(DEMO + '/now-playing');
-        return response;
-    } catch (error) {
-        console.warn("Error getting demo");
-        console.error(error);
-        throw new Error('failed to fetch demo now playing data');
-    }
-}
-
-export const getDemoRecentTracks = async (): Promise<SpotifyApi.PlayHistoryObject[]> => {
-    try {
-        const response = await get(DEMO + '/recent');
-        return response;
-    } catch (error) {
-        console.warn("Error getting demo");
-        console.error(error);
-        throw new Error('failed to fetch demo recent data');
-    }
-}
+export const getDemoGenreSeeds = () => getDemoData('genre-seeds');
+export const getDemoNowPlaying = (): Promise<NowPlayingTrack> => getDemoData('now-playing');
+export const getDemoRecentTracks = (): Promise<RecentTrack[]> => getDemoData('recent');

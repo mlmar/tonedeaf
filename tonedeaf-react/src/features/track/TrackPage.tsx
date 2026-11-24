@@ -1,21 +1,22 @@
 import { useTracksAndFeatures, useUserInfo } from '~/hooks/SpotifyHooks.ts';
 import { createPlaylist } from '~/util/SpotifyUtil.js';
 
-import { Options } from '~/components/Options.jsx';
+import { Options } from '~/components/Options';
 import { ImageWrapper } from '~/components/ImageWrapper';
 import { TrackCard } from './TrackCard';
 
-import { Load } from '~/components/Load.jsx';
+import { Load } from '~/components/Load';
 
 import { Config } from '~/util/Config.js';
 import { useIsDemo } from '~/hooks/useIsDemo.ts';
 import { useTrackViewState } from '~/hooks/useTrackViewState.js';
 import { useTonedeafStore } from '~/hooks/useTonedeafStore.js';
+import type { ImageExportProps } from '~/hooks/useDownload';
 
 /*
   Display user's top tracks from a selected time range
 */
-export const TrackPage = ({ onDownloadClick = null, exportRef = null }) => {
+export const TrackPage = ({ onDownloadClick = null, exportRef = null }: ImageExportProps) => {
     const { isDemo } = useIsDemo();
     const userInfo = useUserInfo();
     const setAlertText = useTonedeafStore((state) => state.setAlertText);
@@ -34,8 +35,11 @@ export const TrackPage = ({ onDownloadClick = null, exportRef = null }) => {
             return;
         }
 
-        const id = userInfo.id;
-        const response = await createPlaylist(id, 'tonedeaf top tracks', info?.tracks);
+        if (!userInfo || !info?.tracks) {
+            return;
+        }
+
+        const response = await createPlaylist(userInfo.id, 'tonedeaf top tracks', info.tracks);
         if (response) {
             setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
         }

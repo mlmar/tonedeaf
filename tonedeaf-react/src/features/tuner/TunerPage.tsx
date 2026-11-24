@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState, type MouseEvent, type ReactElement } from 'react';
 import { getDefaultAttributes, getParamAttributes, getAttributeRecs, createPlaylist } from '~/util/SpotifyUtil.js';
 import { isEqual } from '~/util/ObjectUtil.js';
 
-import { Options } from '~/components/Options.jsx';
-import { AttributeInput } from './AttributeInput.jsx';
+import { Options } from '~/components/Options';
+import { AttributeInput } from './AttributeInput';
 import { TrackCard } from '~/features/track/TrackCard';
 
-import { Load } from '~/components/Load.jsx';
-import { CHECK } from '~/util/IconUtil.jsx';
+import { Load } from '~/components/Load';
+import { CHECK } from '~/util/IconUtil';
 
 import { Config } from '~/util/Config.js';
 import { useIsDemo } from '~/hooks/useIsDemo.ts';
@@ -32,15 +32,15 @@ export const TunerPage = () => {
     const genreSeeds = useGenreSeeds();
 
     const [attributes, setAttributes] = useState(getParamAttributes());
-    const [prevAttributes, setPrevAttributes] = useState(null);
+    const [prevAttributes, setPrevAttributes] = useState<typeof attributes | null>(null);
 
-    const [selected, setSelected] = useState(new Set());
-    const [prevSelected, setPrevSelected] = useState(null);
+    const [selected, setSelected] = useState(() => new Set<string>());
+    const [prevSelected, setPrevSelected] = useState<Set<string> | null>(null);
 
-    const [tracks, setTracks] = useState(null);
+    const [tracks, setTracks] = useState<SpotifyApi.TrackObjectSimplified[] | null>(null);
 
     // if user tries to view results, fetch them from Spotify
-    const handleViewClick = (index) => {
+    const handleViewClick = (index: number) => {
         if (index === 1 && isDemo) {
             setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
             return;
@@ -48,8 +48,8 @@ export const TunerPage = () => {
 
         setViewIndex(index);
 
-        const equalSets =
-            selected?.size === prevSelected?.size && [...selected].every((elem) => prevSelected?.has(elem));
+        const equalSets = prevSelected?.size === selected.size
+            && [...selected].every((genre) => prevSelected.has(genre));
         const equalAttributes = isEqual(attributes, prevAttributes);
         if (index === 1 && (!equalSets || !equalAttributes)) {
             setPrevSelected(selected);
@@ -58,10 +58,14 @@ export const TunerPage = () => {
         }
     };
 
-    const handlePlaylistOptions = async (index) => {
+    const handlePlaylistOptions = async (index: number) => {
         if (index === 0) {
-            const id = userInfo.id;
-            const response = await createPlaylist(id, 'tonedeaf tuner tracks', tracks);
+            if (!userInfo || !tracks) {
+                return;
+            }
+
+            const response = await createPlaylist(userInfo.id, 'tonedeaf tuner tracks', tracks);
+
             if (response) setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
         } else {
             getRecommendations();
@@ -69,36 +73,27 @@ export const TunerPage = () => {
     };
 
     const getRecommendations = async () => {
-        let _selected = [];
-        selected?.forEach((genre) => {
-            _selected.push(genre);
-        });
-        const recs = await getAttributeRecs(_selected, attributes);
+        const recs = await getAttributeRecs([...selected], attributes);
         setTracks(recs);
     };
 
-    /*
-    - if genre is not part of the selected set, add it, otherwise delete it
-    - only allow 5 genres to be selected
-  */
-    const handleGenreClick = (event) => {
+    const handleGenreClick = (event: MouseEvent<HTMLSpanElement>) => {
         const genre = event.currentTarget.id;
-        if (selected.has(genre)) {
-            setSelected((s) => {
-                s.delete(genre);
-                return new Set(s);
-            });
-        } else if (selected.size < 5) {
-            setSelected((s) => new Set(s).add(genre));
-        }
+
+        setSelected((previous) => {
+            if (previous.has(genre)) {
+                // Keep the selection used by the last request intact for comparison.
+                const next = new Set(previous);
+                next.delete(genre);
+                return next;
+            }
+
+            return previous.size < 5 ? new Set(previous).add(genre) : previous;
+        });
     };
 
-    /*
-    - callback function to be passed to AttributeInput component 
-    - if user changes any of the input ranges for the attributes, save both min and max
-    - prevent the max from ever being lower than the min
-  */
-    const handleAttributeChange = (id, value, type) => {
+    // Adjust the lower bound when the range sliders cross.
+    const handleAttributeChange = (id: string, value: number, type: 'min' | 'max') => {
         setAttributes((prev) => {
             const temp = { ...prev };
             if (type === 'max') {
@@ -111,10 +106,10 @@ export const TunerPage = () => {
         });
     };
 
-    const getGenreButton = (genre) => {
-        const exists = selected?.has(genre);
-        let selectedClass = exists ? 'selected' : '';
-        let text = exists ? CHECK : null;
+    const getGenreButton = (genre: string) => {
+        const exists = selected.has(genre);
+        const selectedClass = exists ? 'selected' : '';
+        const text = exists ? CHECK : null;
         return (
             <span onClick={handleGenreClick} id={genre} key={genre}>
                 <button className={'text-btn bold ' + selectedClass}>
@@ -125,7 +120,7 @@ export const TunerPage = () => {
     };
 
     const getView = () => {
-        let view = null;
+        let view: ReactElement | null = null;
         switch (viewIndex) {
             default: // always show genres and attributes page by default
                 view = (
@@ -156,7 +151,7 @@ export const TunerPage = () => {
                 view = tracks?.length ? (
                     <div className='cards'>
                         {tracks?.map((track, i) => (
-                            <TrackCard track={{ ...track, rank: i + 1 }} key={track?.name + i} norank nohover />
+                            <TrackCard track={{ ...track, rank: i + 1 }} key={track.name + i} />
                         ))}
                     </div>
                 ) : (

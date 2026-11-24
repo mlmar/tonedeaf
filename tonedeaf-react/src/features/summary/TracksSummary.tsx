@@ -1,20 +1,25 @@
+import type { ReactElement } from 'react';
 import { useTracksAndFeatures } from '~/hooks/SpotifyHooks';
 import { ImageWrapper } from '~/components/ImageWrapper';
 import { Config } from '~/util/Config';
 import { Chart } from './Chart';
 
-export const TracksSummary = (props) => {
-    const { index, onClick } = props;
+type TracksSummaryProps = {
+    index: number;
+    onClick: () => void;
+};
+
+export const TracksSummary = ({ index, onClick }: TracksSummaryProps) => {
     const tracksInfo = useTracksAndFeatures(index);
 
     const topTracks = () => {
-        let tracks = [];
-        let style = {
+        const tracks: ReactElement[] = [];
+        const style = {
             flexBasis: (Config.TOP_IMAGES_ROWS / Config.TOP_IMAGES_LIMIT) * 100 + '%',
         };
         if (tracksInfo) {
             for (let i = 1; i < Config.TOP_IMAGES_LIMIT + 1; i++) {
-                let track = tracksInfo?.tracks?.[i];
+                const track = tracksInfo?.tracks?.[i];
                 tracks.push(<ImageWrapper src={track?.album?.images?.[0]?.url} style={style} key={i} />);
             }
         }
@@ -22,7 +27,7 @@ export const TracksSummary = (props) => {
     };
 
     const topTrack = () => {
-        let track = tracksInfo?.tracks?.[0];
+        const track = tracksInfo?.tracks?.[0];
         return (
             <>
                 <p className='panel large bold inactive'>
@@ -30,7 +35,7 @@ export const TracksSummary = (props) => {
                 </p>
                 <div className='flex-col float-images' onClick={onClick}>
                     <div className='flex'>
-                        <ImageWrapper src={track?.album.images?.[0].url} />
+                        <ImageWrapper src={track?.album.images?.[0]?.url} />
                         <div className='flex-wrap flex-fill'>{topTracks()}</div>
                     </div>
                 </div>
@@ -39,7 +44,7 @@ export const TracksSummary = (props) => {
     };
 
     const trackStats = () => {
-        let averages = tracksInfo?.averages;
+        const averages = tracksInfo?.averages;
         if (averages) {
             return (
                 <div className='flex-col panel'>

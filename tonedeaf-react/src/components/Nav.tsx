@@ -1,19 +1,18 @@
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 
-/*
-  Navigation bar ui element
-  - displays the currently selected navigation element based on provided index
+type NavProps = {
+    index: number;
+    onChange?: (index: number) => void;
+    options?: readonly string[];
+    text: string;
+    onLogout?: () => void;
+};
 
-  text      :   title string
-  index     :   index of currently selected nav option
-  setIndex  :   callback to parent to set currently selected index
-
-*/
-export const Nav = ({ index, onChange, options, text, onLogout }) => {
+export const Nav = ({ index, onChange, options, text, onLogout }: NavProps) => {
     const [mobileButtonsVisible, setMobileButtonsVisible] = useState(false);
 
-    const setNavIndex = (event) => {
-        if (onChange) onChange(parseInt(event.target.id));
+    const setNavIndex = (event: MouseEvent<HTMLButtonElement>) => {
+        onChange?.(Number(event.currentTarget.id));
         setMobileButtonsVisible(false);
     };
 
@@ -29,7 +28,7 @@ export const Nav = ({ index, onChange, options, text, onLogout }) => {
                         <button
                             className={index === i ? 'selected desktop' : 'desktop'}
                             onClick={setNavIndex}
-                            id={i}
+                            id={String(i)}
                             key={i}
                         >
                             {option}
@@ -48,7 +47,7 @@ export const Nav = ({ index, onChange, options, text, onLogout }) => {
             <>
                 <div className='mobile mobile-options'>
                     {options?.map((option, i) => (
-                        <button className={index === i ? 'selected' : ''} onClick={setNavIndex} id={i} key={i}>
+                        <button className={index === i ? 'selected' : ''} onClick={setNavIndex} id={String(i)} key={i}>
                             {option}
                         </button>
                     ))}

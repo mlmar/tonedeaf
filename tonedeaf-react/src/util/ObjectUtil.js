@@ -1,3 +1,8 @@
+/**
+ * @template Value
+ * @param {Record<string, Value> | null} obj1
+ * @param {Record<string, Value> | null} obj2
+ */
 export const isEqual = (obj1, obj2) => {
   if (!obj1 || !obj2 || typeof obj1 != "object" || typeof obj2 != "object") return false;
   for(const property in obj1) {
