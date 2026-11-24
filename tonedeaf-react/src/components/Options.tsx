@@ -1,13 +1,16 @@
-/*
-  Option select panel
+import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from 'react';
 
-  title       : title string
-  description : description string
-  options     : array of option strings
-  onClick     : passes back array index of option as an arugment
-  col         : displays the options vertically if true
-  index       : currently selected option
-*/
+type OptionLabel = string | { icon: string; text: string };
+
+type OptionsProps = Omit<ComponentPropsWithoutRef<'div'>, 'onClick'> & {
+    subtitle?: ReactNode;
+    description?: string;
+    options?: readonly OptionLabel[];
+    onClick?: ((index: number) => void) | null;
+    col?: boolean;
+    index?: number;
+};
+
 export const Options = ({
     title,
     subtitle,
@@ -19,17 +22,17 @@ export const Options = ({
     children,
     className,
     ...props
-}) => {
-    const handleClick = (event) => {
-        if (onClick && event.target.id) onClick(parseInt(event.target.id));
-    };
-
-    function renderOption(option) {
-        if (option?.icon) {
-            return <img src={option.icon} alt={option.text} />;
+}: OptionsProps) => {
+    const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+        if (!(event.target instanceof Element)) {
+            return;
         }
-        return option;
-    }
+
+        const option = event.target.closest('.option');
+        if (option?.id) {
+            onClick?.(Number(option.id));
+        }
+    };
 
     return (
         <div
@@ -48,8 +51,8 @@ export const Options = ({
                 onClick={handleClick}
             >
                 {options?.map((option, i) => (
-                    <Option selected={index === i} id={i} key={option + i}>
-                        {renderOption(option)}
+                    <Option selected={index === i} id={String(i)} key={i}>
+                        {typeof option === 'string' ? option : <img src={option.icon} alt={option.text} />}
                     </Option>
                 ))}
                 {children}
@@ -58,7 +61,14 @@ export const Options = ({
     );
 };
 
-export const Option = ({ id, selected, children, href }) => {
+type OptionProps = {
+    id: string;
+    selected: boolean;
+    children: ReactNode;
+    href?: string;
+};
+
+export const Option = ({ id, selected, children, href }: OptionProps) => {
     return (
         <a
             id={id}

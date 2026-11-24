@@ -1,5 +1,10 @@
-import { useRef } from 'react';
+import { useRef, type Ref } from 'react';
 import html2canvas from 'html2canvas';
+
+export type ImageExportProps = {
+    exportRef?: Ref<HTMLDivElement>;
+    onDownloadClick?: ((index: number) => void) | null;
+};
 
 function isMobile(): boolean {
     return /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(
@@ -8,7 +13,7 @@ function isMobile(): boolean {
 }
 
 export const useDownload = () => {
-    const exportRef = useRef<HTMLElement>(null);
+    const exportRef = useRef<HTMLDivElement>(null);
 
     const refreshImageURL = async (): Promise<{
         canvas: HTMLCanvasElement | null;
@@ -36,7 +41,7 @@ export const useDownload = () => {
         return { canvas, blob: null };
     };
 
-    const shareImage = async (text: string) => {
+    const shareImage = async (text?: string) => {
         const { canvas, blob } = await refreshImageURL();
 
         if (isMobile() && navigator.canShare && blob) {
@@ -51,8 +56,7 @@ export const useDownload = () => {
 
             if (text) {
                 shareData.text =
-                    (text.length ? text + '\n' : '') +
-                    'https://tonedeaf.vercel.app';
+                    text + '\nhttps://tonedeaf.vercel.app';
             }
 
             if (navigator.canShare(shareData)) {

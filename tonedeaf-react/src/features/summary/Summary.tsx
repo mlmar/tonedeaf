@@ -1,18 +1,17 @@
 import { useTonedeafStore } from '~/hooks/useTonedeafStore.js';
-import { ArtistSummary } from './ArtistsSummary.jsx';
-import { TracksSummary } from './TracksSummary.jsx';
+import { ArtistSummary } from './ArtistsSummary';
+import { TracksSummary } from './TracksSummary';
 
-import { Options } from '~/components/Options.jsx';
+import { Options } from '~/components/Options';
 
 import { Config } from '~/util/Config.js';
 import { useSummaryViewState } from '~/hooks/useSummaryViewState.js';
 import { useArtistViewState } from '~/hooks/useArtistViewState.js';
 import { useTrackViewState } from '~/hooks/useTrackViewState.js';
 import { useArtistGenre } from '~/hooks/useArtistGenre.js';
+import type { ImageExportProps } from '~/hooks/useDownload';
 
-export const Summary = (props) => {
-    const { onDownloadClick, exportRef } = props;
-
+export const Summary = ({ onDownloadClick, exportRef }: ImageExportProps) => {
     const setNavIndex = useTonedeafStore((state) => state.setNavIndex);
     const { setArtistGenre } = useArtistGenre();
     const { summaryTimeFrameIndex, setSummaryTimeFrameIndex } = useSummaryViewState();
@@ -24,7 +23,7 @@ export const Summary = (props) => {
         setArtistTimeFrameIndex(summaryTimeFrameIndex);
     };
 
-    const handleArtistGenreClick = (genre) => {
+    const handleArtistGenreClick = (genre: string) => {
         setNavIndex(1);
         setArtistGenre(genre);
         setArtistTimeFrameIndex(summaryTimeFrameIndex);

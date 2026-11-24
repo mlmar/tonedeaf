@@ -1,14 +1,20 @@
+import type { ReactElement } from 'react';
 import { useArtistsAndGenres } from '~/hooks/SpotifyHooks';
 import { ImageWrapper } from '~/components/ImageWrapper';
 import { Config } from '~/util/Config';
 import { Load } from '~/components/Load';
 
-export const ArtistSummary = (props) => {
-    const { index, onArtistClick, onGenreClick } = props;
+type ArtistSummaryProps = {
+    index: number;
+    onArtistClick: () => void;
+    onGenreClick: (genre: string) => void;
+};
+
+export const ArtistSummary = ({ index, onArtistClick, onGenreClick }: ArtistSummaryProps) => {
     const artistsInfo = useArtistsAndGenres(index);
 
     const topGenres = () => {
-        if (artistsInfo?.genres?.length > 0) {
+        if (artistsInfo.artists && artistsInfo.genres.length > 0) {
             const first = artistsInfo?.genres[0];
             const genres = artistsInfo?.genres.slice(1, Config.TOP_GENRES_LIMIT + 1).map((item, i) => (
                 <label className='flex-col big bold' key={i + item.genre} onClick={() => onGenreClick(item.genre)}>
@@ -41,14 +47,14 @@ export const ArtistSummary = (props) => {
     };
 
     const topArtists = () => {
-        let artists = [];
-        let style = {
+        const artists: ReactElement[] = [];
+        const style = {
             flexBasis: (Config.TOP_IMAGES_ROWS / Config.TOP_IMAGES_LIMIT) * 100 + '%',
         };
 
         if (artistsInfo) {
             for (let i = 1; i < Config.TOP_IMAGES_LIMIT + 1; i++) {
-                let artist = artistsInfo?.artists?.[i];
+                const artist = artistsInfo?.artists?.[i];
                 artists.push(<ImageWrapper src={artist?.images?.[0]?.url} style={style} key={i} />);
             }
         }
@@ -65,7 +71,7 @@ export const ArtistSummary = (props) => {
                 </p>
                 <div className='flex-col float-images' onClick={onArtistClick}>
                     <div className='flex'>
-                        <ImageWrapper src={artist?.images?.[0].url} />
+                        <ImageWrapper src={artist?.images?.[0]?.url} />
                         <div className='flex-wrap flex-fill'>{topArtists()}</div>
                     </div>
                 </div>

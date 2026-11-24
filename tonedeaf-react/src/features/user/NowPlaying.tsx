@@ -1,15 +1,15 @@
+import type { ReactNode } from 'react';
 import { ImageWrapper } from '~/components/ImageWrapper';
-import { Load } from '~/components/Load.jsx';
+import { Load } from '~/components/Load';
 import { useNowPlaying } from '~/hooks/SpotifyHooks';
 import ICON from '~/icons/SpotifyGreen.png';
 
-/*
-  Displays currently playing track or last played track
+type NowPlayingProps = {
+    widget?: boolean;
+    children?: ReactNode;
+};
 
-  widget    :   compact widget for scope page
-  onChange  :   on track change, the track is passed as argument
-*/
-export const NowPlaying = ({ widget, children }) => {
+export const NowPlaying = ({ widget = false, children }: NowPlayingProps) => {
     const track = useNowPlaying();
 
     if (!widget) {
@@ -23,7 +23,7 @@ export const NowPlaying = ({ widget, children }) => {
                         <ImageWrapper
                             className='icon'
                             src={ICON}
-                            title={`Open ${track?.name} in Spotify`}
+                            title={`Open ${track.title ?? 'track'} in Spotify`}
                             url={track?.url}
                             nohover
                         />
@@ -47,7 +47,7 @@ export const NowPlaying = ({ widget, children }) => {
                             <ImageWrapper
                                 className='icon'
                                 src={ICON}
-                                title={`Open ${track?.name} in Spotify`}
+                                title={`Open ${track.title ?? 'track'} in Spotify`}
                                 url={track?.url}
                                 nohover
                             />

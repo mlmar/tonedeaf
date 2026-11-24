@@ -1,41 +1,12 @@
 import { useState } from 'react';
 
 import { ImageWrapper } from '~/components/ImageWrapper';
+import type { TrackDetails } from '~/util/SpotifyUtil';
 
 import ICON from '~/icons/SpotifyGreen.png';
 
 type TrackCardProps = {
-    track: {
-        album: {
-            album_type: string | null;
-            available_markets?: string[] | undefined;
-            external_urls: {
-                spotify: string | null;
-            };
-            href: string | null;
-            id: string | null;
-            images: {
-                height?: number | undefined;
-                url: string | null;
-                width?: number | undefined;
-            }[];
-            name: string | null;
-            type: string;
-            uri: string | null;
-            release_date: string | null;
-        };
-        external_ids: {
-            isrc?: string | null | undefined;
-            ean?: string | null | undefined;
-            upc?: string | null | undefined;
-        };
-        artists: {
-            name: string | null;
-        }[];
-        popularity: number;
-        rank?: number;
-        name: string;
-    };
+    track: TrackDetails & { rank?: number };
     features?: {
         danceability: number;
         energy: number;

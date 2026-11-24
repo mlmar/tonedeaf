@@ -14,14 +14,7 @@ type ArtistCardProps = {
         genres: string[];
         href: string | null | undefined;
         id: string | null | undefined;
-        images:
-            | {
-                  height: number;
-                  url: string;
-                  width: number;
-              }[]
-            | null
-            | undefined;
+        images: SpotifyApi.ImageObject[] | null | undefined;
         name: string | null | undefined;
         popularity: number;
         type: string | null | undefined;

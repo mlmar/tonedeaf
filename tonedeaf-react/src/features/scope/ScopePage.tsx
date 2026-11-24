@@ -1,18 +1,19 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent, type ReactElement } from 'react';
 import { getSearchRecs, createPlaylist } from '~/util/SpotifyUtil';
 
-import { Options } from '~/components/Options.jsx';
-import { ImageWrapper } from '~/components/ImageWrapper.jsx';
+import { Options } from '~/components/Options';
+import { ImageWrapper } from '~/components/ImageWrapper';
 import { ArtistCard } from '~/features/artist/ArtistCard';
 import { TrackCard } from '~/features/track/TrackCard';
-import { NowPlaying } from '~/features/user/NowPlaying.jsx';
+import { NowPlaying } from '~/features/user/NowPlaying';
 
-import { Load } from '~/components/Load.jsx';
+import { Load } from '~/components/Load';
 
 import { Config } from '~/util/Config';
 import { useIsDemo } from '~/hooks/useIsDemo.ts';
 import { useNowPlaying, useUserInfo } from '~/hooks/SpotifyHooks';
 import { useSearch } from '~/hooks/useSearch';
+import { useTonedeafStore } from '~/hooks/useTonedeafStore';
 
 const VIEW_OPTIONS = ['Search', 'Recommendations'];
 const VIEW_OPTIONS_TEMP = ['Search'];
@@ -21,35 +22,41 @@ const SEARCH_OPTIONS = ['Artists', 'Tracks'];
 const PLAYLIST_OPTIONS = ['Create Playlist', 'Reroll'];
 const PLAYLIST_OPTIONS_TEMP = ['Create Playlist'];
 
-/*
-Find song recommendations by choosing a combination of >5 artists/tracks
-*/
-export const ScopePage = ({ setAlertText }) => {
+type SearchResult = SpotifyApi.ArtistObjectFull | SpotifyApi.TrackObjectFull;
+
+// Find recommendations from up to five selected artists and tracks.
+export const ScopePage = () => {
     const { isDemo } = useIsDemo();
     const userInfo = useUserInfo();
+    const setAlertText = useTonedeafStore((state) => state.setAlertText);
     const [viewIndex, setViewIndex] = useState(0);
     const [searchIndex, setSearchIndex] = useState(0);
     const [searchInput, setSearchInput] = useState('');
 
-    const [selected, setSelected] = useState([]);
-    const [prevSeleected, setPrevSelected] = useState(null);
-    const [tracks, setTracks] = useState(null);
+    const [selected, setSelected] = useState<SearchResult[]>([]);
+    const [prevSelected, setPrevSelected] = useState<SearchResult[] | null>(null);
+    const [tracks, setTracks] = useState<SpotifyApi.TrackObjectSimplified[] | null>(null);
 
     const { data: searchResults, isLoading } = useSearch(searchInput, searchIndex);
     const nowPlayingTrack = useNowPlaying();
 
-    const handleViewClick = (index) => {
+    const handleViewClick = (index: number) => {
         setViewIndex(index);
-        if (index === 1 && selected !== prevSeleected) {
+
+        if (index === 1 && selected !== prevSelected) {
             setPrevSelected(selected);
             getRecommendations();
         }
     };
 
-    const handlePlaylistOptions = async (index) => {
+    const handlePlaylistOptions = async (index: number) => {
         if (index === 0) {
-            const id = userInfo.id;
-            const response = await createPlaylist(id, 'tonedeaf scope tracks', tracks);
+            if (!userInfo || !tracks) {
+                return;
+            }
+
+            const response = await createPlaylist(userInfo.id, 'tonedeaf scope tracks', tracks);
+
             if (response) setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
         } else {
             getRecommendations();
@@ -57,57 +64,58 @@ export const ScopePage = ({ setAlertText }) => {
     };
 
     const handleFindMore = async () => {
-        if (isDemo) return;
+        if (isDemo || !nowPlayingTrack) {
+            return;
+        }
 
-        const artistIds = [nowPlayingTrack.artistID];
-        const trackIds = [nowPlayingTrack.trackID];
+        const { artistID, trackID } = nowPlayingTrack;
+        if (!artistID && !trackID) {
+            return;
+        }
 
-        const _tracks = await getSearchRecs(artistIds, trackIds);
-        setTracks(_tracks);
+        const artistIds = artistID ? [artistID] : [];
+        const trackIds = trackID ? [trackID] : [];
+        const recommendations = await getSearchRecs(artistIds, trackIds);
+
+        setTracks(recommendations);
         setViewIndex(1);
         setSelected([]);
     };
 
-    /*
-    Upon getting recomendations
-      - set an invalid search index to disable highlighting on the option panel
-      - set the rec view index
-      - set the tracks
-    */
     const getRecommendations = async () => {
         setViewIndex(1);
 
-        let artistIds = [];
-        let trackIds = [];
+        const artistIds: string[] = [];
+        const trackIds: string[] = [];
 
-        selected.forEach((sel) => {
-            if (sel?.type === 'artist') artistIds.push(sel?.id);
-            if (sel?.type === 'track') trackIds.push(sel?.id);
+        selected.forEach((item) => {
+            if (item.type === 'artist') {
+                artistIds.push(item.id);
+            } else {
+                trackIds.push(item.id);
+            }
         });
 
-        const _tracks = await getSearchRecs(artistIds, trackIds);
-        setTracks(_tracks);
+        const recommendations = await getSearchRecs(artistIds, trackIds);
+        setTracks(recommendations);
     };
 
-    // let the input bar be controlled so we can save the value
-    const handleSearchChange = (event) => {
-        const value = event.target.value;
-        setSearchInput(value);
+    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearchInput(event.currentTarget.value);
     };
 
-    // handle artist/track selection
-    const handleSelect = (info) => {
-        if (selected.length < 5) {
-            // only 5 unique selections are allowed
-            if (!selected.find((s) => s.id === info?.id)) {
-                setSelected((prev) => [...prev, info]);
+    const handleSelect = (result: SearchResult) => {
+        setSelected((previous) => {
+            if (previous.length >= 5 || previous.some((item) => item.id === result.id)) {
+                return previous;
             }
-        }
+
+            return [...previous, result];
+        });
     };
 
-    // handle artist/track deselection
-    const handleDeselect = (info) => {
-        setSelected((prev) => prev.filter((fil) => fil.id !== info?.id));
+    const handleDeselect = (result: SearchResult) => {
+        setSelected((previous) => previous.filter((item) => item.id !== result.id));
     };
 
     // show Images of user selections
@@ -122,34 +130,18 @@ export const ScopePage = ({ setAlertText }) => {
                     </p>
                 )}
                 <div className='selected images'>
-                    {selected.map((info, i) => {
-                        if (info?.type === 'artist') {
-                            return (
-                                <ImageWrapper
-                                    className='hover-deselect'
-                                    src={info?.images?.[0]?.url}
-                                    title={info?.name}
-                                    onClick={() => {
-                                        handleDeselect(info);
-                                    }}
-                                    key={info?.name + i}
-                                />
-                            );
-                        } else if (info?.type === 'track') {
-                            return (
-                                <ImageWrapper
-                                    className='hover-deselect'
-                                    src={info?.album?.images?.[0]?.url}
-                                    title={info?.name}
-                                    onClick={() => {
-                                        handleDeselect(info);
-                                    }}
-                                    key={info?.name + i}
-                                />
-                            );
-                        } else {
-                            return null;
-                        }
+                    {selected.map((result) => {
+                        const images = result.type === 'artist' ? result.images : result.album?.images;
+
+                        return (
+                            <ImageWrapper
+                                className='hover-deselect'
+                                src={images?.[0]?.url}
+                                title={result.name}
+                                onClick={() => handleDeselect(result)}
+                                key={result.id}
+                            />
+                        );
                     })}
                 </div>
             </div>
@@ -170,48 +162,52 @@ export const ScopePage = ({ setAlertText }) => {
             return <label className='medium bold'> No results found </label>;
         }
 
-        let res = null;
-        if (searchIndex === 0) {
-            res = searchResults?.map((artist, i) =>
-                selected.find((item) => item.id === artist.id) ? null : (
+        const cards = searchResults?.map((result, i) => {
+            if (selected.some((item) => item.id === result.id)) {
+                return null;
+            }
+
+            if (searchIndex === 0 && result.type === 'artist') {
+                return (
                     <ArtistCard
-                        artist={artist}
+                        artist={result}
                         className='hover-select'
-                        onClick={handleSelect}
-                        rank={i + 1}
-                        key={artist?.name + i}
+                        onClick={() => handleSelect(result)}
+                        key={result.id}
                     />
-                )
-            );
-        } else if (searchIndex === 1) {
-            res = searchResults?.map((track, i) =>
-                selected.find((item) => item.id === track.id) ? null : (
+                );
+            }
+
+            if (searchIndex === 1 && result.type === 'track') {
+                return (
                     <TrackCard
-                        track={{ ...track, rank: i + 1 }}
+                        track={{ ...result, rank: i + 1 }}
                         className='hover-select'
-                        onClick={handleSelect}
-                        key={track?.name + i}
+                        onClick={() => handleSelect(result)}
+                        key={result.id}
                     />
-                )
-            );
-        }
+                );
+            }
+
+            return null;
+        });
 
         return (
             <div className='cards'>
-                {searchResults?.length > 0 && (
+                {Boolean(searchResults?.length) && (
                     <p className='medium bold directions'>
                         Search Results &mdash; Select
                         {SEARCH_OPTIONS[searchIndex].toLocaleLowerCase()} by pressing on their card.
                     </p>
                 )}
-                {res}
+                {cards}
             </div>
         );
     };
 
     // show appropriate windows based on view index
     const getView = () => {
-        let view = null;
+        let view: ReactElement | null = null;
         switch (viewIndex) {
             default: // display now playing widget and search bar
                 view = (
@@ -241,12 +237,12 @@ export const ScopePage = ({ setAlertText }) => {
                 );
                 break;
             case 1: // display recommendations
-                if (tracks?.length > 0) {
+                if (tracks && tracks.length > 0) {
                     // recs found
                     view = (
                         <div className='cards'>
-                            {tracks?.map((track, i) => (
-                                <TrackCard track={{ ...track, rank: i + 1 }} key={track?.name + i} imageClick={null} />
+                            {tracks.map((track, i) => (
+                                <TrackCard track={{ ...track, rank: i + 1 }} key={track.name + i} />
                             ))}
                         </div>
                     );
