@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { INITIAL_TONEDEAF_STATE, useTonedeafStore } from '~/hooks/useTonedeafStore';
 import { logout, restoreSession, SessionEndedError, subscribeToSessionEnd } from '~/service/AuthService';
-import { CHANGE_USER_URL, HOME_URL } from '~/util/System';
+import { HOME_URL } from '~/util/System';
 
 type LoginStatus = 'loading' | 'signed-in' | 'signed-out' | 'unavailable' | 'logout-failed';
 
@@ -23,7 +23,6 @@ export function useLogin() {
     const [authError, setAuthError] = useState(() => new URLSearchParams(window.location.search).has('auth_error'));
     const [retryCount, setRetryCount] = useState(0);
     const statusRef = useRef<LoginStatus>('loading');
-    const changeAccount = useRef(false);
 
     const updateStatus = useCallback((next: LoginStatus) => {
         statusRef.current = next;
@@ -87,19 +86,13 @@ export function useLogin() {
         };
     }, [queryClient, retryCount, updateStatus]);
 
-    async function signOut(switchAccount = false) {
-        changeAccount.current = switchAccount;
+    async function signOut() {
         setAuthError(false);
         const request = logout();
         updateStatus('loading');
 
         try {
             await request;
-            if (switchAccount) {
-                window.location.assign(CHANGE_USER_URL);
-                return;
-            }
-
             updateStatus('signed-out');
         } catch {
             updateStatus('logout-failed');
@@ -108,7 +101,7 @@ export function useLogin() {
 
     function retry() {
         if (status === 'logout-failed') {
-            void signOut(changeAccount.current);
+            void signOut();
             return;
         }
 

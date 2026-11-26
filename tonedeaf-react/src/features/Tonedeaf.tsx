@@ -68,7 +68,6 @@ export const Tonedeaf = () => {
                         onChange={setNavIndex}
                         options={Config.NAV_OPTIONS}
                         onLogout={isDemo ? exitDemo : () => void signOut()}
-                        onChangeAccount={isDemo ? undefined : () => void signOut(true)}
                     />
                     <Boundary fallback={<label className='large bold'>Something went wrong!</label>}>
                         {getContent()}

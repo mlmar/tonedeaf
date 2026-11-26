@@ -48,12 +48,6 @@ export const Login = ({ authError, sessionUnavailable, logoutFailed, onRetry }: 
                         try a demo
                     </button>
                 </div>
-                {!sessionUnavailable && (
-                    <p className='tiny'>
-                        Still seeing the previous account?{' '}
-                        <a href='https://support.spotify.com/article/how-to-log-out/'>Sign out of Spotify</a>, then try again.
-                    </p>
-                )}
             </div>
             <div className='info flex-col'>
                 <label className='tiny'>This application is not developed by or affiliated with Spotify AB.</label>
