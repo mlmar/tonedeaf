@@ -1,4 +1,4 @@
-import { useState, type MouseEvent } from 'react';
+import { useId, useRef, useState } from 'react';
 
 type NavProps = {
     index: number;
@@ -9,27 +9,44 @@ type NavProps = {
 };
 
 export const Nav = ({ index, onChange, options, text, onLogout }: NavProps) => {
-    const [mobileButtonsVisible, setMobileButtonsVisible] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const mobileOptionsId = useId();
+    const mobileOptionsRef = useRef<HTMLDivElement>(null);
+    const burgerButtonRef = useRef<HTMLButtonElement>(null);
 
-    const setNavIndex = (event: MouseEvent<HTMLButtonElement>) => {
-        onChange?.(Number(event.currentTarget.id));
-        setMobileButtonsVisible(false);
+    const closeMobileMenu = () => {
+        // Return focus to the trigger before disabling the drawer buttons.
+        if (mobileOptionsRef.current?.contains(document.activeElement)) {
+            burgerButtonRef.current?.focus();
+        }
+
+        setMobileMenuOpen(false);
     };
 
-    const handleBurgerButton = () => {
-        setMobileButtonsVisible(!mobileButtonsVisible);
+    const handleOptionSelect = (nextIndex: number) => {
+        // Switch sections immediately while CSS handles the drawer exit.
+        onChange?.(nextIndex);
+        closeMobileMenu();
     };
 
-    const getButtons = () => {
+    const toggleMobileMenu = () => {
+        if (mobileMenuOpen) {
+            closeMobileMenu();
+            return;
+        }
+
+        setMobileMenuOpen(true);
+    };
+
+    const getDesktopButtons = () => {
         return (
             <>
                 <span className='options'>
-                    {options?.map((option, i) => (
+                    {options?.map((option, optionIndex) => (
                         <button
-                            className={index === i ? 'selected desktop' : 'desktop'}
-                            onClick={setNavIndex}
-                            id={String(i)}
-                            key={i}
+                            className={index === optionIndex ? 'selected desktop' : 'desktop'}
+                            onClick={() => handleOptionSelect(optionIndex)}
+                            key={optionIndex}
                         >
                             {option}
                         </button>
@@ -43,23 +60,31 @@ export const Nav = ({ index, onChange, options, text, onLogout }: NavProps) => {
     };
 
     const getMobileButtons = () => {
+        const viewportClass = `mobile mobile-options-viewport${mobileMenuOpen ? ' is-open' : ''}`;
+
         return (
-            <>
-                <div className='mobile mobile-options'>
-                    {options?.map((option, i) => (
-                        <button className={index === i ? 'selected' : ''} onClick={setNavIndex} id={String(i)} key={i}>
+            <div className={viewportClass}>
+                <div
+                    className='mobile-options'
+                    id={mobileOptionsId}
+                    ref={mobileOptionsRef}
+                    aria-hidden={!mobileMenuOpen}
+                >
+                    {options?.map((option, optionIndex) => (
+                        <button
+                            className={index === optionIndex ? 'selected' : ''}
+                            disabled={!mobileMenuOpen}
+                            onClick={() => handleOptionSelect(optionIndex)}
+                            key={optionIndex}
+                        >
                             {option}
                         </button>
                     ))}
-                    <button onClick={onLogout}> Logout </button>
+                    <button disabled={!mobileMenuOpen} onClick={onLogout}>
+                        Logout
+                    </button>
                 </div>
-                <div
-                    className='back'
-                    onClick={() => {
-                        setMobileButtonsVisible(false);
-                    }}
-                ></div>
-            </>
+            </div>
         );
     };
 
@@ -67,11 +92,30 @@ export const Nav = ({ index, onChange, options, text, onLogout }: NavProps) => {
         <nav className='nav'>
             <span className='title'>
                 <label> {text} </label>
-                {getButtons()}
-                <button className='burger-btn mobile' onClick={handleBurgerButton}>
+                {getDesktopButtons()}
+                <button
+                    className='burger-btn mobile'
+                    ref={burgerButtonRef}
+                    aria-label='Navigation menu'
+                    aria-controls={mobileOptionsId}
+                    aria-expanded={mobileMenuOpen}
+                    onClick={toggleMobileMenu}
+                >
                     &#9776;
                 </button>
-                {mobileButtonsVisible && getMobileButtons()}
+                {/* Keep the drawer mounted so CSS can finish or reverse the slide. */}
+                {getMobileButtons()}
+                {mobileMenuOpen && (
+                    <div
+                        className='mobile mobile-nav-backdrop'
+                        aria-hidden='true'
+                        onPointerDown={(event) => {
+                            // Preserve drawer focus until the click handler can return it to the trigger.
+                            event.preventDefault();
+                        }}
+                        onClick={closeMobileMenu}
+                    />
+                )}
             </span>
         </nav>
     );
