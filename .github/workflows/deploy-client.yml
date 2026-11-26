@@ -1,0 +1,70 @@
+name: Deploy client build branch
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: write
+
+jobs:
+    build:
+        if: github.ref == 'refs/heads/main'
+        concurrency:
+            group: publish-client-build
+            queue: max
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: npm
+                  cache-dependency-path: tonedeaf-react/package-lock.json
+
+            - name: Install client dependencies
+              working-directory: tonedeaf-react
+              run: npm ci
+
+            - name: Run client tests
+              working-directory: tonedeaf-react
+              run: npm test -- --run
+
+            - name: Build client
+              working-directory: tonedeaf-react
+              run: npm run build
+
+            - name: Stage deployment files
+              run: |
+                  set -o pipefail
+                  deployment_dir="$RUNNER_TEMP/tonedeaf-deploy"
+                  mkdir -p "$deployment_dir"
+
+                  # Copy the server from Git so local files cannot enter the deployment.
+                  git archive "$GITHUB_SHA" tonedeaf-express | tar -x -C "$deployment_dir"
+                  cp -R tonedeaf-express/public "$deployment_dir/tonedeaf-express/"
+
+            - name: Check that the source commit is still current
+              id: source
+              run: |
+                  git fetch --no-tags origin refs/heads/main
+                  if [ "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA" ]; then
+                      echo "current=true" >> "$GITHUB_OUTPUT"
+                  else
+                      echo "Skipping publication because main has moved."
+                  fi
+
+            - name: Publish build branch
+              if: steps.source.outputs.current == 'true'
+              uses: peaceiris/actions-gh-pages@v4
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ${{ runner.temp }}/tonedeaf-deploy
+                  publish_branch: build/client
+                  force_orphan: true
+                  full_commit_message: 'Deploy Tonedeaf from ${{ github.sha }}'
