@@ -1,6 +1,12 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "framework": "express",
+    "rewrites": [
+        {
+            "source": "/",
+            "destination": "/index.html"
+        }
+    ],
     "git": {
         "deploymentEnabled": {
             "**": false,
