@@ -8,6 +8,7 @@
  */
 
 const express = require("express"); // Express web server framework
+const { readFile } = require("node:fs/promises");
 const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -31,7 +32,27 @@ app.use("/api", demoEndpoints);
 const authEndpoints = require("./auth/endpoints.js");
 app.use("/api", authEndpoints);
 
-// Vercel serves public/ directly. A local server can serve the same build.
+// Vercel forwards / to Express while serving the other public files itself.
+app.get("/", async function (_req, res, next) {
+    try {
+        const index = await readFile(path.join(__dirname, "public", "index.html"));
+        res.type("html").send(index);
+    } catch (error) {
+        if (error.code !== "ENOENT") {
+            next(error);
+            return;
+        }
+
+        if (process.env.VERCEL) {
+            res.redirect("/index.html");
+            return;
+        }
+
+        next();
+    }
+});
+
+// A local server can also serve the other files in the build.
 if (require.main === module) {
     app.use(express.static(path.join(__dirname, "public")));
     app.listen(8888, () => console.log("Listening on 8888"));
