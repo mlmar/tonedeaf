@@ -1,13 +1,14 @@
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import SpotifyWebApi from 'spotify-web-api-js';
-import { logout, restoreSession } from '~/service/AuthService';
-import { createPlaylist, getProfile } from '~/util/SpotifyUtil';
+import { logout, restoreSession, SessionUnavailableError } from '~/service/AuthService';
+import { createPlaylist, getProfile, getTopTracks } from '~/util/SpotifyUtil';
 
 vi.unmock('~/util/SpotifyUtil');
 vi.mock('spotify-web-api-js', () => ({
     default: class {
         setAccessToken() {}
         getMe() {}
+        getMyTopTracks() {}
         createPlaylist() {}
         addTracksToPlaylist() {}
     },
@@ -16,6 +17,7 @@ vi.mock('spotify-web-api-js', () => ({
 const sdk = {
     setAccessToken: vi.spyOn(SpotifyWebApi.prototype, 'setAccessToken'),
     getMe: vi.spyOn(SpotifyWebApi.prototype, 'getMe'),
+    getMyTopTracks: vi.spyOn(SpotifyWebApi.prototype, 'getMyTopTracks'),
     createPlaylist: vi.spyOn(SpotifyWebApi.prototype, 'createPlaylist'),
     addTracksToPlaylist: vi.spyOn(SpotifyWebApi.prototype, 'addTracksToPlaylist'),
 };
@@ -120,4 +122,26 @@ test('a rejected refresh can pick up credentials another tab already replaced', 
     expect(profile).toEqual({ id: 'test-account' });
     expect(fetchAuth).toHaveBeenCalledTimes(3);
     expect(sdk.setAccessToken.mock.calls).toEqual([['replacement'], ['']]);
+});
+
+test('a Spotify read remains retryable after the refresh response body disconnects', async () => {
+    // The response arrives successfully, but consuming the body fails.
+    const interrupted = new ReadableStream({
+        start(controller) {
+            controller.error(new TypeError('Connection lost'));
+        },
+    });
+    const fetchAuth = vi.fn()
+        .mockResolvedValueOnce(sessionResponse('expiring', 30_000))
+        .mockResolvedValueOnce(new Response(interrupted))
+        .mockResolvedValueOnce(sessionResponse('fresh'));
+    vi.stubGlobal('fetch', fetchAuth);
+    sdk.getMyTopTracks.mockResolvedValue({ items: [], href: '', limit: 50, offset: 0, total: 0 });
+
+    await restoreSession();
+    await expect(getTopTracks(2)).rejects.toBeInstanceOf(SessionUnavailableError);
+    expect(sdk.getMyTopTracks).not.toHaveBeenCalled();
+
+    await expect(getTopTracks(2)).resolves.toEqual([]);
+    expect(sdk.getMyTopTracks).toHaveBeenCalledOnce();
 });

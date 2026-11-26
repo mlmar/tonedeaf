@@ -3,6 +3,7 @@ import { useArtistsAndGenres } from '~/hooks/SpotifyHooks';
 import { ImageWrapper } from '~/components/ImageWrapper';
 import { Config } from '~/util/Config';
 import { Load } from '~/components/Load';
+import { SpotifyReadRetry } from '~/components/SpotifyReadRetry';
 
 type ArtistSummaryProps = {
     index: number;
@@ -79,12 +80,17 @@ export const ArtistSummary = ({ index, onArtistClick, onGenreClick }: ArtistSumm
         );
     };
 
-    return artistsInfo?.artists ? (
+    return (
         <>
-            {topArtist()}
+            {artistsInfo.artists && topArtist()}
             {topGenres()}
+            <SpotifyReadRetry
+                key={index}
+                error={artistsInfo.error}
+                isFetching={artistsInfo.isFetching}
+                onRetry={artistsInfo.refetch}
+                fallback={!artistsInfo.artists && <Load />}
+            />
         </>
-    ) : (
-        <Load />
     );
 };

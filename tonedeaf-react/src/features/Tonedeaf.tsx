@@ -77,7 +77,7 @@ export const Tonedeaf = () => {
         }
 
         if (status === 'loading') {
-            return <div role='status' aria-label='Checking Spotify session'><Load /></div>;
+            return <div className='startup-status' role='status' aria-label='Checking Spotify session'><Load /></div>;
         }
 
         return (

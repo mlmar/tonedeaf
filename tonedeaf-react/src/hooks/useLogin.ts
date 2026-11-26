@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { INITIAL_TONEDEAF_STATE, useTonedeafStore } from '~/hooks/useTonedeafStore';
-import { logout, restoreSession, SessionEndedError, subscribeToSessionEnd } from '~/service/AuthService';
+import { hasPendingLogout, logout, restoreSession, SessionEndedError, subscribeToSessionEnd } from '~/service/AuthService';
 import { HOME_URL } from '~/util/System';
 
 type LoginStatus = 'loading' | 'signed-in' | 'signed-out' | 'unavailable' | 'logout-failed';
@@ -17,6 +17,7 @@ function cleanCallbackUrl() {
     }
 }
 
+// Keep startup, logout, and demo navigation in sync with the browser session.
 export function useLogin() {
     const queryClient = useQueryClient();
     const [status, setStatus] = useState<LoginStatus>('loading');
@@ -33,6 +34,7 @@ export function useLogin() {
         cleanCallbackUrl();
     }, []);
 
+    // Clear private state when a session ends and ignore startup results after cleanup.
     useEffect(() => {
         let active = true;
 
@@ -48,12 +50,28 @@ export function useLogin() {
             }
 
             clearPrivateState();
-            if (statusRef.current !== 'logout-failed') {
+            if (!hasPendingLogout() && statusRef.current !== 'logout-failed') {
                 updateStatus('signed-out');
             }
         });
 
-        async function restore() {
+        async function initialize() {
+            if (hasPendingLogout()) {
+                // An interrupted logout takes precedence over the session cookie.
+                try {
+                    await logout();
+                    if (active) {
+                        updateStatus('signed-out');
+                    }
+                } catch {
+                    if (active) {
+                        updateStatus('logout-failed');
+                    }
+                }
+
+                return;
+            }
+
             try {
                 const session = await restoreSession();
                 if (active && statusRef.current === 'loading') {
@@ -74,7 +92,7 @@ export function useLogin() {
             }
         }
 
-        void restore();
+        void initialize();
         window.addEventListener('focus', recheckSession);
         window.addEventListener('pageshow', recheckSession);
 
@@ -88,11 +106,10 @@ export function useLogin() {
 
     async function signOut() {
         setAuthError(false);
-        const request = logout();
         updateStatus('loading');
 
         try {
-            await request;
+            await logout();
             updateStatus('signed-out');
         } catch {
             updateStatus('logout-failed');
@@ -112,7 +129,6 @@ export function useLogin() {
     function exitDemo() {
         queryClient.clear();
         useTonedeafStore.setState(INITIAL_TONEDEAF_STATE);
-        updateStatus('signed-out');
         window.history.replaceState(window.history.state, '', HOME_URL);
     }
 

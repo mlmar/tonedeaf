@@ -12,7 +12,7 @@
  */
 
 import SpotifyWebApi from "spotify-web-api-js";
-import { assertSessionVersion, getAccessToken, getSessionVersion } from "~/service/AuthService";
+import { assertSessionVersion, getAccessToken, getSessionVersion, SessionUnavailableError } from "~/service/AuthService";
 
 /** Spotify Web API instance for making authenticated requests */
 const spotifyWebApi = new SpotifyWebApi();
@@ -130,6 +130,16 @@ async function requestSpotify<T>(request: () => Promise<T>): Promise<T> {
     return result;
 }
 
+// Keep session recovery actionable through reads that wrap SDK errors with context.
+function throwSpotifyReadError(error: unknown, message: string): never {
+    if (error instanceof SessionUnavailableError) {
+        throw error;
+    }
+
+    console.error(error);
+    throw new Error(message);
+}
+
 /**
  * Retrieves the authenticated user's Spotify profile information
  * @async
@@ -221,8 +231,7 @@ export const getTopArtists = async (
 
         return artists?.items;
     } catch (error) {
-        console.error(error);
-        throw new Error('Failed to fetch top artists');
+        throwSpotifyReadError(error, 'Failed to fetch top artists');
     }
 };
 
@@ -243,8 +252,7 @@ export const getTopTracks = async (
 
         return tracks?.items;
     } catch (error) {
-        console.error(error);
-        throw new Error('Failed to fetch top tracks');
+        throwSpotifyReadError(error, 'Failed to fetch top tracks');
     }
 };
 
@@ -262,8 +270,7 @@ export const getRecentTracks = async (): Promise<RecentTrack[]> => {
 
         return tracks?.items;
     } catch (error) {
-        console.error(error);
-        throw new Error('Failed to get recently played tracks');
+        throwSpotifyReadError(error, 'Failed to get recently played tracks');
     }
 };
 
@@ -342,8 +349,7 @@ export const getFeatures = async (tracks: SpotifyApi.TrackObjectFull[]): Promise
 
         return features.audio_features;
     } catch (error) {
-        console.error(error);
-        throw new Error('Failed to fetch audio features');
+        throwSpotifyReadError(error, 'Failed to fetch audio features');
     }
 };
 
@@ -366,8 +372,7 @@ export const getTracksAndFeatures = async (
         const averages = getAudioFeaturesAverages(tracks ?? [], features ?? []);
         return { tracks, features, averages };
     } catch (error) {
-        console.error(error);
-        throw new Error('Failed to fetch tracks and features');
+        throwSpotifyReadError(error, 'Failed to fetch tracks and features');
     }
 };
 
@@ -582,8 +587,7 @@ export const getAttributeRecs = async (
 
         return response.tracks;
     } catch (error) {
-        console.error(error);
-        throw new Error('Failed to fetch attribute reccomendations');
+        throwSpotifyReadError(error, 'Failed to fetch attribute recommendations');
     }
 };
 

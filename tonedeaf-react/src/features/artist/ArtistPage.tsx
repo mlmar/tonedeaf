@@ -6,6 +6,7 @@ import { ImageWrapper } from '~/components/ImageWrapper';
 import { ArtistCard } from './ArtistCard';
 
 import { Load } from '~/components/Load';
+import { SpotifyReadRetry } from '~/components/SpotifyReadRetry';
 import { CHECK } from '~/util/IconUtil';
 
 import { Config } from '~/util/Config.js';
@@ -135,7 +136,14 @@ export const ArtistPage = ({ onDownloadClick = null, exportRef = null }: ImageEx
                     subtitle={genreButtons}
                 />
             )}
-            {info?.artists ? getView() : <Load />}
+            {info.artists && getView()}
+            <SpotifyReadRetry
+                key={timeFrameIndex}
+                error={info.error}
+                isFetching={info.isFetching}
+                onRetry={info.refetch}
+                fallback={!info.artists && <Load />}
+            />
         </div>
     );
 };

@@ -2,6 +2,7 @@ const authPath = '/api/auth';
 const refreshMargin = 60_000;
 const sessionLock = 'tonedeaf-spotify-session';
 const sessionChannel = 'tonedeaf-auth';
+const pendingLogoutKey = 'tonedeaf-pending-logout';
 
 type Session = {
     sessionId: string;
@@ -12,6 +13,7 @@ type Session = {
 let session: Session | null = null;
 let sessionVersion = 0;
 let endingSessionId: string | undefined;
+let pendingLogout: Promise<void> | undefined;
 let lastLoggedOutSessionId: string | undefined;
 let pending: {
     promise: Promise<Session | null>;
@@ -23,6 +25,12 @@ const sessionEndListeners = new Set<() => void>();
 export class SessionEndedError extends Error {
     constructor() {
         super('The Spotify session ended');
+    }
+}
+
+export class SessionUnavailableError extends Error {
+    constructor(cause?: unknown) {
+        super('Spotify session temporarily unavailable', { cause });
     }
 }
 
@@ -49,6 +57,7 @@ function forgetSession() {
 export function subscribeToSessionEnd(listener: () => void) {
     sessionEndListeners.add(listener);
 
+    // Match the session ID so a stale tab cannot sign out a newer account.
     const channel = typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel(sessionChannel);
     if (channel) {
         channel.onmessage = (event) => {
@@ -70,8 +79,13 @@ export function subscribeToSessionEnd(listener: () => void) {
     };
 }
 
-function withSessionLock<T>(action: () => Promise<T>): Promise<T> {
-    return navigator.locks ? navigator.locks.request(sessionLock, action) : action();
+// Serialize cookie updates across same-origin tabs where Web Locks is available.
+async function withSessionLock<T>(action: () => Promise<T>): Promise<T> {
+    if (navigator.locks) {
+        return await navigator.locks.request(sessionLock, action);
+    }
+
+    return action();
 }
 
 function postAuth(endpoint: string, data?: { sessionId?: string; rejectedAccessToken?: string }) {
@@ -86,6 +100,7 @@ function postAuth(endpoint: string, data?: { sessionId?: string; rejectedAccessT
     });
 }
 
+// Resolve credentials under the tab lock and discard updates from an ended session.
 async function requestSession(version: number, rejectedAccessToken?: string) {
     return withSessionLock(async () => {
         assertSessionVersion(version);
@@ -94,14 +109,19 @@ async function requestSession(version: number, rejectedAccessToken?: string) {
             sessionId: session?.sessionId,
             rejectedAccessToken,
         };
-        let response = await postAuth('/session', requestData);
+        let response: Response;
 
-        assertSessionVersion(version);
-        if (response.status === 401 && response.headers.get('X-Tonedeaf-Refresh-Rejected') === '1') {
-            // The server marked the rejected refresh token. This request can
-            // pick up a replacement cookie that another tab already wrote.
+        try {
             response = await postAuth('/session', requestData);
             assertSessionVersion(version);
+            if (response.status === 401 && response.headers.get('X-Tonedeaf-Refresh-Rejected') === '1') {
+                // This request can pick up a replacement cookie that another tab already wrote.
+                response = await postAuth('/session', requestData);
+                assertSessionVersion(version);
+            }
+        } catch (error) {
+            assertSessionVersion(version);
+            throw new SessionUnavailableError(error);
         }
 
         if (response.status === 401) {
@@ -113,10 +133,22 @@ async function requestSession(version: number, rejectedAccessToken?: string) {
         }
 
         if (!response.ok) {
-            throw new Error('Spotify session temporarily unavailable');
+            if (response.status >= 500 || response.status === 429) {
+                throw new SessionUnavailableError();
+            }
+
+            throw new Error('Spotify session check failed');
         }
 
-        const next: Session = await response.json();
+        let next: Session;
+
+        try {
+            next = await response.json();
+        } catch (error) {
+            assertSessionVersion(version);
+            throw new SessionUnavailableError(error);
+        }
+
         assertSessionVersion(version);
 
         if (next.sessionId === lastLoggedOutSessionId) {
@@ -136,6 +168,7 @@ async function requestSession(version: number, rejectedAccessToken?: string) {
 
 export function restoreSession(rejectedAccessToken?: string): Promise<Session | null> {
     if (pending) {
+        // Share the current check unless it returns a token that this caller already rejected.
         const currentRequest = pending;
         return currentRequest.promise.then((result) => {
             if (rejectedAccessToken && result?.accessToken === rejectedAccessToken
@@ -176,23 +209,58 @@ export async function getAccessToken(rejectedAccessToken?: string) {
     return refreshed.accessToken;
 }
 
-export async function logout() {
-    // A retry still targets the session that was visible before local state cleared.
-    const sessionId = session?.sessionId ?? endingSessionId;
+function readPendingLogout() {
+    try {
+        return window.sessionStorage.getItem(pendingLogoutKey) || undefined;
+    } catch {
+        return undefined;
+    }
+}
+
+function writePendingLogout(sessionId: string | undefined) {
+    try {
+        if (sessionId) {
+            window.sessionStorage.setItem(pendingLogoutKey, sessionId);
+        } else {
+            window.sessionStorage.removeItem(pendingLogoutKey);
+        }
+    } catch {
+        // The initiating tab can still retry from memory when storage is blocked.
+    }
+}
+
+export function hasPendingLogout() {
+    return Boolean(pendingLogout || endingSessionId || readPendingLogout());
+}
+
+export function logout(): Promise<void> {
+    if (pendingLogout) {
+        return pendingLogout;
+    }
+
+    // Save the original target before clearing memory so reload can resume logout.
+    const sessionId = endingSessionId ?? readPendingLogout() ?? session?.sessionId;
     endingSessionId = sessionId;
+    writePendingLogout(sessionId);
     forgetSession();
 
-    await withSessionLock(async () => {
+    pendingLogout = withSessionLock(async () => {
         const response = await postAuth('/logout', { sessionId });
         if (!response.ok) {
             throw new Error('Could not log out of Tonedeaf');
         }
+
+        endingSessionId = undefined;
+        writePendingLogout(undefined);
+
+        if (sessionId && typeof BroadcastChannel !== 'undefined') {
+            const channel = new BroadcastChannel(sessionChannel);
+            channel.postMessage({ type: 'logout', sessionId });
+            channel.close();
+        }
+    }).finally(() => {
+        pendingLogout = undefined;
     });
 
-    endingSessionId = undefined;
-    if (sessionId && typeof BroadcastChannel !== 'undefined') {
-        const channel = new BroadcastChannel(sessionChannel);
-        channel.postMessage({ type: 'logout', sessionId });
-        channel.close();
-    }
+    return pendingLogout;
 }

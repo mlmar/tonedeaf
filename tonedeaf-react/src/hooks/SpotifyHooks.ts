@@ -44,11 +44,13 @@ export function useNowPlaying(interval: number = 10000): Awaited<ReturnType<type
  */
 export const useArtistsAndGenres = (timeFrameIndex: number, genre: string | null = Config.GENRE) => {
     const { isDemo } = useIsDemo();
-    const { data } = useQuery({
+    const query = useQuery({
         ...QUERY_CONFIG,
         queryKey: [isDemo, timeFrameIndex, 'artists'],
         queryFn: async () => isDemo ? await getDemoArtists(timeFrameIndex) : await getTopArtists(timeFrameIndex)
     });
+
+    const { data, error, isFetching, refetch } = query;
 
     // Rank before filtering to keep each artist's original position in the list.
     const artists = data?.map((artist, i) => ({ ...artist, rank: i + 1 }))
@@ -56,7 +58,10 @@ export const useArtistsAndGenres = (timeFrameIndex: number, genre: string | null
 
     return {
         artists,
-        genres: data ? countGenres(data) : []
+        genres: data ? countGenres(data) : [],
+        error,
+        isFetching,
+        refetch,
     };
 };
 
@@ -66,13 +71,11 @@ export const useArtistsAndGenres = (timeFrameIndex: number, genre: string | null
  */
 export const useTracksAndFeatures = (timeFrameIndex: number) => {
     const { isDemo } = useIsDemo();
-    const { data } = useQuery({
+    return useQuery({
         ...QUERY_CONFIG,
         queryKey: [isDemo, timeFrameIndex, 'tracks'],
         queryFn: async () => isDemo ? await getDemoTracksAndFeatures(timeFrameIndex) : await getTracksAndFeatures(timeFrameIndex),
     });
-
-    return data;
 };
 
 /**
@@ -80,7 +83,7 @@ export const useTracksAndFeatures = (timeFrameIndex: number) => {
  */
 export const useRecent = () => {
     const { isDemo } = useIsDemo();
-    const { data } = useQuery({
+    return useQuery({
         ...QUERY_CONFIG,
         queryKey: [isDemo, 'recent'],
         queryFn: async () => {
@@ -90,8 +93,6 @@ export const useRecent = () => {
             return await getRecentTracks();
         }
     });
-
-    return data;
 };
 
 /**
@@ -99,7 +100,7 @@ export const useRecent = () => {
  */
 export const useGenreSeeds = () => {
     const { isDemo } = useIsDemo();
-    const { data } = useQuery({
+    return useQuery({
         ...QUERY_CONFIG,
         queryKey: [isDemo, 'genre-seeds'],
         queryFn: async () => {
@@ -109,6 +110,4 @@ export const useGenreSeeds = () => {
             return await getGenreSeeds();
         },
     });
-
-    return data;
 };

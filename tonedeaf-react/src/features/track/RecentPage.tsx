@@ -6,6 +6,7 @@ import { ImageWrapper } from '~/components/ImageWrapper';
 import { TrackCard } from './TrackCard';
 
 import { Load } from '~/components/Load';
+import { SpotifyReadRetry } from '~/components/SpotifyReadRetry';
 
 import { Config } from '~/util/Config.js';
 import { useIsDemo } from '~/hooks/useIsDemo.ts';
@@ -21,7 +22,7 @@ export const RecentPage = () => {
     const setAlertText = useTonedeafStore((state) => state.setAlertText);
 
     const { recentViewIndex: viewIndex, setRecentViewIndex: setViewIndex } = useRecentViewState();
-    const tracks = useRecent();
+    const { data: tracks, error, isFetching, refetch } = useRecent();
 
     const handleCreatePlaylist = async () => {
         if (isDemo) {
@@ -46,7 +47,7 @@ export const RecentPage = () => {
 
     const renderTracks = () => {
         if (!tracks) {
-            return <Load />;
+            return null;
         }
 
         if (viewIndex === 0) {
@@ -86,6 +87,7 @@ export const RecentPage = () => {
                 <Options title='Like These Tracks?' options={['Create Playlist']} onClick={handleCreatePlaylist} />
             </header>
             {renderTracks()}
+            <SpotifyReadRetry error={error} isFetching={isFetching} onRetry={refetch} fallback={!tracks && <Load />} />
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import { useState, type MouseEvent, type ReactElement } from 'react';
+import { useRef, useState, type MouseEvent, type ReactElement } from 'react';
 import { getDefaultAttributes, getParamAttributes, getAttributeRecs, createPlaylist } from '~/util/SpotifyUtil.js';
 import { isEqual } from '~/util/ObjectUtil.js';
 
@@ -13,12 +13,18 @@ import { Config } from '~/util/Config.js';
 import { useIsDemo } from '~/hooks/useIsDemo.ts';
 import { useTonedeafStore } from '~/hooks/useTonedeafStore.js';
 import { useGenreSeeds, useUserInfo } from '~/hooks/SpotifyHooks.js';
+import { SpotifyReadRetry } from '~/components/SpotifyReadRetry';
 
 const VIEW_OPTIONS = ['Attributes', 'Recommendations'];
 const VIEW_OPTIONS_TEMP = ['Attributes'];
 const PLAYLIST_OPTIONS = ['Create Playlist', 'Reroll'];
 
 const DEFAULT_ATTRIBUTES = getDefaultAttributes();
+
+type RecommendationRequest = {
+    genres: Set<string>;
+    attributes: ReturnType<typeof getParamAttributes>;
+};
 
 /*
   Users can select up to 5 genres and edit preferred track attributes to get song recommendations
@@ -29,17 +35,18 @@ export const TunerPage = () => {
     const setAlertText = useTonedeafStore((state) => state.setAlertText);
 
     const [viewIndex, setViewIndex] = useState(0);
-    const genreSeeds = useGenreSeeds();
+    const genreSeedsQuery = useGenreSeeds();
+    const { data: genreSeeds } = genreSeedsQuery;
 
     const [attributes, setAttributes] = useState(getParamAttributes());
-    const [prevAttributes, setPrevAttributes] = useState<typeof attributes | null>(null);
-
     const [selected, setSelected] = useState(() => new Set<string>());
-    const [prevSelected, setPrevSelected] = useState<Set<string> | null>(null);
-
+    const [lastRequest, setLastRequest] = useState<RecommendationRequest | null>(null);
+    const activeRequest = useRef<RecommendationRequest | null>(null);
     const [tracks, setTracks] = useState<SpotifyApi.TrackObjectSimplified[] | null>(null);
+    const [recommendationError, setRecommendationError] = useState<unknown>();
+    const [isFetchingRecommendations, setIsFetchingRecommendations] = useState(false);
 
-    // if user tries to view results, fetch them from Spotify
+    // Fetch results on entry when the filters differ from the last request.
     const handleViewClick = (index: number) => {
         if (index === 1 && isDemo) {
             setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
@@ -48,13 +55,12 @@ export const TunerPage = () => {
 
         setViewIndex(index);
 
-        const equalSets = prevSelected?.size === selected.size
-            && [...selected].every((genre) => prevSelected.has(genre));
-        const equalAttributes = isEqual(attributes, prevAttributes);
+        const equalSets = lastRequest?.genres.size === selected.size
+            && [...selected].every((genre) => lastRequest.genres.has(genre));
+        const equalAttributes = isEqual(attributes, lastRequest?.attributes ?? null);
+
         if (index === 1 && (!equalSets || !equalAttributes)) {
-            setPrevSelected(selected);
-            setPrevAttributes(attributes);
-            getRecommendations();
+            void getRecommendations({ genres: selected, attributes });
         }
     };
 
@@ -68,13 +74,38 @@ export const TunerPage = () => {
 
             if (response) setAlertText(Config.STATUS_MESSAGE.PLAYLIST_CREATED);
         } else {
-            getRecommendations();
+            await getRecommendations({ genres: selected, attributes });
         }
     };
 
-    const getRecommendations = async () => {
-        const recs = await getAttributeRecs([...selected], attributes);
-        setTracks(recs);
+    // Keep the requested filters for retries and leave previous results visible while fetching.
+    const getRecommendations = async (request: RecommendationRequest) => {
+        const current = activeRequest.current;
+        if (current?.genres === request.genres && current.attributes === request.attributes) {
+            return;
+        }
+
+        activeRequest.current = request;
+        setLastRequest(request);
+        setIsFetchingRecommendations(true);
+        setRecommendationError(undefined);
+
+        try {
+            const recs = await getAttributeRecs([...request.genres], request.attributes);
+            // Results for older filters may arrive after the user requests new ones.
+            if (activeRequest.current === request) {
+                setTracks(recs);
+            }
+        } catch (error) {
+            if (activeRequest.current === request) {
+                setRecommendationError(error);
+            }
+        } finally {
+            if (activeRequest.current === request) {
+                activeRequest.current = null;
+                setIsFetchingRecommendations(false);
+            }
+        }
     };
 
     const handleGenreClick = (event: MouseEvent<HTMLSpanElement>) => {
@@ -182,9 +213,30 @@ export const TunerPage = () => {
                     <label className='medium bold'>
                         Find song recommendations based on your preferred genres and song attributes.
                     </label>
+                    {genreSeeds && getView()}
+                    <SpotifyReadRetry
+                        error={genreSeedsQuery.error}
+                        isFetching={genreSeedsQuery.isFetching}
+                        onRetry={genreSeedsQuery.refetch}
+                        fallback={!genreSeeds && <Load />}
+                    />
                 </>
             )}
-            {(viewIndex === 0 && genreSeeds) || (viewIndex === 1 && tracks) ? getView() : <Load />}
+            {viewIndex === 1 && (
+                <>
+                    {tracks && getView()}
+                    <SpotifyReadRetry
+                        error={recommendationError}
+                        isFetching={isFetchingRecommendations}
+                        onRetry={async () => {
+                            if (lastRequest) {
+                                await getRecommendations(lastRequest);
+                            }
+                        }}
+                        fallback={!tracks && <Load />}
+                    />
+                </>
+            )}
         </div>
     );
 };
