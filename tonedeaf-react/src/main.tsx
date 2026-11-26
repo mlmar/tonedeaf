@@ -3,14 +3,22 @@ import { createRoot } from 'react-dom/client'
 import App from './App'
 import './index.css'
 
-const root = document.getElementById('root')
+const url = new URL(window.location.href)
 
-if (!root) {
-  throw new Error('Missing the tonedeaf root element')
+if (url.hostname === 'localhost') {
+  // Spotify's local callback and the app must share the same cookie host.
+  url.hostname = '127.0.0.1'
+  window.location.replace(url.href)
+} else {
+  const root = document.getElementById('root')
+
+  if (!root) {
+    throw new Error('Missing the tonedeaf root element')
+  }
+
+  createRoot(root).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  )
 }
-
-createRoot(root).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)

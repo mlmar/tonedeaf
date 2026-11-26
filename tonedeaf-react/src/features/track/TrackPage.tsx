@@ -6,6 +6,7 @@ import { ImageWrapper } from '~/components/ImageWrapper';
 import { TrackCard } from './TrackCard';
 
 import { Load } from '~/components/Load';
+import { SpotifyReadRetry } from '~/components/SpotifyReadRetry';
 
 import { Config } from '~/util/Config.js';
 import { useIsDemo } from '~/hooks/useIsDemo.ts';
@@ -27,7 +28,7 @@ export const TrackPage = ({ onDownloadClick = null, exportRef = null }: ImageExp
         setTrackTimeFrameIndex: setTimeFrameIndex,
         setTrackViewIndex: setViewIndex,
     } = useTrackViewState();
-    const info = useTracksAndFeatures(timeFrameIndex);
+    const { data: info, error, isFetching, refetch } = useTracksAndFeatures(timeFrameIndex);
 
     const handleCreatePlaylist = async () => {
         if (isDemo) {
@@ -105,7 +106,14 @@ export const TrackPage = ({ onDownloadClick = null, exportRef = null }: ImageExp
                     <Options title='Like These Tracks?' options={['Create Playlist']} onClick={handleCreatePlaylist} />
                 )}
             </header>
-            {info ? getView() : <Load />}
+            {info && getView()}
+            <SpotifyReadRetry
+                key={timeFrameIndex}
+                error={error}
+                isFetching={isFetching}
+                onRetry={refetch}
+                fallback={!info && <Load />}
+            />
         </div>
     );
 };

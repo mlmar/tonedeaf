@@ -15,16 +15,14 @@ import { TunerPage } from '~/features/tuner/TunerPage';
 
 import { Load } from '~/components/Load';
 
-import { HOME_URL } from '~/util/System.js';
-
 import { Config } from '~/util/Config.ts';
 import { useLogin } from '~/hooks/useLogin';
 import { useTonedeafStore } from '~/hooks/useTonedeafStore';
 import { useIsDemo } from '~/hooks/useIsDemo';
 
 export const Tonedeaf = () => {
-    const { setIsDemo } = useIsDemo();
-    const loggedIn = useLogin();
+    const { isDemo } = useIsDemo();
+    const { status, authError, retry, signOut, exitDemo } = useLogin();
 
     const navIndex = useTonedeafStore((state) => state.navIndex);
     const setNavIndex = useTonedeafStore((state) => state.setNavIndex);
@@ -60,28 +58,42 @@ export const Tonedeaf = () => {
         }
     };
 
-    return (
-        <div className='app'>
-            <TonedeafAlert />
-            {!loggedIn ? (
-                <Login />
-            ) : (
+    function renderApp() {
+        if (isDemo || status === 'signed-in') {
+            return (
                 <main className='main'>
                     <Nav
                         text='tonedeaf'
                         index={navIndex}
                         onChange={setNavIndex}
                         options={Config.NAV_OPTIONS}
-                        onLogout={() => {
-                            window.location.replace(HOME_URL);
-                            setIsDemo(false);
-                        }}
+                        onLogout={isDemo ? exitDemo : () => void signOut()}
                     />
                     <Boundary fallback={<label className='large bold'>Something went wrong!</label>}>
                         {getContent()}
                     </Boundary>
                 </main>
-            )}
+            );
+        }
+
+        if (status === 'loading') {
+            return <div className='startup-status' role='status' aria-label='Checking Spotify session'><Load /></div>;
+        }
+
+        return (
+            <Login
+                authError={authError}
+                sessionUnavailable={status === 'unavailable'}
+                logoutFailed={status === 'logout-failed'}
+                onRetry={retry}
+            />
+        );
+    }
+
+    return (
+        <div className='app'>
+            <TonedeafAlert />
+            {renderApp()}
         </div>
     );
 };

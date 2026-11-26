@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 import { useTracksAndFeatures } from '~/hooks/SpotifyHooks';
+import { SpotifyReadRetry } from '~/components/SpotifyReadRetry';
 import { ImageWrapper } from '~/components/ImageWrapper';
 import { Config } from '~/util/Config';
 import { Chart } from './Chart';
@@ -10,7 +11,7 @@ type TracksSummaryProps = {
 };
 
 export const TracksSummary = ({ index, onClick }: TracksSummaryProps) => {
-    const tracksInfo = useTracksAndFeatures(index);
+    const { data: tracksInfo, error, isFetching, refetch } = useTracksAndFeatures(index);
 
     const topTracks = () => {
         const tracks: ReactElement[] = [];
@@ -79,10 +80,11 @@ export const TracksSummary = ({ index, onClick }: TracksSummaryProps) => {
         }
     };
 
-    return tracksInfo ? (
+    return (
         <>
-            {topTrack()}
+            {tracksInfo && topTrack()}
             {trackStats()}
+            <SpotifyReadRetry key={index} error={error} isFetching={isFetching} onRetry={refetch} />
         </>
-    ) : null;
+    );
 };

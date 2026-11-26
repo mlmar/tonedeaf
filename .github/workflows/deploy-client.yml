@@ -25,7 +25,17 @@ jobs:
               with:
                   node-version: 24
                   cache: npm
-                  cache-dependency-path: tonedeaf-react/package-lock.json
+                  cache-dependency-path: |
+                      tonedeaf-react/package-lock.json
+                      tonedeaf-express/package-lock.json
+
+            - name: Install server dependencies
+              working-directory: tonedeaf-express
+              run: npm ci
+
+            - name: Run auth tests
+              working-directory: tonedeaf-express
+              run: npm test
 
             - name: Install client dependencies
               working-directory: tonedeaf-react
