@@ -98,36 +98,63 @@
 
     /*** MOBILE MENU ***/
 
-    .mobile-options {
-        z-index: 100;
-        flex-direction: column;
+    .mobile-options-viewport {
         position: absolute;
         top: 2.5rem;
-        width: 45%;
-        padding-right: 1rem;
-        bottom: 0;
         right: 0;
+        bottom: 0;
+        z-index: 100;
+        width: 45%;
+
+        // Clip the slide without creating a scroll container for focused buttons.
+        overflow: clip;
+        pointer-events: none;
+    }
+
+    .mobile-options {
         display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding-right: 1rem;
         background: var(--dark);
-        animation: slide-left 0.3s ease forwards;
+
+        // Let the last buttons scroll into view on short screens.
+        overflow-y: auto;
+
+        // Keep the panel visible until its exit transition finishes.
+        visibility: hidden;
+        transform: translateX(100%);
+        transition: transform 180ms ease-in, visibility 0s linear 180ms;
 
         button {
             justify-content: flex-end;
-            font-size: 1rem;
+            font-size: 1.125rem;
             padding: 1rem 0;
         }
 
         .selected {
             color: var(--active);
         }
+    }
 
-        ~ .back {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            z-index: 99;
+    .mobile-options-viewport.is-open .mobile-options {
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateX(0);
+        transition: transform 300ms ease;
+    }
+
+    .mobile-nav-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 99;
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .mobile-options,
+        .mobile-options-viewport.is-open .mobile-options {
+            transition: none;
         }
     }
 
@@ -136,6 +163,12 @@
 
         button {
             height: unset;
+        }
+
+        // Keep the trigger clickable above the backdrop.
+        .burger-btn {
+            position: relative;
+            z-index: 101;
         }
     }
 
@@ -251,17 +284,5 @@
 
     .plus-btn {
         font-size: 0.6em;
-    }
-
-    /*** ANIMATIONS ***/
-
-    @keyframes slide-left {
-        0% {
-            margin-right: -45vw;
-        }
-
-        100% {
-            margin-right: 0vw;
-        }
     }
 }
