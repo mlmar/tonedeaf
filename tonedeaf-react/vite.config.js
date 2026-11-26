@@ -20,7 +20,7 @@ export default defineConfig({
         setupFiles: ['./src/test/setupTests.js', './src/test/mocks.js'],
     },
     build: {
-        outDir: '../tonedeaf-express/dist',
+        outDir: '../tonedeaf-express/public',
         emptyOutDir: true,
     },
 });

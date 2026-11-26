@@ -23,9 +23,18 @@
 
 ## Installation
 
-- Run `npm install` in both `tonedeaf-express` and `tonedeaf-react` folders
+- Use Node.js 24 and run `npm ci` in both `tonedeaf-express` and `tonedeaf-react`.
 - Run `npm start` in `tonedeaf-express` to start the node server for authentication and demo services
 - Run `npm run dev` in `tonedeaf-react` to start the client
+- To serve a production build locally, run `npm run build` in `tonedeaf-react` and open `http://127.0.0.1:8888` with Express running.
+
+## Deployment
+
+Pull requests to `main` run the client tests and a Vite build. On pushes to `main`, the **Deploy client build branch** workflow runs the same checks and publishes the Express server and the generated `tonedeaf-express/public/` directory to `build/client`. The generated commit records the source SHA. To rerun publication, select `main` under **Actions → Deploy client build branch → Run workflow**.
+
+For the initial rollout, set `main` as the GitHub default branch and let the first successful workflow run create `build/client`.
+
+In Vercel, set the Root Directory to `tonedeaf-express` and Node.js version to 24.x. Let the Express preset install dependencies, package `index.js`, and serve `public/` from the CDN. Leave the custom build and output directory overrides disabled. Verify the first `build/client` preview, then set Production Branch Tracking to `build/client`. Set `CLIENT_ID` and `CLIENT_S` for production and register `https://tonedeaf.vercel.app/api/auth/callback` in Spotify.
 
 ## Environment Variables
 

@@ -31,11 +31,10 @@ app.use("/api", demoEndpoints);
 const authEndpoints = require("./auth/endpoints.js");
 app.use("/api", authEndpoints);
 
-const staticDirecory = "/dist";
-app.use(express.static(path.join(__dirname, staticDirecory)));
-app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, staticDirecory, "index.html"));
-});
+// Vercel serves public/ directly. A local server can serve the same build.
+if (require.main === module) {
+    app.use(express.static(path.join(__dirname, "public")));
+    app.listen(8888, () => console.log("Listening on 8888"));
+}
 
-console.log("Listening on 8888");
-app.listen(8888);
+module.exports = app;
