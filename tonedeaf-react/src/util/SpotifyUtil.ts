@@ -12,6 +12,7 @@
  */
 
 import SpotifyWebApi from "spotify-web-api-js";
+import { assertSessionVersion, getAccessToken, getSessionVersion } from "~/service/AuthService";
 
 /** Spotify Web API instance for making authenticated requests */
 const spotifyWebApi = new SpotifyWebApi();
@@ -93,12 +94,41 @@ export interface AttributeConfig {
 }
 
 /**
- * Sets the access token for Spotify API authentication
- * @param {string} token - The Spotify access token
+ * The SDK reads its token when it creates the request. Retry only the
+ * underlying request that Spotify rejected, including each playlist step.
  */
-export const setAccessToken = (token: string): void => {
-    spotifyWebApi.setAccessToken(token);
-};
+async function requestSpotify<T>(request: () => Promise<T>): Promise<T> {
+    const version = getSessionVersion();
+
+    function send(token: string) {
+        assertSessionVersion(version);
+        spotifyWebApi.setAccessToken(token);
+
+        try {
+            return request();
+        } finally {
+            spotifyWebApi.setAccessToken('');
+        }
+    }
+
+    const token = await getAccessToken();
+    let result: T;
+
+    try {
+        result = await send(token);
+    } catch (error) {
+        assertSessionVersion(version);
+        if (!(error instanceof XMLHttpRequest) || error.status !== 401) {
+            throw error;
+        }
+
+        const refreshed = await getAccessToken(token);
+        result = await send(refreshed);
+    }
+
+    assertSessionVersion(version);
+    return result;
+}
 
 /**
  * Retrieves the authenticated user's Spotify profile information
@@ -107,7 +137,7 @@ export const setAccessToken = (token: string): void => {
  */
 export const getProfile = async (): Promise<SpotifyApi.CurrentUsersProfileResponse> => {
     try {
-        const response = await spotifyWebApi.getMe();
+        const response = await requestSpotify(() => spotifyWebApi.getMe());
         return response;
     } catch (error) {
         console.error(error);
@@ -134,7 +164,7 @@ export const getNowPlaying = async (): Promise<NowPlayingTrack> => {
     };
 
     try {
-        const response = await spotifyWebApi.getMyCurrentPlaybackState();
+        const response = await requestSpotify(() => spotifyWebApi.getMyCurrentPlaybackState());
 
         if (response?.item) {
             track.title = response.item?.name;
@@ -185,7 +215,7 @@ export const getTopArtists = async (
 ): Promise<SpotifyApi.ArtistObjectFull[]> => {
     try {
         const params = { time_range: RANGES[rangeIndex], limit: 50 };
-        const artists = await spotifyWebApi.getMyTopArtists(params);
+        const artists = await requestSpotify(() => spotifyWebApi.getMyTopArtists(params));
 
         if (DEV) console.log(artists?.items);
 
@@ -207,7 +237,7 @@ export const getTopTracks = async (
 ): Promise<SpotifyApi.TrackObjectFull[]> => {
     try {
         const params = { time_range: RANGES[rangeIndex], limit: 50 };
-        const tracks = await spotifyWebApi.getMyTopTracks(params);
+        const tracks = await requestSpotify(() => spotifyWebApi.getMyTopTracks(params));
 
         if (DEV) console.log(tracks?.items);
 
@@ -226,7 +256,7 @@ export const getTopTracks = async (
 export const getRecentTracks = async (): Promise<RecentTrack[]> => {
     try {
         const params = { limit: 50 };
-        const tracks = await spotifyWebApi.getMyRecentlyPlayedTracks(params);
+        const tracks = await requestSpotify(() => spotifyWebApi.getMyRecentlyPlayedTracks(params));
 
         if (DEV) console.log(tracks?.items);
 
@@ -305,9 +335,8 @@ const getAudioFeaturesAverages = (tracks: SpotifyApi.TrackObjectFull[], features
  */
 export const getFeatures = async (tracks: SpotifyApi.TrackObjectFull[]): Promise<SpotifyApi.AudioFeaturesObject[]> => {
     try {
-        const features = await spotifyWebApi.getAudioFeaturesForTracks(
-            getIDS(tracks)
-        );
+        const ids = getIDS(tracks);
+        const features = await requestSpotify(() => spotifyWebApi.getAudioFeaturesForTracks(ids));
 
         if (DEV) console.log(features?.audio_features);
 
@@ -431,14 +460,11 @@ export const createPlaylist = async (
     };
 
     try {
-        const playlist = await spotifyWebApi.createPlaylist(id, params);
+        const playlist = await requestSpotify(() => spotifyWebApi.createPlaylist(id, params));
         const uris = getUris(...entries);
 
         console.log("Creating playlist for", text);
-        const response = await spotifyWebApi.addTracksToPlaylist(
-            playlist.id,
-            uris
-        );
+        const response = await requestSpotify(() => spotifyWebApi.addTracksToPlaylist(playlist.id, uris));
 
         if (DEV) {
             console.log(playlist);
@@ -526,7 +552,7 @@ export const getParamAttributes = (): { [key: string]: number } => {
  */
 export const getGenreSeeds = async (): Promise<string[]> => {
     try {
-        const genres = await spotifyWebApi.getAvailableGenreSeeds();
+        const genres = await requestSpotify(() => spotifyWebApi.getAvailableGenreSeeds());
 
         if (DEV) console.log(genres?.genres);
 
@@ -550,7 +576,7 @@ export const getAttributeRecs = async (
 ): Promise<SpotifyApi.TrackObjectSimplified[]> => {
     try {
         const params = { limit: 50, seed_genres: genres.join(), ...attributes };
-        const response = await spotifyWebApi.getRecommendations(params);
+        const response = await requestSpotify(() => spotifyWebApi.getRecommendations(params));
 
         if (DEV) console.log(response.tracks);
 
@@ -580,7 +606,7 @@ export const search = async (
     const params = { limit: 50 };
 
     try {
-        const response = await spotifyWebApi.search(query, [types], params);
+        const response = await requestSpotify(() => spotifyWebApi.search(query, [types], params));
         if (response.artists) {
             return response.artists.items
         } else if (response.tracks) {
@@ -611,7 +637,7 @@ export const getSearchRecs = async (
             seed_tracks: trackIds.join(','),
             limit: 50,
         };
-        const response = await spotifyWebApi.getRecommendations(params);
+        const response = await requestSpotify(() => spotifyWebApi.getRecommendations(params));
 
         if (DEV) console.log(response?.tracks);
 

@@ -6,9 +6,10 @@ type NavProps = {
     options?: readonly string[];
     text: string;
     onLogout?: () => void;
+    onChangeAccount?: () => void;
 };
 
-export const Nav = ({ index, onChange, options, text, onLogout }: NavProps) => {
+export const Nav = ({ index, onChange, options, text, onLogout, onChangeAccount }: NavProps) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const mobileOptionsId = useId();
     const mobileOptionsRef = useRef<HTMLDivElement>(null);
@@ -52,6 +53,11 @@ export const Nav = ({ index, onChange, options, text, onLogout }: NavProps) => {
                         </button>
                     ))}
                 </span>
+                {onChangeAccount && (
+                    <button className='desktop' onClick={onChangeAccount}>
+                        Change account
+                    </button>
+                )}
                 <button className='desktop' onClick={onLogout}>
                     Logout
                 </button>
@@ -80,6 +86,11 @@ export const Nav = ({ index, onChange, options, text, onLogout }: NavProps) => {
                             {option}
                         </button>
                     ))}
+                    {onChangeAccount && (
+                        <button disabled={!mobileMenuOpen} onClick={onChangeAccount}>
+                            Change account
+                        </button>
+                    )}
                     <button disabled={!mobileMenuOpen} onClick={onLogout}>
                         Logout
                     </button>
